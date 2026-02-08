@@ -1,17 +1,11 @@
 // ./config/database.js
 
+import dotenv from "dotenv";
 import mongoose from "mongoose";
+dotenv.config()
+mongoose.connect(process.env.MONGO_URI);
 
-export async function connectDB() {
-  const uri = process.env.MONGO_URI;
-
-  if (!uri) {
-    throw new Error("MONGO_URI is missing. Check .env location and dotenv.config()");
-  }
-
-  await mongoose.connect(uri);
-
-  const db = mongoose.connection;
+const db = mongoose.connection;
 
   db.on("connected", () => {
     console.log(`✅ Connected to MongoDB at ${db.host}:${db.port}`);
@@ -24,4 +18,3 @@ export async function connectDB() {
   db.on("disconnected", () => {
     console.log("MongoDB disconnected");
   });
-}
