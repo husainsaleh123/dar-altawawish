@@ -1,0 +1,72 @@
+.footer {
+  width: 100%;
+  margin-top: auto;
+  padding: 3.8rem 1rem 2.8rem;
+  background: #2500a8;
+  color: #ffffff;
+  text-align: center;
+  animation: fadeUp 520ms ease both;
+}
+
+.quote {
+  margin: 0;
+  font-size: clamp(1.05rem, 1.6vw, 1.55rem);
+  font-weight: 500;
+  line-height: 1.8;
+}
+
+.socials {
+  margin: 2.1rem auto 1.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.3rem;
+  flex-wrap: wrap;
+}
+
+.socialLink {
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: transform 220ms ease, background-color 220ms ease, color 220ms ease;
+}
+
+.socialLink:hover {
+  transform: translateY(-3px);
+  background: #ffffff;
+  color: #2500a8;
+}
+
+.socialLink svg {
+  width: 31px;
+  height: 31px;
+}
+
+.socialLink i {
+  font-size: 1.9rem;
+  line-height: 1;
+}
+
+.copy {
+  margin: 0;
+  font-size: clamp(0.95rem, 1.35vw, 1.3rem);
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

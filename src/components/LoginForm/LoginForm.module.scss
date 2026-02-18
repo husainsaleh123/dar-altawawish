@@ -1,0 +1,88 @@
+// src/components/LoginForm/LoginForm.module.scss
+
+.loginContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+.loginForm {
+  max-width: 400px;
+  width: 100%;
+  padding: 2rem;
+  background-color: var(--white);
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  
+  h2 {
+    text-align: center;
+    color: var(--text-dark);
+    margin-bottom: 1.5rem;
+  }
+  
+  .formGroup {
+    margin-bottom: 1rem;
+    
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--text-dark);
+      font-weight: 500;
+    }
+    
+    input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid var(--tan-3);
+      border-radius: 4px;
+      font-size: 1rem;
+      
+      &:focus {
+        outline: none;
+        border-color: var(--orange);
+      }
+    }
+  }
+  
+  .submitButton {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: var(--orange);
+    color: var(--white);
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 1rem;
+    
+    &:hover {
+      background-color: darken(orangered, 10%);
+    }
+  }
+  
+  .toggleButton {
+    width: 100%;
+    padding: 0.5rem;
+    background: none;
+    border: 1px solid var(--tan-3);
+    border-radius: 4px;
+    color: var(--text-light);
+    cursor: pointer;
+    
+    &:hover {
+      background-color: var(--tan-1);
+    }
+  }
+  
+  .error {
+    color: var(--orange);
+    text-align: center;
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    background-color: rgba(255, 69, 0, 0.1);
+    border-radius: 4px;
+  }
+}

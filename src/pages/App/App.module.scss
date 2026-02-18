@@ -1,0 +1,24 @@
+// ./src/pages/App/App.module.scss
+
+.App {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+}
+
+.routeContent {
+  flex: 1;
+  animation: routeFade 420ms ease both;
+}
+
+@keyframes routeFade {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
