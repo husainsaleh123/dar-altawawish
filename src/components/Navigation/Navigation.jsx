@@ -1,4 +1,5 @@
 import styles from './Navigation.module.scss';
+import { useEffect, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 
 const NAV_ITEMS = [
@@ -8,70 +9,65 @@ const NAV_ITEMS = [
   { label: 'Contact', to: '/contact' }
 ];
 
-function BrandIcon() {
-  return (
-    <svg
-      className={styles.brandIcon}
-      viewBox="0 0 64 64"
-      aria-hidden="true"
-      focusable="false"
-    >
-      <path
-        d="M32 6l20 10v18L32 58 12 34V16L32 6z"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="4"
-      />
-      <path
-        d="M20 22h24M20 30h24M24 38h16"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="4"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
 export default function Navigation({ user }) {
   const location = useLocation();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [location.pathname]);
 
   return (
-    <nav className={styles.navbar} aria-label="Primary">
-      <NavLink className={styles.brand} to="/">
-        <BrandIcon />
+    <nav className={`${styles.navbar} ${isMenuOpen ? styles.navOpen : ''}`} aria-label="Primary">
+      <NavLink className={styles.brand} to="/" aria-label="Home">
+        <span className={styles.brandPlaceholder} aria-hidden="true">💎</span>
       </NavLink>
 
-      <ul className={styles.links}>
-        {NAV_ITEMS.map((item) => {
-          const isProductsRoute = item.to === '/orders/new' && location.pathname.startsWith('/orders');
-          return (
-            <li key={item.label}>
-              <NavLink
-                to={item.to}
-                className={({ isActive }) =>
-                  `${styles.navLink} ${isActive || isProductsRoute ? styles.navLinkActive : ''}`.trim()
-                }
-                end={item.to === '/'}
-              >
-                {item.label}
-              </NavLink>
-            </li>
-          );
-        })}
-      </ul>
+      <button
+        type="button"
+        className={styles.menuToggle}
+        aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
+        aria-expanded={isMenuOpen}
+        aria-controls="primary-menu"
+        onClick={() => setIsMenuOpen((open) => !open)}
+      >
+        <span />
+        <span />
+        <span />
+      </button>
 
-      <div className={styles.actions}>
-        {!user && (
-          <>
-            <Link to="/login" className={styles.loginBtn}>
-              Login
-            </Link>
-            <Link to="/signup" className={styles.signupBtn}>
-              Sign up
-            </Link>
-          </>
-        )}
+      <div id="primary-menu" className={`${styles.menuPanel} ${isMenuOpen ? styles.menuPanelOpen : ''}`}>
+        <ul className={styles.links}>
+          {NAV_ITEMS.map((item) => {
+            const isProductsRoute = item.to === '/orders/new' && location.pathname.startsWith('/orders');
+            return (
+              <li key={item.label}>
+                <NavLink
+                  to={item.to}
+                  className={({ isActive }) =>
+                    `${styles.navLink} ${isActive || isProductsRoute ? styles.navLinkActive : ''}`.trim()
+                  }
+                  end={item.to === '/'}
+                >
+                  {item.label}
+                </NavLink>
+              </li>
+            );
+          })}
+        </ul>
+
+        <div className={styles.actions}>
+          {!user && (
+            <>
+              <Link to="/login" className={styles.loginBtn}>
+                Login
+              </Link>
+              <Link to="/signup" className={styles.signupBtn}>
+                Sign up
+              </Link>
+            </>
+          )}
+        </div>
       </div>
     </nav>
   );

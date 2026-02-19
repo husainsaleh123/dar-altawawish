@@ -34,9 +34,10 @@ export default function HomePage() {
         </label>
 
         <p className={styles.introText}>
-          Find the finest goldsmith materials and gemstones
-          <br />
-          with <strong>Dar Altawawish.</strong>
+          <span className={styles.introLineTop}>Find the finest goldsmith materials and gemstones</span>
+          <span className={styles.introSubline}>
+            with <strong>Dar Altawawish.</strong>
+          </span>
         </p>
 
         <div className={styles.actions}>

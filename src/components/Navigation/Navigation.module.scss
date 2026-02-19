@@ -1,5 +1,5 @@
 .navbar {
-  --nav-bg: #22008f;
+  --nav-bg: #1c0094;
   --nav-text: #ffffff;
 
   position: sticky;
@@ -15,20 +15,42 @@
   min-height: 68px;
   padding: 0.75rem 1.5rem;
   border-radius: 0;
-  background: linear-gradient(135deg, #2d07ac 0%, var(--nav-bg) 60%, #1b0072 100%);
+  background: #1c0094;
+  position: sticky;
+}
+
+.menuPanel {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1.2rem;
+  width: 100%;
+  grid-column: 1 / -1;
+  grid-row: 1;
+  position: relative;
 }
 
 .brand {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
+  justify-self: start;
+  grid-column: 1;
+  grid-row: 1;
   color: var(--nav-text);
   text-decoration: none;
+  position: relative;
+  z-index: 2;
 }
 
-.brandIcon {
-  width: 36px;
-  height: 36px;
+.brandPlaceholder {
+  width: 42px;
+  height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.75rem;
+  line-height: 1;
 }
 
 .links {
@@ -39,6 +61,9 @@
   margin: 0;
   padding: 0;
   list-style: none;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 
   a {
     color: rgba(255, 255, 255, 0.95);
@@ -73,6 +98,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.65rem;
+  justify-content: flex-end;
 }
 
 .loginBtn,
@@ -108,28 +134,115 @@
   opacity: 1;
 }
 
-@media (max-width: 900px) {
+.menuToggle {
+  display: none;
+  width: 42px;
+  height: 42px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 10px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.menuToggle span {
+  display: block;
+  width: 21px;
+  height: 2px;
+  margin: 4px auto;
+  border-radius: 999px;
+  background: #ffffff;
+}
+
+@media (max-width: 768px) {
   .navbar {
-    grid-template-columns: 1fr;
-    justify-items: center;
-    gap: 0.9rem;
-    padding: 1rem;
+    grid-template-columns: 1fr auto;
+    gap: 0.8rem;
+    padding: 0.9rem 1rem;
+    align-items: center;
+    position: sticky;
+  }
+
+  .menuToggle {
+    display: inline-block;
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .brand {
+    grid-column: 1;
+    grid-row: 1;
+    justify-self: start;
+  }
+
+  .menuPanel {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 1001;
+    padding: 0.9rem 1rem 1rem;
+    background: #1c0094;
+    border-top: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 10px 24px rgba(18, 0, 72, 0.35);
+    gap: 0.95rem;
+  }
+
+  .menuPanelOpen {
+    display: grid;
   }
 
   .links {
-    gap: 1.3rem;
-    flex-wrap: wrap;
+    gap: 0.8rem;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    position: static;
+    left: auto;
+    transform: none;
   }
-}
 
-@media (max-width: 480px) {
-  .links a {
-    font-size: 0.95rem;
+  .navLink {
+    width: 100%;
+    justify-content: flex-start;
+    padding: 0.56rem 0.9rem;
+  }
+
+  .actions {
+    justify-content: flex-start;
+    flex-wrap: wrap;
   }
 
   .loginBtn,
   .signupBtn {
-    padding: 0.5rem 1.05rem;
-    font-size: 0.9rem;
+    padding: 0.52rem 1.05rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar {
+    padding: 0.78rem;
+  }
+
+  .menuPanel {
+    padding: 0.78rem 0.78rem 0.95rem;
+  }
+
+  .brandPlaceholder {
+    width: 38px;
+    height: 38px;
+    font-size: 1.5rem;
+  }
+
+  .links a {
+    font-size: 0.98rem;
+  }
+
+  .loginBtn,
+  .signupBtn {
+    padding: 0.5rem 0.95rem;
+    font-size: 0.86rem;
   }
 }

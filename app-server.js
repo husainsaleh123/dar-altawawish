@@ -14,6 +14,7 @@ import userRoutes from "./routes/api/users.js";
 import productRoutes from "./routes/api/products.js";
 import orderRoutes from "./routes/api/orders.js";
 import adminOrdersRoutes from "./routes/api/adminOrders.js";
+import contactRoutes from "./routes/api/contact.js";
 // (optional later) import adminProductsRoutes from "./routes/api/adminProducts.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -40,6 +41,7 @@ app.use(checkToken);
 
 // Public
 app.use("/api/products", productRoutes);
+app.use("/api/contact", contactRoutes);
 
 // Auth / Users
 app.use("/api/users", userRoutes);

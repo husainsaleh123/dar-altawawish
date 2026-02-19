@@ -1,16 +1,172 @@
 .page {
   width: min(100%, 980px);
-  margin: 2rem auto;
-  padding: 1rem 1.2rem;
+  margin: 0 auto;
+  padding: 3.8rem 1.2rem 4.6rem;
   text-align: center;
   color: #151523;
 }
 
-.page h1 {
-  margin: 0 0 0.6rem;
+.header {
+  margin: 1.5rem 0 4rem;
 }
 
-.page p {
+.header h1 {
   margin: 0;
-  font-size: 1.05rem;
+  font-size: clamp(1.8rem, 3vw, 2.7rem);
+  font-weight: 700;
+}
+
+.header p {
+  margin: 0.8rem 0 0;
+  color: #666872;
+  font-size: clamp(1rem, 1.7vw, 1.55rem);
+  font-weight: 500;
+}
+
+.formCard {
+  width: min(100%, 760px);
+  margin: 2.7rem auto 4rem;
+  padding: 2.8rem 2.3rem 2.3rem;
+  border-radius: 24px;
+  background: rgba(0, 56, 204, 0.3);
+}
+
+.contactForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1.35rem;
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.6rem;
+}
+
+.contactForm label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.46rem;
+  margin-top: 0;
+  color: #ffffff;
+  font-size: 1.02rem;
+  font-weight: 600;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.contactForm label i {
+  width: 1rem;
+  text-align: center;
+  font-size: 0.95rem;
+}
+
+.contactForm input,
+.contactForm textarea {
+  width: 100%;
+  margin: 0;
+  padding: 0.95rem 1rem;
+  border: 0;
+  border-radius: 6px;
+  background: #f2f2f2;
+  color: #1d1f2a;
+  font-size: 1rem;
+  font-family: inherit;
+  outline: none;
+}
+
+.contactForm textarea {
+  resize: vertical;
+  min-height: 130px;
+}
+
+.contactForm button {
+  margin: 1rem 0 0;
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: 0;
+  border-radius: 8px;
+  background: #1c0094 !important;
+  color: #ffffff !important;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.sendButton {
+  background: #1c0094 !important;
+  color: #ffffff !important;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 0.58rem;
+}
+
+.sendButton:disabled {
+  opacity: 0.72;
+  cursor: not-allowed;
+}
+
+.sendButton i {
+  font-size: 0.92rem;
+  line-height: 1;
+  transform: translateY(1px);
+}
+
+.successMsg,
+.errorMsg {
+  margin: 0.35rem 0 0;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-align: center;
+}
+
+.successMsg {
+  color: #e6ffed;
+}
+
+.errorMsg {
+  color: #ffe7e7;
+}
+
+@media (max-width: 768px) {
+  .page {
+    padding: 3rem 1rem 3.6rem;
+  }
+
+  .header {
+    margin: 0.8rem 0 2.2rem;
+  }
+
+  .formCard {
+    padding: 2rem 1.4rem 1.5rem;
+    border-radius: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .page {
+    padding: 2.4rem 0.8rem 3.2rem;
+  }
+
+  .header {
+    margin: 0.6rem 0 1.8rem;
+  }
+
+  .header h1 {
+    font-size: 1.55rem;
+  }
+
+  .header p {
+    font-size: 0.95rem;
+  }
+
+  .contactForm label {
+    font-size: 0.92rem;
+  }
+
+  .contactForm input,
+  .contactForm textarea,
+  .contactForm button {
+    font-size: 0.9rem;
+  }
 }
