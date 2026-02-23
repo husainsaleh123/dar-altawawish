@@ -44,44 +44,19 @@
 }
 
 @media (max-width: 960px) {
+  .section {
+    padding-left: 1.4rem;
+    padding-right: 1.4rem;
+  }
+
   .container {
-    grid-template-columns: 1fr;
-    gap: 2rem;
+    grid-template-columns: minmax(0, 1fr) minmax(180px, 230px);
+    grid-template-areas:
+      "heading heading"
+      "text image";
+    align-items: start;
+    gap: 1rem;
   }
-
-  .imagePlaceholder {
-    justify-self: start;
-  }
-}
-
-@media (max-width: 768px) {
-  .content h1 {
-    width: 90%;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  .content p {
-    width: 90%;
-    margin-left: auto;
-    margin-right: auto;
-    line-height: 2.6;
-  }
-
-  .imagePlaceholder {
-    width: 90%;
-    max-width: 320px;
-    justify-self: center;
-  }
-}
-
-@media (max-width: 768px) {
-  .content h1 {
-    margin-top: 2.5rem;
-  }
-}
-
-@media (max-width: 768px) {
 
   .content {
     display: contents;
@@ -89,40 +64,67 @@
 
   .content h1 {
     grid-area: heading;
-    width: 86%;
-    margin-top: 1.2rem;
-    margin-bottom: 0.2rem;
-    margin-left: auto;
-    margin-right: auto;
-    font-size: clamp(2.15rem, 6.4vw, 2.55rem);
-  }
-
-
-  .container {
-    grid-template-areas:
-      "heading"
-      "image"
-      "text";
-    gap: 1.5rem;
-    padding-top: 0.5rem;
-  }
-
-
-  .imagePlaceholder {
-    grid-area: image;
-    justify-self: center;
-    margin-top: 1rem;
-    margin-bottom: 1rem;
   }
 
   .content p {
     grid-area: text;
-    width: 86%;
-    margin-left: auto;
-    margin-right: auto;
-    font-size: clamp(1.1rem, 3.2vw, 1.3rem);
-    line-height: 2.65;
-    margin-top: 0.25rem;
+    text-align: left;
+    font-size: clamp(0.96rem, 1.9vw, 1.12rem);
+    line-height: 2.45;
+  }
+
+  .imagePlaceholder {
+    grid-area: image;
+    width: min(100%, 240px);
+    justify-self: end;
+    margin-top: -1.6rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .section {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .container {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "heading"
+      "image"
+      "text";
+    gap: 1.15rem;
+    padding-top: 0.25rem;
+  }
+
+  .content {
+    display: contents;
+  }
+
+  .content h1 {
+    grid-area: heading;
+    width: 90%;
+    margin: 0 auto 0.4rem;
+    font-size: clamp(2rem, 10.5vw, 2.55rem);
+    line-height: 1.06;
+  }
+
+  .imagePlaceholder {
+    grid-area: image;
+    width: min(100%, 260px);
+    justify-self: center;
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+  }
+
+  .content p {
+    grid-area: text;
+    width: 90%;
+    max-width: none;
+    margin: 0 auto;
+    font-size: clamp(1.02rem, 1.35vw, 1.3rem);
+    line-height: 2.5;
+    text-align: left;
   }
 }
 
@@ -171,6 +173,15 @@
   width: 100%;
   background: #ffffff;
   padding: clamp(2.5rem, 6vw, 4.75rem) 0.65rem;
+}
+
+@media (max-width: 1200px) and (min-width: 769px) {
+  .section,
+  .valuesSection,
+  .coreValuesSection {
+    padding-left: 2.3rem;
+    padding-right: 2.3rem;
+  }
 }
 
 .coreValuesContainer {
@@ -278,5 +289,31 @@
     margin-right: auto;
     grid-template-columns: 1fr;
     overflow-x: visible;
+  }
+}
+
+@media (max-width: 1200px) and (min-width: 769px) {
+  .coreValuesGrid {
+    grid-template-columns: repeat(5, minmax(150px, 1fr));
+    gap: 0.8rem;
+    overflow-x: visible;
+    width: 100%;
+  }
+
+  .valueCard {
+    width: 100%;
+    min-height: 320px;
+    padding: 1.25rem 1rem;
+  }
+}
+
+@media (max-width: 1000px) and (min-width: 769px) {
+  .coreValuesGrid {
+    grid-template-columns: 1fr;
+    overflow-x: visible;
+  }
+
+  .valueCard {
+    min-height: 0;
   }
 }
