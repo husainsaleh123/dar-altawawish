@@ -51,7 +51,7 @@ export default function HomePage() {
         <p className={styles.numbersText}>
           With more than 36 years of knowledge and expertise, we offer tailor-made solutions becoming
           the leading gemstones and jewelry supply in the Gulf and profile Bahrain as the preferred
-          service location for the GCC
+          service location for the GCC.
         </p>
 
         <div className={styles.statsGrid}>
