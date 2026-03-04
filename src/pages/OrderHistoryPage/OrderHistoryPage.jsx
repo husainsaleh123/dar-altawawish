@@ -1,52 +1,78 @@
-// ./src/pages/OrderHistoryPage/OrderHistoryPage.jsx
-
 import styles from './OrderHistoryPage.module.scss';
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import * as ordersAPI from '../../utilities/orders-api';
-import UserLogOut from '../../components/UserLogOut/UserLogOut';
-import OrderList from '../../components/OrderList/OrderList';
-import OrderDetail from '../../components/OrderDetail/OrderDetail';
-import Logo from '../../components/Logo/Logo';
+import { useNavigate } from 'react-router-dom';
 
-export default function OrderHistoryPage({ user, setUser }) {
-  /*--- State --- */
-  const [orders, setOrders] = useState([]);
-  const [activeOrder, setActiveOrder] = useState(null);
+function formatPrice(value) {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'BHD',
+    maximumFractionDigits: 3
+  }).format(Number(value) || 0);
+}
 
-  /*--- Side Effects --- */
-  useEffect(function () {
-    // Load previous orders (paid)
-    async function fetchOrderHistory() {
-      const orders = await ordersAPI.getOrderHistory();
-      setOrders(orders);
-      // If no orders, activeOrder will be set to null below
-      setActiveOrder(orders[0] || null);
-    }
-    fetchOrderHistory();
-  }, []);
+export default function OrderHistoryPage({ cartItems = [], onUpdateQty, onRemoveItem }) {
+  const navigate = useNavigate();
+  const totalPrice = cartItems.reduce((sum, item) => sum + (Number(item.price) || 0) * (item.qty || 0), 0);
 
-  /*--- Event Handlers --- */
-  function handleSelectOrder(order) {
-    setActiveOrder(order);
+  function handleProceedCheckout() {
+    navigate('/checkout/access');
   }
 
-  /*--- Rendered UI --- */
   return (
     <main className={styles.OrderHistoryPage}>
-      <aside className={styles.aside}>
-        <Logo />
-        <Link to="/orders/new" className="button btn-sm">NEW ORDER</Link>
-        <UserLogOut user={user} setUser={setUser} />
-      </aside>
-      <OrderList
-        orders={orders}
-        activeOrder={activeOrder}
-        handleSelectOrder={handleSelectOrder}
-      />
-      <OrderDetail
-        order={activeOrder}
-      />
+      <section className={styles.cartContainer}>
+        <header className={styles.header}>
+          <h1>Your Cart</h1>
+          <p>{cartItems.length ? `${cartItems.length} product(s)` : 'No products in cart yet.'}</p>
+        </header>
+
+        {!cartItems.length && <p className={styles.empty}>Your cart is empty.</p>}
+
+        {cartItems.length > 0 && (
+          <>
+            <div className={styles.list}>
+              {cartItems.map((item) => (
+                <article key={item._id} className={styles.itemRow}>
+                  <div className={styles.imageWrap} aria-hidden="true">
+                    {item.image ? <img src={item.image} alt="" /> : 'Image Placeholder'}
+                  </div>
+
+                  <div className={styles.itemInfo}>
+                    <h2>{item.name}</h2>
+                    <p className={styles.price}>{formatPrice(item.price)}</p>
+                  </div>
+
+                  <div className={styles.qtyControls}>
+                    <button type="button" onClick={() => onUpdateQty?.(item._id, item.qty - 1)}>
+                      −
+                    </button>
+                    <span>{item.qty}</span>
+                    <button type="button" onClick={() => onUpdateQty?.(item._id, item.qty + 1)}>
+                      +
+                    </button>
+                  </div>
+
+                  <div className={styles.itemActions}>
+                    <p>{formatPrice((Number(item.price) || 0) * (item.qty || 0))}</p>
+                    <button type="button" onClick={() => onRemoveItem?.(item._id)}>
+                      Remove
+                    </button>
+                  </div>
+                </article>
+              ))}
+            </div>
+
+            <footer className={styles.totalBar}>
+              <div>
+                <span>Total</span>
+                <strong>{formatPrice(totalPrice)}</strong>
+              </div>
+              <button type="button" className={styles.checkoutCta} onClick={handleProceedCheckout}>
+                Proceed to checkout
+              </button>
+            </footer>
+          </>
+        )}
+      </section>
     </main>
   );
 }

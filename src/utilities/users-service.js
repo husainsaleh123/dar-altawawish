@@ -20,6 +20,16 @@ export async function login(credentials) {
   return response.user;
 }
 
+export async function googleAuth(payload) {
+  const response = await usersAPI.googleAuth(payload);
+  localStorage.setItem('token', response.token);
+  return response.user;
+}
+
+export async function getGoogleConfig() {
+  return usersAPI.getGoogleConfig();
+}
+
 export function getToken() {
   const token = localStorage.getItem('token');
   // getItem will return null if no key

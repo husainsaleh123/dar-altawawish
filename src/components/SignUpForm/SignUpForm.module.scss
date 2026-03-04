@@ -1,0 +1,160 @@
+.registerSection {
+  width: 100%;
+  display: grid;
+  justify-items: center;
+  gap: 1rem;
+  padding: 1.2rem 0 2rem;
+}
+
+.registerCard {
+  width: min(100%, 760px);
+  border: 1px solid #bfc4cc;
+  border-radius: 6px;
+  background: #f4f4f4;
+  padding: clamp(1rem, 2.3vw, 1.8rem);
+}
+
+.registerCard h1 {
+  margin: 0 0 1.25rem;
+  font-size: clamp(2rem, 3.5vw, 2.7rem);
+  color: #182131;
+}
+
+.googleButtonWrap {
+  display: flex;
+  justify-content: center;
+}
+
+.googleButtonWrap > div {
+  width: 100%;
+}
+
+.orText {
+  margin: 1.2rem 0;
+  text-align: center;
+  color: #707781;
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.registerForm {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  color: inherit;
+}
+
+.fieldBlock {
+  display: block;
+}
+
+.fieldBlock label {
+  display: block;
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: #161d2b;
+  line-height: 1.2;
+  margin: 0 0 0.35rem;
+}
+
+.fieldBlock input,
+.fieldBlock select {
+  display: block;
+  width: 100%;
+  min-height: 44px;
+  border: 1px solid #6fb6f0;
+  border-radius: 4px;
+  padding: 0.55rem 0.7rem;
+  background: #f4f4f4;
+  color: #121828;
+  font-size: 1rem;
+}
+
+.fieldBlock input[readonly] {
+  color: #555d6e;
+}
+
+.fieldBlock select {
+  cursor: pointer;
+}
+
+.countrySelectWrap {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.countrySelectWrap select {
+  flex: 1;
+}
+
+.fieldBlock input:focus,
+.fieldBlock select:focus {
+  outline: none;
+  border-color: #1c0094;
+  box-shadow: 0 0 0 2px #1c009422;
+}
+
+.countryPhoneRow {
+  display: grid;
+  gap: 0.9rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.registerButton {
+  margin: 0.9rem 0 1.15rem;
+  border: 0;
+  border-radius: 999px;
+  min-height: 48px;
+  width: 100%;
+  background: #1c0094;
+  color: #fff;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  cursor: pointer;
+}
+
+.registerButton:hover {
+  background: #2f20b9;
+}
+
+.registerButton:disabled {
+  background: #7f75c8;
+  cursor: not-allowed;
+}
+
+.errorText {
+  min-height: 1.2rem;
+  margin: 0.5rem 0 0;
+  color: #b3193f;
+  text-align: center;
+}
+
+.loginPrompt {
+  margin: 0;
+  font-size: 1.05rem;
+  color: #1b1b1f;
+}
+
+.loginPrompt a {
+  color: #1c0094;
+  text-decoration: underline;
+}
+
+@media (max-width: 700px) {
+  .fieldBlock label {
+    font-size: 1rem;
+  }
+
+  .countryPhoneRow {
+    grid-template-columns: 1fr;
+  }
+
+  .countryPhoneRow .fieldBlock {
+    width: 100%;
+  }
+}

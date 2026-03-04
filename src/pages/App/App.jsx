@@ -1,12 +1,13 @@
 // ./src/pages/App/App.jsx
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import styles from './App.module.scss';
 import { getUser } from '../../utilities/users-service';
 import AuthPage from '../AuthPage/AuthPage';
 import NewOrderPage from '../NewOrderPage/NewOrderPage';
 import OrderHistoryPage from '../OrderHistoryPage/OrderHistoryPage';
+import CheckoutAccessPage from '../CheckoutAccessPage/CheckoutAccessPage';
 import Navigation from '../../components/Navigation/Navigation';
 import HomePage from '../HomePage/HomePage';
 import AboutPage from '../AboutPage/AboutPage';
@@ -15,11 +16,62 @@ import Footer from '../../components/Footer/Footer';
 
 export default function App() {
   const [user, setUser] = useState(getUser());
+  const [cartItems, setCartItems] = useState(() => {
+    const saved = localStorage.getItem('cartItems');
+    if (!saved) return [];
+    try {
+      const parsed = JSON.parse(saved);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  });
   const location = useLocation();
+
+  useEffect(() => {
+    localStorage.setItem('cartItems', JSON.stringify(cartItems));
+  }, [cartItems]);
+
+  function handleAddToCart(product) {
+    if (!product?._id) return;
+    setCartItems((prev) => {
+      const existing = prev.find((item) => item._id === product._id);
+      if (existing) {
+        return prev.map((item) =>
+          item._id === product._id ? { ...item, qty: item.qty + 1 } : item
+        );
+      }
+      return [
+        ...prev,
+        {
+          _id: product._id,
+          name: product.name,
+          image: product.image || '',
+          price: Number(product.price) || 0,
+          qty: 1
+        }
+      ];
+    });
+  }
+
+  function handleUpdateCartQty(productId, newQty) {
+    setCartItems((prev) => {
+      if (newQty <= 0) {
+        return prev.filter((item) => item._id !== productId);
+      }
+      return prev.map((item) =>
+        item._id === productId ? { ...item, qty: newQty } : item
+      );
+    });
+  }
+
+  function handleRemoveFromCart(productId) {
+    setCartItems((prev) => prev.filter((item) => item._id !== productId));
+  }
 
   return (
     <main className={styles.App}>
-      <Navigation user={user} />
+      <Navigation cartCount={cartItems.reduce((sum, item) => sum + item.qty, 0)} />
       <div key={location.pathname} className={styles.routeContent}>
         <Routes>
           <Route path="/" element={<HomePage />} />
@@ -27,13 +79,17 @@ export default function App() {
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/login" element={user ? <Navigate to="/" /> : <AuthPage setUser={setUser} initialMode="login" />} />
           <Route path="/signup" element={user ? <Navigate to="/" /> : <AuthPage setUser={setUser} initialMode="signup" />} />
-          <Route
-            path="/orders/new"
-            element={user ? <NewOrderPage user={user} setUser={setUser} /> : <Navigate to="/login" replace />}
-          />
+          <Route path="/orders/new" element={<NewOrderPage onAddToCart={handleAddToCart} />} />
+          <Route path="/checkout/access" element={<CheckoutAccessPage setUser={setUser} user={user} />} />
           <Route
             path="/orders"
-            element={user ? <OrderHistoryPage user={user} setUser={setUser} /> : <Navigate to="/login" replace />}
+            element={
+              <OrderHistoryPage
+                cartItems={cartItems}
+                onUpdateQty={handleUpdateCartQty}
+                onRemoveItem={handleRemoveFromCart}
+              />
+            }
           />
           <Route path="/*" element={<Navigate to="/" />} />
         </Routes>

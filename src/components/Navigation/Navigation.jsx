@@ -1,6 +1,7 @@
 import styles from './Navigation.module.scss';
 import { useEffect, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
+import 'font-awesome/css/font-awesome.min.css';
 
 const NAV_ITEMS = [
   { label: 'Home', to: '/' },
@@ -9,7 +10,7 @@ const NAV_ITEMS = [
   { label: 'Contact', to: '/contact' }
 ];
 
-export default function Navigation({ user }) {
+export default function Navigation({ cartCount = 0 }) {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -57,16 +58,13 @@ export default function Navigation({ user }) {
         </ul>
 
         <div className={styles.actions}>
-          {!user && (
-            <>
-              <Link to="/login" className={styles.loginBtn}>
-                Login
-              </Link>
-              <Link to="/signup" className={styles.signupBtn}>
-                Sign up
-              </Link>
-            </>
-          )}
+          <button type="button" className={styles.languageBtn} aria-label="Current language EN">
+            EN
+          </button>
+          <Link to="/orders" className={styles.cartBtn} aria-label="Cart">
+            <i className="fa fa-shopping-cart" aria-hidden="true" />
+            {cartCount > 0 && <span className={styles.cartCount}>{cartCount}</span>}
+          </Link>
         </div>
       </div>
     </nav>

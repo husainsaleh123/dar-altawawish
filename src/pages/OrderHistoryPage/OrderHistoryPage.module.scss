@@ -1,17 +1,189 @@
 // ./src/pages/OrderHistoryPage/OrderHistoryPage.module.scss
 
 .OrderHistoryPage {
-  height: 100%;
-  display: grid;
-  grid-template-columns: 1.6fr 3.5fr 3fr;
-  grid-template-rows: 1fr;
-  background-color: var(--white);
+  min-height: calc(100vh - 120px);
+  padding: 2rem 1rem 3rem;
+  background-color: #fdfcf1;
   border-radius: 2vmin;
 }
-.OrderHistoryPage .aside {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+
+.cartContainer {
+  width: min(100%, 980px);
+  margin: 0 auto;
+  background: #fff;
+  border: 1px solid #e5e8f2;
+  border-radius: 16px;
+  padding: 1.2rem;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: clamp(1.5rem, 2.4vw, 2.1rem);
+}
+
+.header p {
+  margin: 0.45rem 0 0;
+  color: #5f6680;
+}
+
+.empty {
+  margin: 1rem 0 0;
+  color: #5f6680;
+}
+
+.list {
+  margin-top: 1rem;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.itemRow {
+  display: grid;
+  grid-template-columns: 92px 1fr auto auto;
+  gap: 0.9rem;
   align-items: center;
-  margin: 3vmin 2vmin;
+  border: 1px solid #e8ebf4;
+  border-radius: 12px;
+  padding: 0.7rem;
+}
+
+.imageWrap {
+  width: 92px;
+  aspect-ratio: 1 / 1;
+  border-radius: 10px;
+  background: #ececf0;
+  color: #7a7f8e;
+  display: grid;
+  place-items: center;
+  font-size: 0.72rem;
+  text-align: center;
+  padding: 0.35rem;
+}
+
+.imageWrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+  display: block;
+}
+
+.itemInfo h2 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.price {
+  margin: 0.3rem 0 0;
+  color: #2f3f6b;
+  font-weight: 600;
+}
+
+.qtyControls {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.qtyControls button {
+  width: 30px;
+  height: 30px;
+  border: 0;
+  border-radius: 8px;
+  background: #e7ecfa;
+  color: #24335e;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.qtyControls span {
+  min-width: 22px;
+  text-align: center;
+  font-weight: 700;
+}
+
+.itemActions {
+  text-align: right;
+}
+
+.itemActions p {
+  margin: 0 0 0.4rem;
+  font-weight: 700;
+  color: #1e2b56;
+}
+
+.itemActions button {
+  border: 0;
+  background: transparent;
+  color: #b3193f;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.totalBar {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  border-top: 1px solid #e5e8f2;
+  padding-top: 0.85rem;
+  font-size: 1.05rem;
+}
+
+.totalBar div {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.totalBar strong {
+  color: #1c0094;
+}
+
+.checkoutCta {
+  border: 0;
+  border-radius: 999px;
+  background: #1c0094;
+  color: #fff;
+  min-height: 46px;
+  min-width: 210px;
+  padding: 0 1.1rem;
+  font-size: 0.95rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+}
+
+.checkoutCta:hover {
+  background: #2f20b9;
+}
+
+@media (max-width: 760px) {
+  .itemRow {
+    grid-template-columns: 80px 1fr;
+  }
+
+  .imageWrap {
+    width: 80px;
+  }
+
+  .qtyControls {
+    margin-top: 0.45rem;
+  }
+
+  .itemActions {
+    text-align: left;
+  }
+
+  .totalBar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .checkoutCta {
+    width: 100%;
+    min-width: 0;
+  }
 }

@@ -13,6 +13,14 @@ export default function AuthPage({ setUser, initialMode = 'login' }) {
     setShowLogin(initialMode !== 'signup');
   }, [initialMode]);
 
+  if (initialMode === 'signup') {
+    return (
+      <main className={styles.SignUpPage}>
+        <SignUpForm setUser={setUser} />
+      </main>
+    );
+  }
+
   return (
     <main className={styles.AuthPage}>
       <div>

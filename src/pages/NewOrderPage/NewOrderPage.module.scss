@@ -1,24 +1,381 @@
 // src/pages/NewOrderPage/NewOrderPage.module.scss
 
 .NewOrderPage {
-  height: 100%;
+  min-height: calc(100vh - 120px);
   display: grid;
-  grid-template-columns: 1.6fr 3.5fr 3fr;
-  grid-template-rows: 1fr;
-  background-color: var(--white);
+  place-items: start center;
+  align-content: start;
+  gap: 2.2rem;
+  padding: 2.5rem 1.25rem 3rem;
+  background-color: #fdfcf1;
   border-radius: 2vmin;
-  div {
-    background-color: #fdfcf1;
-    a {
-      background-color: blue;
-    }
+}
+
+.productIntro {
+  text-align: center;
+  max-width: 980px;
+  color: #151523;
+}
+
+.productIntro h1 {
+  margin: 5rem 0 2.5rem;
+  font-size: clamp(2rem, 3.8vw, 3rem);
+  line-height: 1.2;
+}
+
+.productIntro p {
+  margin: 0;
+  font-size: clamp(1rem, 1.8vw, 1.35rem);
+  line-height: 2.2;
+}
+
+.categorySection {
+  width: min(100%, 1100px);
+}
+
+.searchBar {
+  position: relative;
+  width: min(92%, 700px);
+  margin: 0 auto 5rem;
+}
+
+.searchBar input {
+  width: 100%;
+  height: 64px;
+  border: 0;
+  border-radius: 999px;
+  background: #dfdfdf;
+  padding: 0 4.1rem 0 1.5rem;
+  color: #3e3e46;
+  font-size: 1.25rem;
+}
+
+.searchBar input:focus {
+  outline: 3px solid #3020ba55;
+}
+
+.searchBar input::placeholder {
+  color: #87878f;
+}
+
+.searchIcon {
+  position: absolute;
+  top: 50%;
+  right: 1.35rem;
+  transform: translateY(-50%);
+  color: #8f8f95;
+  pointer-events: none;
+}
+
+.searchIcon svg {
+  width: 1.8rem;
+  height: 1.8rem;
+  display: block;
+}
+
+.categoryTabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  justify-content: center;
+  margin-bottom: 1.4rem;
+}
+
+.categoryTab {
+  border: 1px solid #cad3eb;
+  background: #ffffff;
+  color: #1a1a2a;
+  border-radius: 999px;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.activeTab {
+  background: #4569c4;
+  color: #ffffff;
+  border-color: #4569c4;
+}
+
+.productsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.productCard {
+  background: #ffffff;
+  border: 1px solid #e2e7f5;
+  border-radius: 12px;
+  padding: 1rem;
+  cursor: pointer;
+}
+
+.productCard h3 {
+  margin: 0 0 0.65rem;
+  font-size: 1.03rem;
+  line-height: 1.45;
+}
+
+.productCategory {
+  margin: 0 0 0.55rem;
+  color: #4f5f86;
+  font-size: 0.9rem;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+.productPrice {
+  margin: 0 0 0.2rem;
+  color: #1e2b56;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.productImagePlaceholder {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 10px;
+  background: #ececf0;
+  color: #7a7f8e;
+  display: grid;
+  place-items: center;
+  font-size: 0.92rem;
+  margin-bottom: 0.75rem;
+}
+
+.productImagePlaceholder img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+  display: block;
+}
+
+.addToCartButton {
+  margin: 0.95rem auto 0;
+  width: min(100%, 320px);
+  display: block;
+  border: 0;
+  border-radius: 8px;
+  padding: 0.62rem 0.9rem;
+  background: #1c0094;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.statusText {
+  margin: 1rem 0 0;
+  text-align: center;
+  color: #4f556d;
+  font-weight: 500;
+}
+
+.errorText {
+  margin: 1rem 0 0;
+  text-align: center;
+  color: #b3193f;
+  font-weight: 600;
+}
+
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.48);
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  z-index: 1000;
+}
+
+.modalCard {
+  width: min(100%, 560px);
+  background: #fff;
+  border-radius: 14px;
+  padding: 1.2rem 1.1rem;
+}
+
+.modalImagePlaceholder {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 10px;
+  background: #ececf0;
+  color: #7a7f8e;
+  display: grid;
+  place-items: center;
+  font-size: 0.92rem;
+  margin-bottom: 0.85rem;
+}
+
+.modalImagePlaceholder img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+  display: block;
+}
+
+.modalCard h2 {
+  margin: 0 0 0.65rem;
+  font-size: 1.45rem;
+}
+
+.modalMeta {
+  display: grid;
+  gap: 0.2rem;
+  margin-bottom: 0.7rem;
+}
+
+.modalMeta p {
+  margin: 0;
+  color: #24283a;
+}
+
+.inStock {
+  color: #0c7a2b;
+  font-weight: 700;
+}
+
+.outOfStock {
+  color: #b3193f;
+  font-weight: 700;
+}
+
+.modalCard p {
+  margin: 0;
+  line-height: 1.65;
+  color: #35384a;
+}
+
+.closeModalButton {
+  margin-top: 1rem;
+  border: 0;
+  border-radius: 8px;
+  padding: 0.58rem 1rem;
+  background: #1c0094;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.cartSuccessOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.48);
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  z-index: 1100;
+  animation: fadeInOverlay 180ms ease-out;
+}
+
+.cartSuccessCard {
+  width: min(100%, 760px);
+  background: #fff;
+  border-radius: 14px;
+  padding: 2rem 1.8rem;
+  text-align: center;
+  animation: popInCard 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  transform-origin: center;
+}
+
+.cartSuccessCard h2 {
+  margin: 0;
+  color: #1a1a2a;
+  font-size: clamp(1.05rem, 1.8vw, 1.45rem);
+}
+
+.cartSuccessActions {
+  margin-top: 1.15rem;
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.checkoutButton,
+.continueShoppingButton {
+  border: 0;
+  border-radius: 8px;
+  padding: 0.62rem 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 140ms ease, box-shadow 140ms ease, filter 140ms ease;
+}
+
+.checkoutButton:hover,
+.continueShoppingButton:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(11, 19, 43, 0.14);
+}
+
+.checkoutButton:active,
+.continueShoppingButton:active {
+  transform: translateY(0) scale(0.98);
+  filter: brightness(0.97);
+}
+
+.checkoutButton {
+  background: #1c0094;
+  color: #fff;
+}
+
+.continueShoppingButton {
+  background: #e7e9f3;
+  color: #1f284a;
+}
+
+@keyframes fadeInOverlay {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
 
-.NewOrderPage aside {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  margin: 3vmin 2vmin;
+@keyframes popInCard {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 900px) {
+  .productsGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 620px) {
+  .searchBar input {
+    height: 56px;
+    font-size: 1.05rem;
+  }
+
+  .searchIcon svg {
+    width: 1.35rem;
+    height: 1.35rem;
+  }
+
+  .productsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cartSuccessOverlay,
+  .cartSuccessCard {
+    animation: none;
+  }
+
+  .checkoutButton,
+  .continueShoppingButton {
+    transition: none;
+  }
 }
