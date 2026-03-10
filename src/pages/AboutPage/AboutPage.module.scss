@@ -36,10 +36,13 @@
   width: min(100%, 320px);
   aspect-ratio: 0.82;
   justify-self: end;
-  border: 2px solid #1b1b1b;
+  border: 0;
   border-radius: 18px;
   background: transparent;
   object-fit: cover;
+  object-position: center;
+  transform-origin: center;
+  image-rendering: auto;
   display: block;
 }
 

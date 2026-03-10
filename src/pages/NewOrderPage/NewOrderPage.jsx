@@ -7,23 +7,716 @@ const MAIN_CATEGORIES = [
   'All Products',
   'Gemstones',
   'Tools',
+  'Scales',
   'Machines',
   'Minerals',
   'Plastic',
   'Threads'
 ];
 
-const MONEY_COUNTING_MACHINE = {
-  _id: 'money-counting-machine',
-  name: 'Money Counting Machine',
-  category: 'Machines',
-  subcategory: null,
-  description:
-    'A reliable money counting machine for fast and accurate cash handling, built for jewellery counters and daily retail operations.',
-  price: 249.0,
-  image: '',
-  countInStock: 8
-};
+const GEMSTONE_SUBCATEGORIES = [
+  'Turquoise',
+  'Malakite',
+  'Coral',
+  'Eye Stone',
+  'Amber',
+  'Aqeeq',
+  'Glass Stone',
+  'Golden Stone',
+  'Zarcoon',
+  'Black Onyx',
+  'Lapis'
+];
+
+const ALL_GEMSTONES_OPTION = 'All Gemstones';
+const TOOL_SUBCATEGORIES = [
+  'Crucibles',
+  'Cotton Buff',
+  'Sawing Blades',
+  'Soldering Water',
+  'Burners',
+  'Drill Bit',
+  'File',
+  'Brushes',
+  'Gold and silver cleaners',
+  'Others'
+];
+const ALL_TOOLS_OPTION = 'All Tools';
+
+const DEFAULT_GEMSTONE_PRODUCTS = [
+  {
+    _id: 'turquoise-1mm-round',
+    name: 'Turquoise 1 mm round',
+    category: 'Gemstones',
+    subcategory: 'Turquoise',
+    description: 'Gemstone product priced per gram.',
+    price: 2,
+    image: '',
+    countInStock: 0,
+    unit: 'gram'
+  },
+  {
+    _id: 'turquoise-1-5mm-round',
+    name: 'Turquoise 1.5 mm round',
+    category: 'Gemstones',
+    subcategory: 'Turquoise',
+    description: 'Gemstone product priced per gram.',
+    price: 2,
+    image: '',
+    countInStock: 0,
+    unit: 'gram'
+  },
+  {
+    _id: 'turquoise-round-2mm',
+    name: 'Turquoise Round 2mm',
+    category: 'Gemstones',
+    subcategory: 'Turquoise',
+    description: 'Gemstone product priced per gram.',
+    price: 2,
+    image: '',
+    countInStock: 0,
+    unit: 'gram'
+  },
+  {
+    _id: 'turquoise-round-3-5mm',
+    name: 'Turquoise Round 3.5 mm',
+    category: 'Gemstones',
+    subcategory: 'Turquoise',
+    description: 'Gemstone product priced per gram.',
+    price: 1,
+    image: '',
+    countInStock: 0,
+    unit: 'gram'
+  },
+  {
+    _id: 'turquoise-round-5mm',
+    name: 'Turquoise Round 5 mm',
+    category: 'Gemstones',
+    subcategory: 'Turquoise',
+    description: 'Gemstone product priced per gram.',
+    price: 0.5,
+    image: '',
+    countInStock: 0,
+    unit: 'gram'
+  }
+];
+
+const DEFAULT_MACHINE_PRODUCTS = [
+  {
+    _id: 'money-counting-machine',
+    name: 'Cash Counting Machine',
+    category: 'Machines',
+    subcategory: null,
+    description:
+      'A reliable money counting machine for fast and accurate cash handling, built for jewellery counters and daily retail operations.',
+    price: 70,
+    image: '',
+    countInStock: 8
+  },
+  {
+    _id: 'sandplus-machine',
+    name: 'Sandplus machine',
+    category: 'Machines',
+    subcategory: null,
+    description: 'Machine product. Price will be updated.',
+    price: 0,
+    image: '',
+    countInStock: 0
+  },
+  {
+    _id: 'benchgrinder-machine',
+    name: 'Benchgrinder (75mm)',
+    category: 'Machines',
+    subcategory: null,
+    description: 'Machine product. Price will be updated.',
+    price: 12,
+    image: '',
+    countInStock: 0
+  },
+  {
+    _id: 'freedom-machine',
+    name: 'Freedom',
+    category: 'Machines',
+    subcategory: null,
+    description: 'Machine product. Price will be updated.',
+    price: 0,
+    image: '',
+    countInStock: 0
+  },
+  {
+    _id: 'furnace-machine',
+    name: 'Furnace',
+    category: 'Machines',
+    subcategory: null,
+    description: 'Machine product. Price will be updated.',
+    price: 0,
+    image: '',
+    countInStock: 0
+  },
+  {
+    _id: 'ultrasonic-cleaner-12l-large',
+    name: 'Ultrasonic cleaner (12L Large)',
+    category: 'Machines',
+    subcategory: null,
+    description: 'Machine product.',
+    price: 160,
+    image: '',
+    countInStock: 0
+  },
+  {
+    _id: 'ultrasonic-cleaner-5-7l-medium',
+    name: 'Ultrasonic cleaner (5.7L Medium)',
+    category: 'Machines',
+    subcategory: null,
+    description: 'Machine product.',
+    price: 140,
+    image: '',
+    countInStock: 0
+  },
+  {
+    _id: 'sandblast-machine',
+    name: 'Sandblast machine',
+    category: 'Machines',
+    subcategory: null,
+    description: 'Machine product.',
+    price: 130,
+    image: '',
+    countInStock: 0
+  }
+];
+
+const DEFAULT_TOOL_PRODUCTS = [
+  {
+    _id: 'electric-crucible-1kg',
+    name: 'Electric Crucible 1 kg',
+    category: 'Tools',
+    subcategory: 'Crucibles',
+    description: 'Tool product.',
+    price: 5,
+    image: '',
+    countInStock: 0
+  },
+  {
+    _id: 'crucible-no-1',
+    name: 'Crucible No. 1',
+    category: 'Tools',
+    subcategory: 'Crucibles',
+    description: 'Tool product.',
+    price: 1,
+    image: '',
+    countInStock: 0
+  },
+  {
+    _id: 'crucible-no-1-5',
+    name: 'Crucible No. 1.5',
+    category: 'Tools',
+    subcategory: 'Crucibles',
+    description: 'Tool product.',
+    price: 1.5,
+    image: '',
+    countInStock: 0
+  },
+  {
+    _id: 'crucible-no-2',
+    name: 'Crucible No. 2',
+    category: 'Tools',
+    subcategory: 'Crucibles',
+    description: 'Tool product.',
+    price: 2,
+    image: '',
+    countInStock: 0
+  },
+  {
+    _id: 'crucible-no-3',
+    name: 'Crucible No. 3',
+    category: 'Tools',
+    subcategory: 'Crucibles',
+    description: 'Tool product.',
+    price: 2,
+    image: '',
+    countInStock: 0
+  },
+  {
+    _id: 'crucible-no-4',
+    name: 'Crucible No. 4',
+    category: 'Tools',
+    subcategory: 'Crucibles',
+    description: 'Tool product.',
+    price: 2.5,
+    image: '',
+    countInStock: 0
+  },
+  {
+    _id: 'crucible-no-5',
+    name: 'Crucible No. 5',
+    category: 'Tools',
+    subcategory: 'Crucibles',
+    description: 'Tool product.',
+    price: 3,
+    image: '',
+    countInStock: 0
+  },
+  {
+    _id: 'yellow-cotton-buff-medium-6x50',
+    name: 'Yellow cotton buff (medium) (6x50)',
+    category: 'Tools',
+    subcategory: 'Cotton Buff',
+    description: 'Tool product.',
+    price: 1.5,
+    image: '',
+    countInStock: 0
+  },
+  {
+    _id: 'yellow-cotton-buff-small-3x50',
+    name: 'Yellow cotton buff (small) (3x50)',
+    category: 'Tools',
+    subcategory: 'Cotton Buff',
+    description: 'Tool product.',
+    price: 1,
+    image: '',
+    countInStock: 0
+  },
+  {
+    _id: 'white-cotton-buff-medium-6x50',
+    name: 'White cotton buff (medium) (6x50)',
+    category: 'Tools',
+    subcategory: 'Cotton Buff',
+    description: 'Tool product.',
+    price: 1.5,
+    image: '',
+    countInStock: 0
+  },
+  {
+    _id: 'white-cotton-buff-3x50',
+    name: 'White cotton buff (3x50)',
+    category: 'Tools',
+    subcategory: 'Cotton Buff',
+    description: 'Tool product.',
+    price: 1,
+    image: '',
+    countInStock: 0
+  },
+  {
+    _id: 'sawing-blade-2-0',
+    name: 'Sawing Blade 2.0',
+    category: 'Tools',
+    subcategory: 'Sawing Blades',
+    description: 'Tool product.',
+    price: 1,
+    image: '',
+    countInStock: 0
+  },
+  {
+    _id: 'sawing-blade-3-0',
+    name: 'Sawing Blade 3.0',
+    category: 'Tools',
+    subcategory: 'Sawing Blades',
+    description: 'Tool product.',
+    price: 1,
+    image: '',
+    countInStock: 0
+  },
+  {
+    _id: 'sawing-blade-6-0',
+    name: 'Sawing Blade 6.0',
+    category: 'Tools',
+    subcategory: 'Sawing Blades',
+    description: 'Tool product.',
+    price: 1,
+    image: '',
+    countInStock: 0
+  },
+  {
+    _id: 'soldering-water-200-ml',
+    name: 'Soldering Water (200 ML)',
+    category: 'Tools',
+    subcategory: 'Soldering Water',
+    description: 'Tool product.',
+    price: 0.8,
+    image: '',
+    countInStock: 0
+  },
+  {
+    _id: 'soldering-water-400-ml',
+    name: 'Soldering Water (400 ML)',
+    category: 'Tools',
+    subcategory: 'Soldering Water',
+    description: 'Tool product.',
+    price: 1,
+    image: '',
+    countInStock: 0
+  },
+  {
+    _id: 'soldering-water-1-ml',
+    name: 'Soldering Water (1 ML)',
+    category: 'Tools',
+    subcategory: 'Soldering Water',
+    description: 'Tool product.',
+    price: 2.5,
+    image: '',
+    countInStock: 0
+  },
+  {
+    _id: 'swaraj-gas-burner-0',
+    name: 'Swaraj Gas Burner 0',
+    category: 'Tools',
+    subcategory: 'Burners',
+    description: 'Tool product.',
+    price: 2,
+    image: '',
+    countInStock: 0
+  },
+  {
+    _id: 'swaraj-gas-burner-3938',
+    name: 'Swaraj Gas Burner 3938',
+    category: 'Tools',
+    subcategory: 'Burners',
+    description: 'Tool product.',
+    price: 2,
+    image: '',
+    countInStock: 0
+  },
+  {
+    _id: 'swaraj-gas-burner-3940',
+    name: 'Swaraj Gas Burner 3940',
+    category: 'Tools',
+    subcategory: 'Burners',
+    description: 'Tool product.',
+    price: 2.5,
+    image: '',
+    countInStock: 0
+  },
+  {
+    _id: 'swaraj-gas-burner-2942',
+    name: 'Swaraj Gas Burner 2942',
+    category: 'Tools',
+    subcategory: 'Burners',
+    description: 'Tool product.',
+    price: 5,
+    image: '',
+    countInStock: 0
+  },
+  {
+    _id: 'sievert-gas-burner-2941',
+    name: 'Sievert Gas Burner 2941',
+    category: 'Tools',
+    subcategory: 'Burners',
+    description: 'Tool product.',
+    price: 8,
+    image: '',
+    countInStock: 0
+  },
+  {
+    _id: 'gemka-burner-3938',
+    name: 'Gemka Burner 3938',
+    category: 'Tools',
+    subcategory: 'Burners',
+    description: 'Tool product.',
+    price: 2,
+    image: '',
+    countInStock: 0
+  },
+  {
+    _id: 'gemka-burner-3939',
+    name: 'Gemka Burner 3939',
+    category: 'Tools',
+    subcategory: 'Burners',
+    description: 'Tool product.',
+    price: 3,
+    image: '',
+    countInStock: 0
+  },
+  {
+    _id: 'gemka-burner-2940',
+    name: 'Gemka Burner 2940',
+    category: 'Tools',
+    subcategory: 'Burners',
+    description: 'Tool product.',
+    price: 3,
+    image: '',
+    countInStock: 0
+  },
+  {
+    _id: 'gemka-burner-2943',
+    name: 'Gemka Burner 2943',
+    category: 'Tools',
+    subcategory: 'Burners',
+    description: 'Tool product.',
+    price: 5,
+    image: '',
+    countInStock: 0
+  },
+  {
+    _id: 'wheel-brush-black',
+    name: 'Wheel brush black',
+    category: 'Tools',
+    subcategory: 'Brushes',
+    description: 'Tool product.',
+    price: 0.4,
+    image: '',
+    countInStock: 0
+  },
+  {
+    _id: 'right-brush-coarse-angled-brass-wire-brush',
+    name: 'Right brush (coarse / angled brass wire brush)',
+    category: 'Tools',
+    subcategory: 'Brushes',
+    description: 'Tool product.',
+    price: 0.5,
+    image: '',
+    countInStock: 0
+  },
+  {
+    _id: 'middle-brush-medium-brass-wire-brush',
+    name: 'Middle brush (medium brass wire brush)',
+    category: 'Tools',
+    subcategory: 'Brushes',
+    description: 'Tool product.',
+    price: 0.6,
+    image: '',
+    countInStock: 0
+  },
+  {
+    _id: 'larger-brush-dense-brass-wire-brush',
+    name: 'Larger brush (dense brass wire brush)',
+    category: 'Tools',
+    subcategory: 'Brushes',
+    description: 'Tool product.',
+    price: 0.8,
+    image: '',
+    countInStock: 0
+  },
+  {
+    _id: 'magnetic-pen-1kg',
+    name: 'Magnetic Pen (1 kg)',
+    category: 'Tools',
+    subcategory: 'Others',
+    description: 'Tool product.',
+    price: 18,
+    image: '',
+    countInStock: 0
+  },
+  {
+    _id: 'stamp-21',
+    name: 'Stamp 21',
+    category: 'Tools',
+    subcategory: 'Others',
+    description: 'Tool product.',
+    price: 2,
+    image: '',
+    countInStock: 0
+  },
+  {
+    _id: 'tar',
+    name: 'Tar',
+    category: 'Tools',
+    subcategory: 'Others',
+    description: '0.3 BD per one (0.25 BD if more).',
+    price: 0.3,
+    image: '',
+    countInStock: 0
+  },
+  {
+    _id: 'casting-sand-1kg',
+    name: 'Casting Sand (1 kg)',
+    category: 'Tools',
+    subcategory: 'Others',
+    description: 'Tool product.',
+    price: 1.5,
+    image: '',
+    countInStock: 0
+  },
+  {
+    _id: 'screw-plate',
+    name: 'Screw Plate',
+    category: 'Tools',
+    subcategory: 'Others',
+    description: 'Tool product.',
+    price: 1,
+    image: '',
+    countInStock: 0
+  },
+  {
+    _id: 'castaldo-spray',
+    name: 'Castaldo Spray',
+    category: 'Tools',
+    subcategory: 'Others',
+    description: 'Tool product.',
+    price: 5,
+    image: '',
+    countInStock: 0
+  },
+  {
+    _id: 'ring-stick',
+    name: 'Ring Stick',
+    category: 'Tools',
+    subcategory: 'Others',
+    description: 'Tool product.',
+    price: 3,
+    image: '',
+    countInStock: 0
+  },
+  {
+    _id: 'red-black-polish',
+    name: 'Red/black polish',
+    category: 'Tools',
+    subcategory: 'Others',
+    description: 'Tool product.',
+    price: 2,
+    image: '',
+    countInStock: 0
+  },
+  {
+    _id: 'sobre-urdu-shovel',
+    name: 'Sobre (Urdu)/Shovel',
+    category: 'Tools',
+    subcategory: 'Others',
+    description: 'Tool product.',
+    price: 0.5,
+    image: '',
+    countInStock: 0
+  },
+  {
+    _id: 'wax',
+    name: 'Wax',
+    category: 'Tools',
+    subcategory: 'Others',
+    description: 'Tool product.',
+    price: 5,
+    image: '',
+    countInStock: 0
+  },
+  {
+    _id: 'araldite-glue',
+    name: 'Araldite Glue',
+    category: 'Tools',
+    subcategory: 'Others',
+    description: 'Tool product.',
+    price: 1.5,
+    image: '',
+    countInStock: 0
+  },
+  {
+    _id: 'net-mesh-jalee-indian',
+    name: 'Net/Mesh (Jalee in Indian)',
+    category: 'Tools',
+    subcategory: 'Others',
+    description: 'Tool product.',
+    price: 0.5,
+    image: '',
+    countInStock: 0
+  },
+  {
+    _id: 'gold-jewelry-polishing-cloth',
+    name: 'Gold Jewelry Polishing Cloth',
+    category: 'Tools',
+    subcategory: 'Gold and silver cleaners',
+    description: 'Tool product.',
+    price: 2,
+    image: '',
+    countInStock: 0
+  },
+  {
+    _id: 'silver-jewelry-polishing-cloth',
+    name: 'Silver Jewelry Polishing Cloth',
+    category: 'Tools',
+    subcategory: 'Gold and silver cleaners',
+    description: 'Tool product.',
+    price: 2,
+    image: '',
+    countInStock: 0
+  },
+  {
+    _id: 'goldbad-liquid-gold-cleaning',
+    name: 'Goldbad Liquid Gold Cleaning',
+    category: 'Tools',
+    subcategory: 'Gold and silver cleaners',
+    description: 'Tool product.',
+    price: 3,
+    image: '',
+    countInStock: 0
+  },
+  {
+    _id: 'silver-jewelry-cleaner-liquid',
+    name: 'Silver Jewelry Cleaner Liquid',
+    category: 'Tools',
+    subcategory: 'Gold and silver cleaners',
+    description: 'Tool product.',
+    price: 3,
+    image: '',
+    countInStock: 0
+  },
+  {
+    _id: 'electronic-scale-100g',
+    name: 'Electronic scale 100g',
+    category: 'Scales',
+    subcategory: null,
+    description: 'Scale product.',
+    price: 10,
+    image: '',
+    countInStock: 0
+  }
+];
+
+const DEFAULT_MINERAL_PRODUCTS = [
+  {
+    _id: 'brass-cube-1kg',
+    name: 'Brass cube (1 kg)',
+    category: 'Minerals',
+    subcategory: null,
+    description: 'Mineral product.',
+    price: 10,
+    image: '',
+    countInStock: 0
+  },
+  {
+    _id: 'copper-1kg',
+    name: 'Copper (1 kg)',
+    category: 'Minerals',
+    subcategory: null,
+    description: 'Mineral product.',
+    price: 12,
+    image: '',
+    countInStock: 0
+  },
+  {
+    _id: 'zinc-1kg',
+    name: 'Zinc (1 kg)',
+    category: 'Minerals',
+    subcategory: null,
+    description: 'Mineral product.',
+    price: 22,
+    image: '',
+    countInStock: 0
+  },
+  {
+    _id: 'auruna-264-100ml',
+    name: 'Auruna 264 (100ml)',
+    category: 'Minerals',
+    subcategory: null,
+    description: 'Mineral product.',
+    price: 120,
+    image: '',
+    countInStock: 0
+  },
+  {
+    _id: 'rhoduna-275-black-100ml',
+    name: 'Rhoduna 275 Black (100ml)',
+    category: 'Minerals',
+    subcategory: null,
+    description: 'Mineral product.',
+    price: 350,
+    image: '',
+    countInStock: 0
+  }
+];
+
+const DEFAULT_PRODUCTS = [
+  ...DEFAULT_MACHINE_PRODUCTS,
+  ...DEFAULT_TOOL_PRODUCTS,
+  ...DEFAULT_GEMSTONE_PRODUCTS,
+  ...DEFAULT_MINERAL_PRODUCTS
+];
 
 function inferMainCategory(product) {
   const source = [
@@ -36,13 +729,67 @@ function inferMainCategory(product) {
     .join(' ')
     .toLowerCase();
 
-  if (source.includes('gem')) return 'Gemstones';
+  if (
+    /\bgem(stone|stones)?\b/.test(source) ||
+    GEMSTONE_SUBCATEGORIES.some((subcategory) => source.includes(subcategory.toLowerCase()))
+  ) {
+    return 'Gemstones';
+  }
+  if (source.includes('scale')) return 'Scales';
   if (source.includes('tool') || source.includes('crucible') || source.includes('file') || source.includes('solder')) return 'Tools';
-  if (source.includes('machine') || source.includes('scale')) return 'Machines';
+  if (source.includes('machine')) return 'Machines';
   if (source.includes('mineral')) return 'Minerals';
   if (source.includes('plastic')) return 'Plastic';
   if (source.includes('thread')) return 'Threads';
   return null;
+}
+
+function inferGemstoneSubcategory(product) {
+  const directSubcategory = String(product?.subcategory || '').trim();
+  if (directSubcategory) {
+    const matched = GEMSTONE_SUBCATEGORIES.find(
+      (subcategory) => subcategory.toLowerCase() === directSubcategory.toLowerCase()
+    );
+    if (matched) return matched;
+  }
+
+  const source = [product?.name, product?.description, product?.subcategory]
+    .filter(Boolean)
+    .join(' ')
+    .toLowerCase();
+
+  return (
+    GEMSTONE_SUBCATEGORIES.find((subcategory) => source.includes(subcategory.toLowerCase())) || null
+  );
+}
+
+function inferToolSubcategory(product) {
+  const directSubcategory = String(product?.subcategory || '').trim();
+  if (directSubcategory) {
+    const matched = TOOL_SUBCATEGORIES.find(
+      (subcategory) => subcategory.toLowerCase() === directSubcategory.toLowerCase()
+    );
+    if (matched) return matched;
+  }
+
+  const source = [product?.name, product?.description, product?.subcategory]
+    .filter(Boolean)
+    .join(' ')
+    .toLowerCase();
+
+  if (source.includes('crucible')) return 'Crucibles';
+  if (source.includes('buff')) return 'Cotton Buff';
+  if (source.includes('saw') || source.includes('blade')) return 'Sawing Blades';
+  if (source.includes('soldering water') || source.includes('flux')) return 'Soldering Water';
+  if (source.includes('burner') || source.includes('torch')) return 'Burners';
+  if (source.includes('drill bit') || (source.includes('drill') && source.includes('bit'))) return 'Drill Bit';
+  if (/\bfile\b/.test(source)) return 'File';
+  if (source.includes('brush')) return 'Brushes';
+  if (source.includes('scale')) return 'Scales';
+  if (source.includes('cleaner') || (source.includes('gold') && source.includes('silver') && source.includes('clean'))) {
+    return 'Gold and silver cleaners';
+  }
+  return 'Others';
 }
 
 function formatPrice(value) {
@@ -58,7 +805,14 @@ export default function NewOrderPage({ onAddToCart }) {
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [activeCategory, setActiveCategory] = useState('All Products');
+  const [activeGemstoneSubcategory, setActiveGemstoneSubcategory] = useState(ALL_GEMSTONES_OPTION);
+  const [activeToolSubcategory, setActiveToolSubcategory] = useState(ALL_TOOLS_OPTION);
+  const [sortBy, setSortBy] = useState('latest');
   const [searchTerm, setSearchTerm] = useState('');
+  const [gemstoneModalProduct, setGemstoneModalProduct] = useState(null);
+  const [gemstoneModalGrams, setGemstoneModalGrams] = useState('1');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(16);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [addedProductName, setAddedProductName] = useState('');
   const [loading, setLoading] = useState(true);
@@ -83,10 +837,17 @@ export default function NewOrderPage({ onAddToCart }) {
 
   const categorizedProducts = useMemo(
     () => {
-      const hasMoneyCountingMachine = products.some(
-        (product) => String(product?.name || '').toLowerCase() === 'money counting machine'
+      const existingProductKeys = new Set(
+        products.map((product) => {
+          const name = String(product?.name || '').toLowerCase().trim();
+          const mainCategory = inferMainCategory(product) || '';
+          return `${name}|${mainCategory}`;
+        })
       );
-      const list = hasMoneyCountingMachine ? products : [MONEY_COUNTING_MACHINE, ...products];
+      const missingDefaults = DEFAULT_PRODUCTS.filter(
+        (product) => !existingProductKeys.has(`${product.name.toLowerCase()}|${inferMainCategory(product) || ''}`)
+      );
+      const list = missingDefaults.length > 0 ? [...missingDefaults, ...products] : products;
       return list.map((product) => ({
         ...product,
         mainCategory: inferMainCategory(product)
@@ -100,22 +861,170 @@ export default function NewOrderPage({ onAddToCart }) {
     return categorizedProducts.filter((product) => product.mainCategory === activeCategory);
   }, [activeCategory, categorizedProducts]);
 
+  const subcategoryFilteredProducts = useMemo(() => {
+    if (activeCategory === 'Gemstones' && activeGemstoneSubcategory !== ALL_GEMSTONES_OPTION) {
+      return categoryFilteredProducts.filter(
+        (product) => inferGemstoneSubcategory(product) === activeGemstoneSubcategory
+      );
+    }
+    if (activeCategory === 'Tools' && activeToolSubcategory !== ALL_TOOLS_OPTION) {
+      return categoryFilteredProducts.filter(
+        (product) => inferToolSubcategory(product) === activeToolSubcategory
+      );
+    }
+    return categoryFilteredProducts;
+  }, [activeCategory, activeGemstoneSubcategory, activeToolSubcategory, categoryFilteredProducts]);
+
   const filteredProducts = useMemo(() => {
     const query = searchTerm.trim().toLowerCase();
-    if (!query) return categoryFilteredProducts;
+    if (!query) return subcategoryFilteredProducts;
 
-    return categoryFilteredProducts.filter((product) => {
+    return subcategoryFilteredProducts.filter((product) => {
       const haystack = [product.name, product.description, product.category, product.subcategory]
         .filter(Boolean)
         .join(' ')
         .toLowerCase();
       return haystack.includes(query);
     });
-  }, [categoryFilteredProducts, searchTerm]);
+  }, [subcategoryFilteredProducts, searchTerm]);
+
+  const sortedProducts = useMemo(() => {
+    const list = [...filteredProducts];
+
+    const getTimestamp = (product) => {
+      const value = product?.createdAt || product?.updatedAt;
+      const time = value ? new Date(value).getTime() : NaN;
+      return Number.isFinite(time) ? time : 0;
+    };
+
+    const getPrice = (product) => {
+      const price = Number(product?.price);
+      return Number.isFinite(price) ? price : 0;
+    };
+
+    switch (sortBy) {
+      case 'oldest':
+        return list.sort((a, b) => getTimestamp(a) - getTimestamp(b));
+      case 'price-low-high':
+        return list.sort((a, b) => getPrice(a) - getPrice(b));
+      case 'price-high-low':
+        return list.sort((a, b) => getPrice(b) - getPrice(a));
+      case 'latest':
+      default:
+        return list.sort((a, b) => getTimestamp(b) - getTimestamp(a));
+    }
+  }, [filteredProducts, sortBy]);
+
+  const categoryCounts = useMemo(
+    () =>
+      MAIN_CATEGORIES.reduce((acc, category) => {
+        acc[category] =
+          category === 'All Products'
+            ? categorizedProducts.length
+            : categorizedProducts.filter((product) => product.mainCategory === category).length;
+        return acc;
+      }, {}),
+    [categorizedProducts]
+  );
+
+  const gemstoneSubcategoryCounts = useMemo(
+    () =>
+      GEMSTONE_SUBCATEGORIES.reduce((acc, subcategory) => {
+        acc[subcategory] = categorizedProducts.filter(
+          (product) =>
+            product.mainCategory === 'Gemstones' && inferGemstoneSubcategory(product) === subcategory
+        ).length;
+        return acc;
+      }, {}),
+    [categorizedProducts]
+  );
+
+  const toolSubcategoryCounts = useMemo(
+    () =>
+      TOOL_SUBCATEGORIES.reduce((acc, subcategory) => {
+        acc[subcategory] = categorizedProducts.filter(
+          (product) => product.mainCategory === 'Tools' && inferToolSubcategory(product) === subcategory
+        ).length;
+        return acc;
+      }, {}),
+    [categorizedProducts]
+  );
+
+  useEffect(() => {
+    if (activeCategory !== 'Gemstones') {
+      setActiveGemstoneSubcategory(ALL_GEMSTONES_OPTION);
+    }
+    if (activeCategory !== 'Tools') {
+      setActiveToolSubcategory(ALL_TOOLS_OPTION);
+    }
+  }, [activeCategory]);
+
+  useEffect(() => {
+    const resolveItemsPerPage = () => {
+      if (window.innerWidth <= 620) return 6;
+      if (window.innerWidth <= 1200) return 9;
+      return 16;
+    };
+
+    const handleResize = () => {
+      setItemsPerPage(resolveItemsPerPage());
+    };
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [activeCategory, activeGemstoneSubcategory, activeToolSubcategory, sortBy, searchTerm, itemsPerPage]);
+
+  const totalPages = Math.max(1, Math.ceil(sortedProducts.length / itemsPerPage));
+  const currentPageSafe = Math.min(currentPage, totalPages);
+  const paginatedProducts = useMemo(() => {
+    const startIndex = (currentPageSafe - 1) * itemsPerPage;
+    return sortedProducts.slice(startIndex, startIndex + itemsPerPage);
+  }, [currentPageSafe, itemsPerPage, sortedProducts]);
 
   function handleAddToCart(product) {
-    onAddToCart?.(product);
-    setAddedProductName(product?.name || 'Product');
+    if (!product) return;
+    const isGemstone = product.mainCategory === 'Gemstones';
+
+    if (!isGemstone) {
+      onAddToCart?.(product);
+      setAddedProductName(product?.name || 'Product');
+      return;
+    }
+
+    setGemstoneModalProduct(product);
+    setGemstoneModalGrams('1');
+  }
+
+  function closeGemstoneModal() {
+    setGemstoneModalProduct(null);
+    setGemstoneModalGrams('1');
+  }
+
+  function handleConfirmGemstoneAddToCart() {
+    if (!gemstoneModalProduct) return;
+
+    const parsed = Number(gemstoneModalGrams);
+    const safeGrams = Number.isFinite(parsed) && parsed > 0 ? parsed : 1;
+    const grams = Math.round(Math.max(0.1, safeGrams) * 10) / 10;
+    const pricePerGram = Number(gemstoneModalProduct.price) || 0;
+    const computedPrice = Math.round(pricePerGram * grams * 1000) / 1000;
+    const gramsLabel = Number.isInteger(grams) ? String(grams) : grams.toFixed(1).replace(/\.0$/, '');
+
+    onAddToCart?.({
+      ...gemstoneModalProduct,
+      _id: `${gemstoneModalProduct._id}__${gramsLabel}g`,
+      name: `${gemstoneModalProduct.name} (${gramsLabel} g)`,
+      price: computedPrice,
+      pricePerGram,
+      grams
+    });
+    setAddedProductName(`${gemstoneModalProduct.name} (${gramsLabel} g)`);
+    closeGemstoneModal();
   }
 
   function handleCheckout() {
@@ -156,65 +1065,227 @@ export default function NewOrderPage({ onAddToCart }) {
           </span>
         </div>
 
-        <div className={styles.categoryTabs}>
-          {MAIN_CATEGORIES.map((category) => (
-            <button
-              key={category}
-              type="button"
-              onClick={() => setActiveCategory(category)}
-              className={`${styles.categoryTab} ${activeCategory === category ? styles.activeTab : ''}`}
-            >
-              {category}
-            </button>
-          ))}
-        </div>
-
-        {loading && <p className={styles.statusText}>Loading products...</p>}
-        {error && !loading && <p className={styles.errorText}>{error}</p>}
-
-        {!loading && !error && (
-          <>
-            <div className={styles.productsGrid}>
-              {filteredProducts.map((product) => (
-                <article
-                  key={product._id}
-                  className={styles.productCard}
-                  onClick={() => setSelectedProduct(product)}
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
-                      setSelectedProduct(product);
-                    }
-                  }}
-                >
-                  <div className={styles.productImagePlaceholder} aria-hidden="true">
-                    {product.image ? <img src={product.image} alt="" /> : 'Image Placeholder'}
-                  </div>
-                  <h3>{product.name}</h3>
-                  <p className={styles.productCategory}>{product.mainCategory || 'Uncategorized'}</p>
-                  <p className={styles.productPrice}>{formatPrice(product.price)}</p>
+        <div className={styles.catalogLayout}>
+          <aside className={styles.categorySidebar} aria-label="Product categories">
+            <h2>Categories</h2>
+            <label className={styles.mobileCategorySelectWrap}>
+              <span className={styles.mobileCategorySelectLabel}>Choose category</span>
+              <select
+                value={activeCategory}
+                onChange={(e) => setActiveCategory(e.target.value)}
+                className={styles.mobileCategorySelect}
+                aria-label="Choose product category"
+              >
+                {MAIN_CATEGORIES.map((category) => (
+                  <option key={category} value={category}>
+                    {category} ({categoryCounts[category] || 0})
+                  </option>
+                ))}
+              </select>
+            </label>
+            <ul>
+              {MAIN_CATEGORIES.map((category) => (
+                <li key={category}>
                   <button
                     type="button"
-                    className={styles.addToCartButton}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleAddToCart(product);
-                    }}
+                    onClick={() => setActiveCategory(category)}
+                    className={activeCategory === category ? styles.activeCategoryButton : ''}
                   >
-                    Add to Cart
+                    <span>{category}</span>
+                    <span>{categoryCounts[category] || 0}</span>
                   </button>
-                </article>
+                </li>
               ))}
-            </div>
+            </ul>
+          </aside>
 
-            {filteredProducts.length === 0 && (
-              <p className={styles.statusText}>No products found in this category.</p>
+          <div className={styles.productsPanel}>
+            {loading && <p className={styles.statusText}>Loading products...</p>}
+            {error && !loading && <p className={styles.errorText}>{error}</p>}
+
+            {!loading && !error && (
+              <>
+                <div className={styles.productsToolbar}>
+                  <h2>{activeCategory}</h2>
+                  <div className={styles.toolbarControls}>
+                    {(activeCategory === 'Gemstones' || activeCategory === 'Tools') && (
+                      <label className={styles.sortControl}>
+                        <span>Sub-category</span>
+                        <select
+                          value={
+                            activeCategory === 'Gemstones'
+                              ? activeGemstoneSubcategory
+                              : activeToolSubcategory
+                          }
+                          onChange={(e) => {
+                            if (activeCategory === 'Gemstones') {
+                              setActiveGemstoneSubcategory(e.target.value);
+                            } else {
+                              setActiveToolSubcategory(e.target.value);
+                            }
+                          }}
+                          className={styles.sortSelect}
+                        >
+                          {activeCategory === 'Gemstones' ? (
+                            <>
+                              <option value={ALL_GEMSTONES_OPTION}>{ALL_GEMSTONES_OPTION}</option>
+                              {GEMSTONE_SUBCATEGORIES.map((subcategory) => (
+                                <option key={subcategory} value={subcategory}>
+                                  {subcategory} ({gemstoneSubcategoryCounts[subcategory] || 0})
+                                </option>
+                              ))}
+                            </>
+                          ) : (
+                            <>
+                              <option value={ALL_TOOLS_OPTION}>{ALL_TOOLS_OPTION}</option>
+                              {TOOL_SUBCATEGORIES.map((subcategory) => (
+                                <option key={subcategory} value={subcategory}>
+                                  {subcategory} ({toolSubcategoryCounts[subcategory] || 0})
+                                </option>
+                              ))}
+                            </>
+                          )}
+                        </select>
+                      </label>
+                    )}
+                    <label className={styles.sortControl}>
+                      <span>Sort</span>
+                      <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className={styles.sortSelect}>
+                        <option value="latest">Latest items</option>
+                        <option value="oldest">Oldest items</option>
+                        <option value="price-low-high">Price: Lowest to Highest</option>
+                        <option value="price-high-low">Price: Highest to Lowest</option>
+                      </select>
+                    </label>
+                  </div>
+                </div>
+
+                <div className={styles.productsGrid}>
+                  {paginatedProducts.map((product) => {
+                    const isGemstone = product.mainCategory === 'Gemstones';
+                    const pricePerGram = Number(product.price) || 0;
+                    return (
+                    <article
+                      key={product._id}
+                      className={styles.productCard}
+                      onClick={() => setSelectedProduct(product)}
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          setSelectedProduct(product);
+                        }
+                      }}
+                    >
+                      <div className={styles.productImagePlaceholder} aria-hidden="true">
+                        {product.image ? <img src={product.image} alt="" /> : 'Image Placeholder'}
+                      </div>
+                      <h3>{product.name}</h3>
+                      <p className={styles.productCategory}>
+                        {product.mainCategory === 'Gemstones' && inferGemstoneSubcategory(product)
+                          ? `${product.mainCategory} - ${inferGemstoneSubcategory(product)}`
+                          : product.mainCategory === 'Tools' && inferToolSubcategory(product)
+                            ? `${product.mainCategory} - ${inferToolSubcategory(product)}`
+                          : product.mainCategory || 'Uncategorized'}
+                      </p>
+                      <p className={styles.productPrice}>
+                        {isGemstone ? `${formatPrice(pricePerGram)} / g` : formatPrice(product.price)}
+                      </p>
+                      <button
+                        type="button"
+                        className={styles.addToCartButton}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleAddToCart(product);
+                        }}
+                      >
+                        Add to Cart
+                      </button>
+                    </article>
+                    );
+                  })}
+                </div>
+
+                {sortedProducts.length > itemsPerPage && (
+                  <div className={styles.pagination}>
+                    <button
+                      type="button"
+                      className={styles.pageButton}
+                      onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
+                      disabled={currentPageSafe === 1}
+                    >
+                      Previous
+                    </button>
+                    <span className={styles.pageInfo}>
+                      Page {currentPageSafe} of {totalPages}
+                    </span>
+                    <button
+                      type="button"
+                      className={styles.pageButton}
+                      onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))}
+                      disabled={currentPageSafe === totalPages}
+                    >
+                      Next
+                    </button>
+                  </div>
+                )}
+
+                {sortedProducts.length === 0 && (
+                  <p className={styles.statusText}>No products found in this category.</p>
+                )}
+              </>
             )}
-          </>
-        )}
+          </div>
+        </div>
       </section>
+
+      {gemstoneModalProduct && (
+        <div className={styles.modalOverlay} onClick={closeGemstoneModal} role="presentation">
+          <div
+            className={styles.modalCard}
+            onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="gemstone-grams-title"
+          >
+            <h2 id="gemstone-grams-title">How many grams?</h2>
+            <p className={styles.gemstoneModalProductName}>{gemstoneModalProduct.name}</p>
+            <p className={styles.gemstoneModalRate}>
+              Price: {formatPrice(Number(gemstoneModalProduct.price) || 0)} / g
+            </p>
+            <label className={styles.gemstoneModalField}>
+              <span>Grams</span>
+              <input
+                type="number"
+                min="0.1"
+                step="0.1"
+                value={gemstoneModalGrams}
+                onChange={(e) => setGemstoneModalGrams(e.target.value)}
+                autoFocus
+              />
+            </label>
+            <p className={styles.gemstoneModalTotal}>
+              Total:{' '}
+              {formatPrice(
+                Math.round(
+                  (Number(gemstoneModalProduct.price) || 0) *
+                    Math.max(0.1, Number(gemstoneModalGrams) || 1) *
+                    1000
+                ) / 1000
+              )}
+            </p>
+            <div className={styles.gemstoneModalActions}>
+              <button type="button" className={styles.continueShoppingButton} onClick={closeGemstoneModal}>
+                Cancel
+              </button>
+              <button type="button" className={styles.checkoutButton} onClick={handleConfirmGemstoneAddToCart}>
+                Add to cart
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {selectedProduct && (
         <div className={styles.modalOverlay} onClick={() => setSelectedProduct(null)} role="presentation">

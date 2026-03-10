@@ -1,8 +1,6 @@
 import styles from './AboutPage.module.scss';
 import 'font-awesome/css/font-awesome.min.css';
-
-const PLACEHOLDER_IMAGE =
-  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='520' viewBox='0 0 420 520'%3E%3Crect width='420' height='520' fill='%23efefef'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23727272' font-family='Arial' font-size='26'%3EImage Placeholder%3C/text%3E%3C/svg%3E";
+import aboutImage from '../../assets/images/about.jpg';
 
 const CORE_VALUES = [
   {
@@ -45,7 +43,7 @@ export default function AboutPage() {
               and retail quantities through direct and in-store orders.
             </p>
           </div>
-          <img className={styles.imagePlaceholder} src={PLACEHOLDER_IMAGE} alt="About section placeholder image" />
+          <img className={styles.imagePlaceholder} src={aboutImage} alt="About Dar AlTawawish" />
         </div>
       </section>
 

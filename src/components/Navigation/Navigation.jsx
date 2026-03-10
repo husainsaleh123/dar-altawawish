@@ -2,6 +2,7 @@ import styles from './Navigation.module.scss';
 import { useEffect, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import 'font-awesome/css/font-awesome.min.css';
+import logoImage from '../../assets/images/Logo_design_final_PNG.png';
 
 const NAV_ITEMS = [
   { label: 'Home', to: '/' },
@@ -21,7 +22,7 @@ export default function Navigation({ cartCount = 0 }) {
   return (
     <nav className={`${styles.navbar} ${isMenuOpen ? styles.navOpen : ''}`} aria-label="Primary">
       <NavLink className={styles.brand} to="/" aria-label="Home">
-        <span className={styles.brandPlaceholder} aria-hidden="true">💎</span>
+        <img className={styles.brandLogo} src={logoImage} alt="Dar Altawawish logo" />
       </NavLink>
 
       <button
