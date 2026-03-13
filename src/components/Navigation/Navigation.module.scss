@@ -50,6 +50,24 @@
   display: block;
 }
 
+.headerControls {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.65rem;
+  grid-column: 3;
+  grid-row: 1;
+  justify-self: end;
+}
+
+.mobileCartBtn {
+  display: none;
+}
+
+.desktopCartBtn {
+  display: inline-flex;
+}
+
 .links {
   display: flex;
   align-items: center;
@@ -201,6 +219,10 @@
     gap: 0.45rem;
   }
 
+  .headerControls {
+    gap: 0.45rem;
+  }
+
   .languageBtn,
   .cartBtn {
     padding: 0.5rem 1rem;
@@ -237,6 +259,10 @@
     gap: 0.35rem;
   }
 
+  .headerControls {
+    gap: 0.35rem;
+  }
+
   .languageBtn,
   .cartBtn {
     padding: 0.42rem 0.78rem;
@@ -259,16 +285,28 @@
     position: sticky;
   }
 
-  .menuToggle {
-    display: inline-block;
-    grid-column: 2;
-    grid-row: 1;
-  }
-
   .brand {
     grid-column: 1;
     grid-row: 1;
     justify-self: start;
+  }
+
+  .headerControls {
+    grid-column: 2;
+    grid-row: 1;
+    gap: 0.65rem;
+  }
+
+  .mobileCartBtn {
+    display: inline-flex;
+  }
+
+  .desktopCartBtn {
+    display: none;
+  }
+
+  .menuToggle {
+    display: inline-block;
   }
 
   .menuPanel {
@@ -355,6 +393,10 @@
 
   .menuPanel {
     padding: 0.78rem 0.78rem 0.95rem;
+  }
+
+  .headerControls {
+    gap: 0.5rem;
   }
 
   .brandLogo {

@@ -46,8 +46,8 @@ app.use("/api/contact", contactRoutes);
 // Auth / Users
 app.use("/api/users", userRoutes);
 
-// Logged-in only
-app.use("/api/orders", ensureLoggedIn, orderRoutes);
+// Mixed access: order creation is public, cart/history routes enforce auth in the router
+app.use("/api/orders", orderRoutes);
 
 // Admin only
 app.use("/api/admin/orders", ensureLoggedIn, requireAdmin, adminOrdersRoutes);

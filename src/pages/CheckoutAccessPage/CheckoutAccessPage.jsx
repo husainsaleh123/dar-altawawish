@@ -16,7 +16,7 @@ export default function CheckoutAccessPage({ setUser, user }) {
   }, [credentials]);
 
   function handleContinueAsGuest() {
-    navigate('/orders', { state: { checkoutMode: 'guest' } });
+    navigate('/checkout', { state: { checkoutMode: 'guest' } });
   }
 
   function handleChange(evt) {
@@ -29,7 +29,7 @@ export default function CheckoutAccessPage({ setUser, user }) {
     try {
       const loggedInUser = await usersService.login(credentials);
       setUser?.(loggedInUser);
-      navigate('/orders', { state: { checkoutMode: 'logged-in' } });
+      navigate('/checkout', { state: { checkoutMode: 'logged-in' } });
     } catch {
       setError('Login failed. Please check your email and password.');
     }
@@ -41,7 +41,7 @@ export default function CheckoutAccessPage({ setUser, user }) {
         <section className={styles.loggedInCard}>
           <h1>You are already logged in</h1>
           <p>Continue to complete your checkout.</p>
-          <button type="button" onClick={() => navigate('/orders')}>
+          <button type="button" onClick={() => navigate('/checkout')}>
             Continue to checkout
           </button>
         </section>

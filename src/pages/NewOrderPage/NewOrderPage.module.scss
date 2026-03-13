@@ -606,12 +606,23 @@
   }
 
   .categorySidebar {
-    padding: 0.85rem;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+  }
+
+  .categorySidebar h2 {
+    margin: 0 0 0.9rem;
+    color: #172043;
+    font-size: clamp(1.1rem, 1.4vw, 1.4rem);
+    line-height: 1.2;
+    text-align: left;
   }
 
   .mobileCategorySelectWrap {
     display: grid;
-    margin-bottom: 0.35rem;
+    margin-bottom: 0.9rem;
   }
 
   .categorySidebar ul {

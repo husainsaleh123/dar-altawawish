@@ -33,7 +33,7 @@ const TOOL_SUBCATEGORIES = [
   'Crucibles',
   'Cotton Buff',
   'Sawing Blades',
-  'Soldering Water',
+  'Soldering',
   'Burners',
   'Drill Bit',
   'File',
@@ -44,6 +44,73 @@ const TOOL_SUBCATEGORIES = [
 const ALL_TOOLS_OPTION = 'All Tools';
 
 const DEFAULT_GEMSTONE_PRODUCTS = [
+  {
+    _id: 'van-cliff-malakite-10x10mm',
+    name: 'Van Cliff Malakite (10mm x 10mm)',
+    category: 'Gemstones',
+    subcategory: 'Malakite',
+    description: 'Gemstone product priced per piece.',
+    price: 0.5,
+    image: '',
+    countInStock: 0,
+    unit: 'piece',
+    requiresQuantitySelection: true
+  },
+  {
+    _id: 'coral-1mm-round',
+    name: 'Coral 1 mm round',
+    category: 'Gemstones',
+    subcategory: 'Coral',
+    description: 'Gemstone product priced per gram.',
+    price: 2,
+    image: '',
+    countInStock: 0,
+    unit: 'gram'
+  },
+  {
+    _id: 'coral-1-5mm-round',
+    name: 'Coral 1.5 mm round',
+    category: 'Gemstones',
+    subcategory: 'Coral',
+    description: 'Gemstone product priced per gram.',
+    price: 2,
+    image: '',
+    countInStock: 0,
+    unit: 'gram'
+  },
+  {
+    _id: 'coral-round-2mm',
+    name: 'Coral Round 2mm',
+    category: 'Gemstones',
+    subcategory: 'Coral',
+    description: 'Gemstone product priced per gram.',
+    price: 2,
+    image: '',
+    countInStock: 0,
+    unit: 'gram'
+  },
+  {
+    _id: 'coral-round-3-5mm',
+    name: 'Coral Round 3.5 mm',
+    category: 'Gemstones',
+    subcategory: 'Coral',
+    description: 'Gemstone product priced per gram.',
+    price: 1,
+    image: '',
+    countInStock: 0,
+    unit: 'gram'
+  },
+  {
+    _id: 'coral-round-5mm',
+    name: 'Coral Round 5 mm',
+    category: 'Gemstones',
+    subcategory: 'Coral',
+    description: 'Gemstone product priced per gram.',
+    price: 0.5,
+    image: '',
+    countInStock: 0,
+    unit: 'gram'
+  },
   {
     _id: 'turquoise-1mm-round',
     name: 'Turquoise 1 mm round',
@@ -330,7 +397,7 @@ const DEFAULT_TOOL_PRODUCTS = [
     _id: 'soldering-water-200-ml',
     name: 'Soldering Water (200 ML)',
     category: 'Tools',
-    subcategory: 'Soldering Water',
+    subcategory: 'Soldering',
     description: 'Tool product.',
     price: 0.8,
     image: '',
@@ -340,7 +407,7 @@ const DEFAULT_TOOL_PRODUCTS = [
     _id: 'soldering-water-400-ml',
     name: 'Soldering Water (400 ML)',
     category: 'Tools',
-    subcategory: 'Soldering Water',
+    subcategory: 'Soldering',
     description: 'Tool product.',
     price: 1,
     image: '',
@@ -350,9 +417,69 @@ const DEFAULT_TOOL_PRODUCTS = [
     _id: 'soldering-water-1-ml',
     name: 'Soldering Water (1 ML)',
     category: 'Tools',
-    subcategory: 'Soldering Water',
+    subcategory: 'Soldering',
     description: 'Tool product.',
     price: 2.5,
+    image: '',
+    countInStock: 0
+  },
+  {
+    _id: 'soldering-sheet-25x12-5-cm',
+    name: 'Soldering Sheet (25 cm * 12.5 cm)',
+    category: 'Tools',
+    subcategory: 'Soldering',
+    description: 'Tool product.',
+    price: 1,
+    image: '',
+    countInStock: 0
+  },
+  {
+    _id: 'soldering-sheet-30x15-cm',
+    name: 'Soldering Sheet (30 cm * 15 cm)',
+    category: 'Tools',
+    subcategory: 'Soldering',
+    description: 'Tool product.',
+    price: 1.5,
+    image: '',
+    countInStock: 0
+  },
+  {
+    _id: 'soldering-sheet-25x25-cm',
+    name: 'Soldering Sheet (25 cm * 25 cm)',
+    category: 'Tools',
+    subcategory: 'Soldering',
+    description: 'Tool product.',
+    price: 2,
+    image: '',
+    countInStock: 0
+  },
+  {
+    _id: 'soldering-sheet-30x25-cm',
+    name: 'Soldering Sheet (30 cm * 25 cm)',
+    category: 'Tools',
+    subcategory: 'Soldering',
+    description: 'Tool product.',
+    price: 2.5,
+    image: '',
+    countInStock: 0
+  },
+  {
+    _id: 'soldering-sheet-30x30-cm',
+    name: 'Soldering Sheet (30 cm * 30 cm)',
+    category: 'Tools',
+    subcategory: 'Soldering',
+    description: 'Tool product.',
+    price: 3,
+    image: '',
+    countInStock: 0
+  },
+  {
+    _id: 'soldering-sheet-35x25-5-cm',
+    name: 'Soldering Sheet (35 cm * 25.5 cm)',
+    category: 'Tools',
+    subcategory: 'Soldering',
+    description: 'Tool product.',
+    price: 3,
     image: '',
     countInStock: 0
   },
@@ -780,7 +907,7 @@ function inferToolSubcategory(product) {
   if (source.includes('crucible')) return 'Crucibles';
   if (source.includes('buff')) return 'Cotton Buff';
   if (source.includes('saw') || source.includes('blade')) return 'Sawing Blades';
-  if (source.includes('soldering water') || source.includes('flux')) return 'Soldering Water';
+  if (source.includes('soldering') || source.includes('flux')) return 'Soldering';
   if (source.includes('burner') || source.includes('torch')) return 'Burners';
   if (source.includes('drill bit') || (source.includes('drill') && source.includes('bit'))) return 'Drill Bit';
   if (/\bfile\b/.test(source)) return 'File';
@@ -811,6 +938,8 @@ export default function NewOrderPage({ onAddToCart }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [gemstoneModalProduct, setGemstoneModalProduct] = useState(null);
   const [gemstoneModalGrams, setGemstoneModalGrams] = useState('1');
+  const [pieceModalProduct, setPieceModalProduct] = useState(null);
+  const [pieceModalQuantity, setPieceModalQuantity] = useState('1');
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(16);
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -989,6 +1118,14 @@ export default function NewOrderPage({ onAddToCart }) {
   function handleAddToCart(product) {
     if (!product) return;
     const isGemstone = product.mainCategory === 'Gemstones';
+    const requiresPieceQuantitySelection =
+      product.unit === 'piece' && product.requiresQuantitySelection;
+
+    if (requiresPieceQuantitySelection) {
+      setPieceModalProduct(product);
+      setPieceModalQuantity('1');
+      return;
+    }
 
     if (!isGemstone) {
       onAddToCart?.(product);
@@ -1003,6 +1140,11 @@ export default function NewOrderPage({ onAddToCart }) {
   function closeGemstoneModal() {
     setGemstoneModalProduct(null);
     setGemstoneModalGrams('1');
+  }
+
+  function closePieceModal() {
+    setPieceModalProduct(null);
+    setPieceModalQuantity('1');
   }
 
   function handleConfirmGemstoneAddToCart() {
@@ -1025,6 +1167,22 @@ export default function NewOrderPage({ onAddToCart }) {
     });
     setAddedProductName(`${gemstoneModalProduct.name} (${gramsLabel} g)`);
     closeGemstoneModal();
+  }
+
+  function handleConfirmPieceAddToCart() {
+    if (!pieceModalProduct) return;
+
+    const parsed = Number(pieceModalQuantity);
+    const qty = Number.isFinite(parsed) && parsed > 0 ? Math.floor(parsed) : 1;
+
+    onAddToCart?.({
+      ...pieceModalProduct,
+      qty
+    });
+    setAddedProductName(
+      `${pieceModalProduct.name} (${qty} piece${qty === 1 ? '' : 's'})`
+    );
+    closePieceModal();
   }
 
   function handleCheckout() {
@@ -1190,7 +1348,9 @@ export default function NewOrderPage({ onAddToCart }) {
                           : product.mainCategory || 'Uncategorized'}
                       </p>
                       <p className={styles.productPrice}>
-                        {isGemstone ? `${formatPrice(pricePerGram)} / g` : formatPrice(product.price)}
+                        {isGemstone
+                          ? `${formatPrice(pricePerGram)} / ${product.unit === 'piece' ? 'piece' : 'g'}`
+                          : formatPrice(product.price)}
                       </p>
                       <button
                         type="button"
@@ -1287,6 +1447,47 @@ export default function NewOrderPage({ onAddToCart }) {
         </div>
       )}
 
+      {pieceModalProduct && (
+        <div className={styles.modalOverlay} onClick={closePieceModal} role="presentation">
+          <div
+            className={styles.modalCard}
+            onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="piece-quantity-title"
+          >
+            <h2 id="piece-quantity-title">How many pieces?</h2>
+            <p className={styles.gemstoneModalProductName}>{pieceModalProduct.name}</p>
+            <p className={styles.gemstoneModalRate}>
+              Price: {formatPrice(Number(pieceModalProduct.price) || 0)} / piece
+            </p>
+            <label className={styles.gemstoneModalField}>
+              <span>Pieces</span>
+              <input
+                type="number"
+                min="1"
+                step="1"
+                value={pieceModalQuantity}
+                onChange={(e) => setPieceModalQuantity(e.target.value)}
+                autoFocus
+              />
+            </label>
+            <p className={styles.gemstoneModalTotal}>
+              Total:{' '}
+              {formatPrice((Number(pieceModalProduct.price) || 0) * Math.max(1, Math.floor(Number(pieceModalQuantity) || 1)))}
+            </p>
+            <div className={styles.gemstoneModalActions}>
+              <button type="button" className={styles.continueShoppingButton} onClick={closePieceModal}>
+                Cancel
+              </button>
+              <button type="button" className={styles.checkoutButton} onClick={handleConfirmPieceAddToCart}>
+                Add to cart
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {selectedProduct && (
         <div className={styles.modalOverlay} onClick={() => setSelectedProduct(null)} role="presentation">
           <div
@@ -1304,7 +1505,10 @@ export default function NewOrderPage({ onAddToCart }) {
 
             <div className={styles.modalMeta}>
               <p>
-                <strong>Price:</strong> {formatPrice(selectedProduct.price)}
+                <strong>Price:</strong>{' '}
+                {selectedProduct.mainCategory === 'Gemstones'
+                  ? `${formatPrice(selectedProduct.price)} / ${selectedProduct.unit === 'piece' ? 'piece' : 'g'}`
+                  : formatPrice(selectedProduct.price)}
               </p>
               <p>
                 <strong>Stock:</strong>{' '}

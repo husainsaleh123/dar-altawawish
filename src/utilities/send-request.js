@@ -28,7 +28,7 @@ export default async function sendRequest(url, method = 'GET', payload = null, o
   let message = 'Bad Request';
   try {
     const data = await res.json();
-    message = data?.error || data?.message || message;
+    message = data?.error || data?.message || data?.msg || message;
   } catch {
     // ignore parsing errors
   }

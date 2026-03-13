@@ -8,6 +8,7 @@ import AuthPage from '../AuthPage/AuthPage';
 import NewOrderPage from '../NewOrderPage/NewOrderPage';
 import OrderHistoryPage from '../OrderHistoryPage/OrderHistoryPage';
 import CheckoutAccessPage from '../CheckoutAccessPage/CheckoutAccessPage';
+import CheckoutPage from '../CheckoutPage/CheckoutPage';
 import Navigation from '../../components/Navigation/Navigation';
 import HomePage from '../HomePage/HomePage';
 import AboutPage from '../AboutPage/AboutPage';
@@ -34,11 +35,15 @@ export default function App() {
 
   function handleAddToCart(product) {
     if (!product?._id) return;
+    const qtyToAdd = Number.isFinite(Number(product.qty)) && Number(product.qty) > 0
+      ? Math.floor(Number(product.qty))
+      : 1;
+
     setCartItems((prev) => {
       const existing = prev.find((item) => item._id === product._id);
       if (existing) {
         return prev.map((item) =>
-          item._id === product._id ? { ...item, qty: item.qty + 1 } : item
+          item._id === product._id ? { ...item, qty: item.qty + qtyToAdd } : item
         );
       }
       return [
@@ -48,7 +53,7 @@ export default function App() {
           name: product.name,
           image: product.image || '',
           price: Number(product.price) || 0,
-          qty: 1
+          qty: qtyToAdd
         }
       ];
     });
@@ -69,6 +74,10 @@ export default function App() {
     setCartItems((prev) => prev.filter((item) => item._id !== productId));
   }
 
+  function handleCheckoutComplete() {
+    setCartItems([]);
+  }
+
   return (
     <main className={styles.App}>
       <Navigation cartCount={cartItems.reduce((sum, item) => sum + item.qty, 0)} />
@@ -81,6 +90,16 @@ export default function App() {
           <Route path="/signup" element={user ? <Navigate to="/" /> : <AuthPage setUser={setUser} initialMode="signup" />} />
           <Route path="/orders/new" element={<NewOrderPage onAddToCart={handleAddToCart} />} />
           <Route path="/checkout/access" element={<CheckoutAccessPage setUser={setUser} user={user} />} />
+          <Route
+            path="/checkout"
+            element={
+              <CheckoutPage
+                cartItems={cartItems}
+                user={user}
+                onCheckoutComplete={handleCheckoutComplete}
+              />
+            }
+          />
           <Route
             path="/orders"
             element={

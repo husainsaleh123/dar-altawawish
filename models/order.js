@@ -4,11 +4,11 @@ import mongoose from "mongoose";
 
 const orderItemSchema = new mongoose.Schema(
   {
-    product: { type: mongoose.Schema.Types.ObjectId, ref: "Product", required: true },
+    product: { type: String, required: true },
 
     // Snapshot values at time of checkout
     name: { type: String, required: true },
-    image: { type: String, required: true },
+    image: { type: String, default: "" },
     price: { type: Number, required: true, min: 0 },
 
     qty: { type: Number, required: true, min: 1 },
@@ -18,7 +18,16 @@ const orderItemSchema = new mongoose.Schema(
 
 const orderSchema = new mongoose.Schema(
   {
-    user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+    orderNumber: { type: String, required: true, unique: true, trim: true },
+
+    user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: false, default: null },
+
+    customer: {
+      fullName: { type: String, required: true, trim: true },
+      email: { type: String, required: true, trim: true, lowercase: true },
+      phone: { type: String, required: true, trim: true },
+      company: { type: String, default: null, trim: true },
+    },
 
     orderItems: { type: [orderItemSchema], required: true },
 

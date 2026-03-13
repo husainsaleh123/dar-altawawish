@@ -3,6 +3,7 @@
 import Order from '../../models/order.js';
 
 export {
+  createOrder,
   cart,
   addToCart,
   setProductQtyInCart,
@@ -11,6 +12,86 @@ export {
   adminIndex,
   adminUpdate
 };
+
+function buildOrderNumber() {
+  const stamp = Date.now().toString().slice(-6);
+  const random = Math.random().toString(36).slice(2, 6).toUpperCase();
+  return `DAT-${stamp}-${random}`;
+}
+
+async function createOrder(req, res) {
+  try {
+    const items = Array.isArray(req.body.items) ? req.body.items : [];
+    if (!items.length) {
+      return res.status(400).json({ msg: "Order must include at least one item" });
+    }
+
+    const orderItems = items.map((item) => {
+      const qty = Math.max(1, Number(item.qty) || 0);
+      const price = Math.max(0, Number(item.price) || 0);
+
+      return {
+        product: String(item._id || item.product || ""),
+        name: String(item.name || "").trim(),
+        image: String(item.image || ""),
+        price,
+        qty,
+      };
+    });
+
+    const hasInvalidItem = orderItems.some((item) => !item.product || !item.name);
+    if (hasInvalidItem) {
+      return res.status(400).json({ msg: "Each order item must include a product and name" });
+    }
+
+    const itemsPrice = orderItems.reduce((sum, item) => sum + item.price * item.qty, 0);
+    const shippingPrice = req.body.fulfillmentMethod === "delivery" ? 1.5 : 0;
+    const totalPrice = itemsPrice + shippingPrice;
+
+    const order = await Order.create({
+      orderNumber: buildOrderNumber(),
+      user: req.user?._id || null,
+      customer: {
+        fullName: `${req.body.firstName || ""} ${req.body.lastName || ""}`.trim(),
+        email: String(req.body.email || "").trim().toLowerCase(),
+        phone: String(req.body.phone || "").trim(),
+        company: String(req.body.company || "").trim() || null,
+      },
+      orderItems,
+      fulfillmentMethod: req.body.fulfillmentMethod === "delivery" ? "delivery" : "pickup",
+      shippingAddress:
+        req.body.fulfillmentMethod === "delivery"
+          ? {
+              fullName: `${req.body.firstName || ""} ${req.body.lastName || ""}`.trim(),
+              phone: String(req.body.phone || "").trim(),
+              address1: String(req.body.address || "").trim(),
+              city: String(req.body.city || "").trim(),
+              country: String(req.body.country || "").trim(),
+            }
+          : undefined,
+      paymentMethod:
+        req.body.paymentMethod === "debit-card"
+          ? "card"
+          : req.body.paymentMethod === "benefitpay"
+            ? "benefitpay"
+            : "cash",
+      payment: {
+        provider: req.body.paymentMethod === "debit-card" ? "manual" : null,
+        status: "pending",
+      },
+      itemsPrice,
+      shippingPrice,
+      taxPrice: 0,
+      totalPrice,
+      isPaid: false,
+      customerNote: String(req.body.notes || "").trim() || null,
+    });
+
+    res.status(201).json(order);
+  } catch (e) {
+    res.status(400).json({ msg: e.message });
+  }
+}
 
 // A cart is the unpaid order for a user
 async function cart(req, res) {

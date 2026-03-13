@@ -25,18 +25,25 @@ export default function Navigation({ cartCount = 0 }) {
         <img className={styles.brandLogo} src={logoImage} alt="Dar Altawawish logo" />
       </NavLink>
 
-      <button
-        type="button"
-        className={styles.menuToggle}
-        aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
-        aria-expanded={isMenuOpen}
-        aria-controls="primary-menu"
-        onClick={() => setIsMenuOpen((open) => !open)}
-      >
-        <span />
-        <span />
-        <span />
-      </button>
+      <div className={styles.headerControls}>
+        <Link to="/orders" className={`${styles.cartBtn} ${styles.mobileCartBtn}`} aria-label="Cart">
+          <i className="fa fa-shopping-cart" aria-hidden="true" />
+          {cartCount > 0 && <span className={styles.cartCount}>{cartCount}</span>}
+        </Link>
+
+        <button
+          type="button"
+          className={styles.menuToggle}
+          aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
+          aria-expanded={isMenuOpen}
+          aria-controls="primary-menu"
+          onClick={() => setIsMenuOpen((open) => !open)}
+        >
+          <span />
+          <span />
+          <span />
+        </button>
+      </div>
 
       <div id="primary-menu" className={`${styles.menuPanel} ${isMenuOpen ? styles.menuPanelOpen : ''}`}>
         <ul className={styles.links}>
@@ -62,7 +69,7 @@ export default function Navigation({ cartCount = 0 }) {
           <button type="button" className={styles.languageBtn} aria-label="Current language EN">
             EN
           </button>
-          <Link to="/orders" className={styles.cartBtn} aria-label="Cart">
+          <Link to="/orders" className={`${styles.cartBtn} ${styles.desktopCartBtn}`} aria-label="Cart">
             <i className="fa fa-shopping-cart" aria-hidden="true" />
             {cartCount > 0 && <span className={styles.cartCount}>{cartCount}</span>}
           </Link>
