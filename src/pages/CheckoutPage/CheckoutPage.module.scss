@@ -333,6 +333,25 @@
   padding: 1rem 0;
 }
 
+.loyaltyPanel {
+  margin-top: 1rem;
+  padding: 1rem 1.05rem;
+  border-radius: 18px;
+  background: #f6f3ea;
+  border: 1px solid rgba(40, 51, 39, 0.1);
+
+  strong {
+    display: block;
+    color: #11140f;
+  }
+
+  p {
+    margin: 0.45rem 0 0;
+    color: #5a675c;
+    line-height: 1.5;
+  }
+}
+
 .summaryItem h3 {
   font-size: 1rem;
 }
@@ -397,6 +416,11 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.9rem;
+}
+
+.loyaltyNote {
+  margin: 0 0 1.2rem;
+  color: #425046;
 }
 
 @media (max-width: 960px) {

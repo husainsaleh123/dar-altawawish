@@ -1,7 +1,11 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { createOrder } from '../../utilities/orders-api';
+import { getProfile } from '../../utilities/users-service';
 import styles from './CheckoutPage.module.scss';
+
+const DELIVERY_FEE = 1.5;
+const FREE_DELIVERY_THRESHOLD = 20;
 
 function formatPrice(value) {
   return new Intl.NumberFormat('en-US', {
@@ -13,6 +17,7 @@ function formatPrice(value) {
 
 export default function CheckoutPage({ cartItems = [], user, onCheckoutComplete }) {
   const navigate = useNavigate();
+  const [profileUser, setProfileUser] = useState(user);
   const [formData, setFormData] = useState({
     firstName: user?.name?.split(' ')[0] || '',
     lastName: user?.name?.split(' ').slice(1).join(' ') || '',
@@ -36,14 +41,46 @@ export default function CheckoutPage({ cartItems = [], user, onCheckoutComplete 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [completedOrder, setCompletedOrder] = useState(null);
 
+  useEffect(() => {
+    let isMounted = true;
+
+    async function loadProfile() {
+      if (!user) {
+        setProfileUser(null);
+        return;
+      }
+
+      try {
+        const data = await getProfile();
+        if (!isMounted) return;
+        setProfileUser(data?.user || user);
+      } catch {
+        if (!isMounted) return;
+        setProfileUser(user);
+      }
+    }
+
+    loadProfile();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [user]);
+
   const subtotal = useMemo(
     () => cartItems.reduce((sum, item) => sum + (Number(item.price) || 0) * (item.qty || 0), 0),
     [cartItems]
   );
   const isBahrain = formData.country.trim().toLowerCase() === 'bahrain';
   const deliveryLabel = isBahrain ? 'Delivery' : 'Shipping';
-  const shipping = subtotal > 0 && formData.fulfillmentMethod === 'delivery' ? 1.5 : 0;
-  const total = subtotal + shipping;
+  const qualifiesForFreeDelivery = subtotal > FREE_DELIVERY_THRESHOLD;
+  const shipping = subtotal > 0 && formData.fulfillmentMethod === 'delivery' && !qualifiesForFreeDelivery
+    ? DELIVERY_FEE
+    : 0;
+  const availablePoints = Number(profileUser?.points) || 0;
+  const loyaltyDiscount = availablePoints >= 100 ? Number((subtotal * 0.1).toFixed(3)) : 0;
+  const pointsToEarn = user ? Math.floor(Math.max(subtotal - loyaltyDiscount, 0)) : 0;
+  const total = subtotal + shipping - loyaltyDiscount;
 
   function handleChange(event) {
     const { name, value, type, checked } = event.target;
@@ -97,7 +134,10 @@ export default function CheckoutPage({ cartItems = [], user, onCheckoutComplete 
         total: createdOrder.totalPrice,
         email: createdOrder.customer?.email || formData.email.trim(),
         itemsCount: createdOrder.orderItems?.reduce((sum, item) => sum + (item.qty || 0), 0)
-          || cartItems.reduce((sum, item) => sum + (item.qty || 0), 0)
+          || cartItems.reduce((sum, item) => sum + (item.qty || 0), 0),
+        pointsEarned: Number(createdOrder.loyalty?.pointsEarned) || 0,
+        pointsRedeemed: Number(createdOrder.loyalty?.pointsRedeemed) || 0,
+        loyaltyDiscount: Number(createdOrder.loyalty?.discountAmount) || 0
       };
 
       onCheckoutComplete?.();
@@ -128,7 +168,20 @@ export default function CheckoutPage({ cartItems = [], user, onCheckoutComplete 
               <span>Items</span>
               <strong>{completedOrder.itemsCount}</strong>
             </div>
+            <div>
+              <span>Points earned</span>
+              <strong>{completedOrder.pointsEarned}</strong>
+            </div>
+            <div>
+              <span>Loyalty discount</span>
+              <strong>{formatPrice(completedOrder.loyaltyDiscount)}</strong>
+            </div>
           </div>
+          {completedOrder.pointsRedeemed > 0 ? (
+            <p className={styles.loyaltyNote}>
+              100 points were redeemed on this order for your 10% loyalty discount.
+            </p>
+          ) : null}
           <div className={styles.successActions}>
             <button type="button" className={styles.primaryButton} onClick={() => navigate('/orders/new')}>
               Continue shopping
@@ -211,8 +264,8 @@ export default function CheckoutPage({ cartItems = [], user, onCheckoutComplete 
                       <strong>{deliveryLabel}</strong>
                       <span>
                         {isBahrain
-                          ? 'Deliver the order to your Bahrain address.'
-                          : 'Ship the order to your selected address.'}
+                          ? `Deliver the order to your Bahrain address.${qualifiesForFreeDelivery ? ' Free above BHD 20.000.' : ''}`
+                          : `Ship the order to your selected address.${qualifiesForFreeDelivery ? ' Free above BHD 20.000.' : ''}`}
                       </span>
                     </div>
                   </label>
@@ -349,6 +402,17 @@ export default function CheckoutPage({ cartItems = [], user, onCheckoutComplete 
             <strong>{cartItems.length} product(s)</strong>
           </div>
 
+          {user ? (
+            <div className={styles.loyaltyPanel}>
+              <strong>{availablePoints} loyalty points available</strong>
+              <p>
+                {availablePoints >= 100
+                  ? `A 10% discount of ${formatPrice(loyaltyDiscount)} will be applied to this order.`
+                  : `Earn ${pointsToEarn} point${pointsToEarn === 1 ? '' : 's'} from this order. Delivery fees are excluded. Reach 100 points to unlock a 10% discount on your next order.`}
+              </p>
+            </div>
+          ) : null}
+
           <div className={styles.summaryItems}>
             {cartItems.map((item) => (
               <article key={item._id} className={styles.summaryItem}>
@@ -370,6 +434,12 @@ export default function CheckoutPage({ cartItems = [], user, onCheckoutComplete 
               <span>{deliveryLabel}</span>
               <strong>{formatPrice(shipping)}</strong>
             </div>
+            {loyaltyDiscount > 0 ? (
+              <div>
+                <span>Loyalty discount</span>
+                <strong>-{formatPrice(loyaltyDiscount)}</strong>
+              </div>
+            ) : null}
             <div className={styles.grandTotal}>
               <span>Total</span>
               <strong>{formatPrice(total)}</strong>

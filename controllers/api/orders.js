@@ -1,6 +1,7 @@
 // ./controllers/api/orders.js
 
 import Order from '../../models/order.js';
+import User from '../../models/user.js';
 
 export {
   createOrder,
@@ -8,6 +9,7 @@ export {
   addToCart,
   setProductQtyInCart,
   checkout,
+  show,
   history,
   adminIndex,
   adminUpdate
@@ -18,6 +20,13 @@ function buildOrderNumber() {
   const random = Math.random().toString(36).slice(2, 6).toUpperCase();
   return `DAT-${stamp}-${random}`;
 }
+
+function roundCurrency(value) {
+  return Math.round((Number(value) || 0) * 1000) / 1000;
+}
+
+const DELIVERY_FEE = 1.5;
+const FREE_DELIVERY_THRESHOLD = 20;
 
 async function createOrder(req, res) {
   try {
@@ -45,8 +54,16 @@ async function createOrder(req, res) {
     }
 
     const itemsPrice = orderItems.reduce((sum, item) => sum + item.price * item.qty, 0);
-    const shippingPrice = req.body.fulfillmentMethod === "delivery" ? 1.5 : 0;
-    const totalPrice = itemsPrice + shippingPrice;
+    const qualifiesForFreeDelivery = itemsPrice > FREE_DELIVERY_THRESHOLD;
+    const shippingPrice =
+      req.body.fulfillmentMethod === "delivery" && !qualifiesForFreeDelivery ? DELIVERY_FEE : 0;
+    const user = req.user?._id ? await User.findById(req.user._id) : null;
+    const canRedeemDiscount = Boolean(user && user.points >= 100);
+    const loyaltyDiscountRate = canRedeemDiscount ? 0.1 : 0;
+    const loyaltyDiscountAmount = canRedeemDiscount ? roundCurrency(itemsPrice * loyaltyDiscountRate) : 0;
+    const totalPrice = roundCurrency(itemsPrice + shippingPrice - loyaltyDiscountAmount);
+    const pointsRedeemed = canRedeemDiscount ? 100 : 0;
+    const pointsEarned = user ? Math.floor(Math.max(itemsPrice - loyaltyDiscountAmount, 0)) : 0;
 
     const order = await Order.create({
       orderNumber: buildOrderNumber(),
@@ -79,6 +96,12 @@ async function createOrder(req, res) {
         provider: req.body.paymentMethod === "debit-card" ? "manual" : null,
         status: "pending",
       },
+      loyalty: {
+        discountRate: loyaltyDiscountRate,
+        discountAmount: loyaltyDiscountAmount,
+        pointsRedeemed,
+        pointsEarned,
+      },
       itemsPrice,
       shippingPrice,
       taxPrice: 0,
@@ -86,6 +109,11 @@ async function createOrder(req, res) {
       isPaid: false,
       customerNote: String(req.body.notes || "").trim() || null,
     });
+
+    if (user) {
+      user.points = Math.max(0, (Number(user.points) || 0) - pointsRedeemed) + pointsEarned;
+      await user.save();
+    }
 
     res.status(201).json(order);
   } catch (e) {
@@ -146,6 +174,23 @@ async function history(req, res) {
       .sort('-updatedAt').exec();
     res.status(200).json(orders);
   }catch(e){
+    res.status(400).json({ msg: e.message });
+  }
+}
+
+async function show(req, res) {
+  try {
+    const order = await Order.findOne({
+      _id: req.params.id,
+      user: req.user._id
+    }).lean();
+
+    if (!order) {
+      return res.status(404).json({ msg: 'Order not found' });
+    }
+
+    res.status(200).json(order);
+  } catch (e) {
     res.status(400).json({ msg: e.message });
   }
 }

@@ -13,7 +13,10 @@ import Navigation from '../../components/Navigation/Navigation';
 import HomePage from '../HomePage/HomePage';
 import AboutPage from '../AboutPage/AboutPage';
 import ContactPage from '../ContactPage/ContactPage';
+import ProfilePage from '../ProfilePage/ProfilePage';
+import OrderDetailsPage from '../OrderDetailsPage/OrderDetailsPage';
 import Footer from '../../components/Footer/Footer';
+import { logOut } from '../../utilities/users-service';
 
 export default function App() {
   const [user, setUser] = useState(getUser());
@@ -78,6 +81,11 @@ export default function App() {
     setCartItems([]);
   }
 
+  function handleLogout() {
+    logOut();
+    setUser(null);
+  }
+
   return (
     <main className={styles.App}>
       <Navigation cartCount={cartItems.reduce((sum, item) => sum + item.qty, 0)} />
@@ -109,6 +117,14 @@ export default function App() {
                 onRemoveItem={handleRemoveFromCart}
               />
             }
+          />
+          <Route
+            path="/profile"
+            element={user ? <ProfilePage user={user} onLogout={handleLogout} /> : <AuthPage setUser={setUser} initialMode="login" />}
+          />
+          <Route
+            path="/profile/orders/:orderId"
+            element={user ? <OrderDetailsPage /> : <AuthPage setUser={setUser} initialMode="login" />}
           />
           <Route path="/*" element={<Navigate to="/" />} />
         </Routes>

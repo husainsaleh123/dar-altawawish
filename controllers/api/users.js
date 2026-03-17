@@ -1,9 +1,11 @@
 // ./controllers/api/users.js
 
 import User from '../../models/user.js';
+import Order from '../../models/order.js';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
+import dns from 'dns/promises';
 
 const checkToken = (req, res) => {
   console.log('req.user', req.user)
@@ -13,6 +15,18 @@ const checkToken = (req, res) => {
 const dataController = {
   async create (req, res, next) {
     try {
+      const email = String(req.body?.email || '').trim().toLowerCase();
+
+      if (!EMAIL_REGEX.test(email)) {
+        return res.status(400).json({ error: 'Enter a valid email address.' });
+      }
+
+      const hasValidEmailDomain = await hasResolvableEmailDomain(email);
+      if (!hasValidEmailDomain) {
+        return res.status(400).json({ error: 'Email domain could not be verified. Please use a real email address.' });
+      }
+
+      req.body.email = email;
       const user = await User.create(req.body)
       console.log(req.body)
       // token will be a string
@@ -24,13 +38,22 @@ const dataController = {
       res.locals.data.token = token
       next()
     } catch (e) {
-      console.log('you got a database problem')
-      res.status(400).json(e)
+      const duplicateEmail = e?.code === 11000 && e?.keyPattern?.email;
+      const validationMessage = Object.values(e?.errors || {})
+        .map((item) => item?.message)
+        .find(Boolean);
+
+      res.status(400).json({
+        error: duplicateEmail
+          ? 'An account with this email already exists.'
+          : validationMessage || e?.message || 'Registration failed.'
+      })
     }
   },
   async login (req, res, next) {
     try {
-      const user = await User.findOne({ email: req.body.email })
+      const email = String(req.body?.email || '').trim().toLowerCase();
+      const user = await User.findOne({ email })
       if (!user) throw new Error()
       const match = await bcrypt.compare(req.body.password, user.password)
       if (!match) throw new Error()
@@ -92,6 +115,61 @@ const dataController = {
   googleConfig(req, res, next) {
     res.locals.data.googleClientId = process.env.GOOGLE_CLIENT_ID || '';
     next();
+  },
+  async profile(req, res, next) {
+    try {
+      const [user, orders] = await Promise.all([
+        User.findById(req.user._id).select('-password').lean(),
+        Order.find({ user: req.user._id })
+          .sort('-createdAt')
+          .select('orderNumber status totalPrice createdAt fulfillmentMethod paymentMethod isPaid isDelivered')
+          .lean()
+      ]);
+
+      if (!user) {
+        return res.status(404).json({ error: 'User not found.' });
+      }
+
+      res.locals.data.profile = { user, orders };
+      next();
+    } catch (error) {
+      res.status(400).json({ error: error?.message || 'Unable to load profile.' });
+    }
+  },
+  async updatePassword(req, res, next) {
+    try {
+      const { currentPassword = '', newPassword = '', confirmPassword = '' } = req.body || {};
+
+      if (!newPassword || newPassword.length < 6) {
+        return res.status(400).json({ error: 'New password must be at least 6 characters.' });
+      }
+
+      if (newPassword !== confirmPassword) {
+        return res.status(400).json({ error: 'New password and confirmation do not match.' });
+      }
+
+      const user = await User.findById(req.user._id);
+      if (!user) {
+        return res.status(404).json({ error: 'User not found.' });
+      }
+
+      if (user.authProvider !== 'local') {
+        return res.status(400).json({ error: 'Password changes are unavailable for Google sign-in accounts.' });
+      }
+
+      const isCurrentPasswordValid = await bcrypt.compare(currentPassword, user.password);
+      if (!isCurrentPasswordValid) {
+        return res.status(400).json({ error: 'Current password is incorrect.' });
+      }
+
+      user.password = newPassword;
+      await user.save();
+
+      res.locals.data.message = 'Password updated successfully.';
+      next();
+    } catch (error) {
+      res.status(400).json({ error: error?.message || 'Unable to update password.' });
+    }
   }
 }
 
@@ -105,6 +183,14 @@ const apiController = {
   googleConfig(req, res) {
     res.json({
       googleClientId: res.locals.data.googleClientId || ''
+    });
+  },
+  profile(req, res) {
+    res.json(res.locals.data.profile);
+  },
+  message(req, res) {
+    res.json({
+      message: res.locals.data.message || 'Success'
     });
   }
 }
@@ -124,6 +210,34 @@ function createJWT (user) {
     process.env.SECRET,
     { expiresIn: '24h' }
   )
+}
+
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+async function hasResolvableEmailDomain(email) {
+  const domain = String(email || '').split('@')[1];
+  if (!domain) return false;
+
+  try {
+    const mxRecords = await dns.resolveMx(domain);
+    if (Array.isArray(mxRecords) && mxRecords.length > 0) return true;
+  } catch {
+    // fall through to A/AAAA lookup
+  }
+
+  try {
+    const addresses = await dns.resolve4(domain);
+    if (Array.isArray(addresses) && addresses.length > 0) return true;
+  } catch {
+    // ignore
+  }
+
+  try {
+    const addresses = await dns.resolve6(domain);
+    return Array.isArray(addresses) && addresses.length > 0;
+  } catch {
+    return false;
+  }
 }
 
 async function verifyGoogleCredential(credential) {

@@ -19,3 +19,11 @@ export function googleAuth(payload) {
 export function getGoogleConfig() {
   return sendRequest(`${BASE_URL}/google/config`, 'GET', null, { includeToken: false });
 }
+
+export function getProfile() {
+  return sendRequest(`${BASE_URL}/profile`);
+}
+
+export function updatePassword(passwordData) {
+  return sendRequest(`${BASE_URL}/password`, 'PUT', passwordData);
+}

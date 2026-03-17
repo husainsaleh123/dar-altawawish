@@ -3,37 +3,132 @@
   display: grid;
   justify-items: center;
   gap: 1rem;
-  padding: 1.2rem 0 2rem;
+  padding: 0;
+}
+
+.embeddedSection {
+  gap: 0.85rem;
 }
 
 .registerCard {
   width: min(100%, 760px);
-  border: 1px solid #bfc4cc;
-  border-radius: 6px;
-  background: #f4f4f4;
+  border: 1px solid #e1e2ef;
+  border-radius: 24px;
+  background: #ffffff;
   padding: clamp(1rem, 2.3vw, 1.8rem);
 }
 
+.embeddedCard {
+  width: 100%;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  background: transparent;
+}
+
+.headerBlock {
+  width: 100%;
+  display: grid;
+  justify-items: center;
+  margin-bottom: 1.1rem;
+  text-align: center;
+}
+
+.headerBlock p {
+  width: 100%;
+  margin: 0.45rem 0 0;
+  color: #5f6575;
+  line-height: 1.6;
+  text-align: center;
+}
+
 .registerCard h1 {
-  margin: 0 0 1.25rem;
-  font-size: clamp(2rem, 3.5vw, 2.7rem);
+  margin: 0;
+  font-size: clamp(1.8rem, 3vw, 2.25rem);
   color: #182131;
 }
 
 .googleButtonWrap {
   display: flex;
   justify-content: center;
+  width: 80%;
+  margin: 1.45rem auto 1.7rem;
 }
 
-.googleButtonWrap > div {
+.googleButtonShell {
+  position: relative;
   width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.googleVisualButton {
+  width: 100%;
+  min-height: 46px;
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  overflow: hidden;
+  background: #4285f4;
+  color: #fff;
+  box-shadow: 0 8px 18px rgba(66, 133, 244, 0.18);
+  cursor: pointer;
+}
+
+.googleVisualButtonDisabled {
+  opacity: 1;
+}
+
+.googleIconBadge {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  background: #fff;
+}
+
+.googleIconBadge svg {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+.googleButtonText {
+  display: block;
+  padding: 0 1rem;
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.googleNativeButton {
+  position: absolute;
+  inset: 0;
+  opacity: 0.01;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.googleNativeButtonReady {
+  cursor: pointer;
+  pointer-events: auto;
 }
 
 .orText {
-  margin: 1.2rem 0;
+  width: 100%;
+  margin: 0 0 1.15rem;
+  display: block;
+  justify-self: center;
   text-align: center;
   color: #707781;
-  font-size: 2rem;
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
   line-height: 1;
 }
 
@@ -45,27 +140,32 @@
 }
 
 .fieldBlock {
-  display: block;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.35rem;
+  width: 100%;
 }
 
 .fieldBlock label {
   display: block;
+  width: 100%;
   font-size: 1.05rem;
   font-weight: 500;
   color: #161d2b;
   line-height: 1.2;
-  margin: 0 0 0.35rem;
+  margin: 0;
+  text-align: left;
 }
 
 .fieldBlock input,
 .fieldBlock select {
   display: block;
   width: 100%;
-  min-height: 44px;
-  border: 1px solid #6fb6f0;
-  border-radius: 4px;
-  padding: 0.55rem 0.7rem;
-  background: #f4f4f4;
+  min-height: 52px;
+  border: 1px solid #d9dceb;
+  border-radius: 16px;
+  padding: 0.8rem 1rem;
+  background: #fbfbff;
   color: #121828;
   font-size: 1rem;
 }
@@ -95,17 +195,26 @@
   box-shadow: 0 0 0 2px #1c009422;
 }
 
+.fieldBlock .inputError {
+  border-color: #c62848;
+  box-shadow: 0 0 0 2px rgba(198, 40, 72, 0.12);
+}
+
 .countryPhoneRow {
   display: grid;
   gap: 0.9rem;
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+.registerForm > * {
+  width: 100%;
+}
+
 .registerButton {
   margin: 0.9rem 0 1.15rem;
   border: 0;
   border-radius: 999px;
-  min-height: 48px;
+  min-height: 52px;
   width: 100%;
   background: #1c0094;
   color: #fff;
@@ -119,7 +228,8 @@
 }
 
 .registerButton:hover {
-  background: #2f20b9;
+  background: #2d15b1;
+  box-shadow: 0 14px 30px rgba(28, 0, 148, 0.22);
 }
 
 .registerButton:disabled {
@@ -143,6 +253,17 @@
 .loginPrompt a {
   color: #1c0094;
   text-decoration: underline;
+}
+
+.inlineSwitchButton {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #1c0094;
+  font-weight: 700;
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 @media (max-width: 700px) {

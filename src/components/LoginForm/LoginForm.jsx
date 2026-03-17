@@ -2,8 +2,9 @@
 
 import { useState } from 'react';
 import * as usersService from '../../utilities/users-service';
+import styles from './LoginForm.module.scss';
 
-export default function LoginForm({ setUser }) {
+export default function LoginForm({ setUser, onSwitchToSignUp, embedded = false }) {
   const [credentials, setCredentials] = useState({
     email: '',
     password: ''
@@ -11,7 +12,11 @@ export default function LoginForm({ setUser }) {
   const [error, setError] = useState('');
 
   function handleChange(evt) {
-    setCredentials({ ...credentials, [evt.target.name]: evt.target.value });
+    const { name, value } = evt.target;
+    setCredentials((prev) => ({
+      ...prev,
+      [name]: name === 'email' ? value.trimStart().toLowerCase() : value
+    }));
     setError('');
   }
 
@@ -30,17 +35,38 @@ export default function LoginForm({ setUser }) {
   }
 
   return (
-    <div>
-      <div className="form-container">
-        <form autoComplete="off" onSubmit={handleSubmit}>
-          <label>Email</label>
-          <input type="text" name="email" value={credentials.email} onChange={handleChange} required />
-          <label>Password</label>
-          <input type="password" name="password" value={credentials.password} onChange={handleChange} required />
-          <button type="submit">LOG IN</button>
-        </form>
+    <section className={`${styles.loginSection} ${embedded ? styles.embedded : ''}`.trim()}>
+      <div className={styles.loginHeader}>
+        <h2>Log in</h2>
+        <p>Use your email address to access your account.</p>
       </div>
-      <p className="error-message">&nbsp;{error}</p>
-    </div>
+
+      <form autoComplete="off" onSubmit={handleSubmit} className={styles.loginForm}>
+        <label className={styles.fieldBlock}>
+          <span>Email</span>
+          <input type="email" name="email" value={credentials.email} onChange={handleChange} required />
+        </label>
+
+        <label className={styles.fieldBlock}>
+          <span>Password</span>
+          <input type="password" name="password" value={credentials.password} onChange={handleChange} required />
+        </label>
+
+        <p className={styles.errorText}>{error || '\u00A0'}</p>
+
+        <button type="submit" className={styles.submitButton}>
+          Log In
+        </button>
+      </form>
+
+      {onSwitchToSignUp ? (
+        <p className={styles.switchText}>
+          Need an account?{' '}
+          <button type="button" onClick={onSwitchToSignUp} className={styles.switchButton}>
+            Sign up
+          </button>
+        </p>
+      ) : null}
+    </section>
   );
 }

@@ -92,6 +92,13 @@ const orderSchema = new mongoose.Schema(
       paidAt: { type: Date, default: null },
     },
 
+    loyalty: {
+      discountRate: { type: Number, default: 0, min: 0 },
+      discountAmount: { type: Number, default: 0, min: 0 },
+      pointsRedeemed: { type: Number, default: 0, min: 0 },
+      pointsEarned: { type: Number, default: 0, min: 0 },
+    },
+
     // Totals (store real totals, do NOT rely on virtuals)
     itemsPrice: { type: Number, required: true, min: 0, default: 0 },
     shippingPrice: { type: Number, required: true, min: 0, default: 0 },

@@ -36,3 +36,7 @@ export function checkout() {
 export function getOrderHistory() {
   return sendRequest(`${BASE_URL}/history`);
 }
+
+export function getOrderById(orderId) {
+  return sendRequest(`${BASE_URL}/${orderId}`);
+}

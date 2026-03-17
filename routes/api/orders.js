@@ -2,7 +2,7 @@
 
 import express from 'express';
 import ensureLoggedIn from '../../config/ensureLoggedIn.js';
-import { createOrder, cart, addToCart, setProductQtyInCart, checkout, history } from '../../controllers/api/orders.js';
+import { createOrder, cart, addToCart, setProductQtyInCart, checkout, show, history } from '../../controllers/api/orders.js';
 
 const router = express.Router();
 
@@ -12,6 +12,8 @@ router.post('/', createOrder);
 router.get('/cart', ensureLoggedIn, cart);
 // GET /api/orders/history
 router.get('/history', ensureLoggedIn, history);
+// GET /api/orders/:id
+router.get('/:id', ensureLoggedIn, show);
 // POST /api/orders/cart/products/:id
 router.post('/cart/products/:id', ensureLoggedIn, addToCart);
 // POST /api/orders/cart/checkout

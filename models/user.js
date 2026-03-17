@@ -3,6 +3,8 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 const userSchema = new mongoose.Schema(
   {
     name: { type: String, required: true, trim: true },
@@ -13,6 +15,12 @@ const userSchema = new mongoose.Schema(
       unique: true,
       lowercase: true,
       trim: true,
+      validate: {
+        validator(value) {
+          return EMAIL_REGEX.test(String(value || "").trim());
+        },
+        message: "Enter a valid email address.",
+      },
     },
 
     password: { type: String, required: true, minlength: 6 },
@@ -42,6 +50,12 @@ const userSchema = new mongoose.Schema(
       default: "",
     },
 
+    points: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
+
     role: {
       type: String,
       enum: ["customer", "admin"],
@@ -50,6 +64,8 @@ const userSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+userSchema.index({ email: 1 }, { unique: true });
 
 // Hash password on create/update
 userSchema.pre("save", async function (next) {

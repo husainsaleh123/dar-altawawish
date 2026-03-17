@@ -64,7 +64,15 @@
   display: none;
 }
 
+.mobileProfileBtn {
+  display: none;
+}
+
 .desktopCartBtn {
+  display: inline-flex;
+}
+
+.desktopProfileBtn {
   display: inline-flex;
 }
 
@@ -118,7 +126,8 @@
 }
 
 .languageBtn,
-.cartBtn {
+.cartBtn,
+.iconBtn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -139,7 +148,8 @@
   background: transparent;
 }
 
-.cartBtn {
+.cartBtn,
+.iconBtn {
   position: relative;
   padding: 0.32rem 0.45rem;
   border: 0;
@@ -147,6 +157,10 @@
   color: #ffffff;
   background: transparent;
   font-size: 1.35rem;
+}
+
+.iconBtn {
+  text-decoration: none;
 }
 
 .cartCount {
@@ -224,12 +238,14 @@
   }
 
   .languageBtn,
-  .cartBtn {
+  .cartBtn,
+  .iconBtn {
     padding: 0.5rem 1rem;
     font-size: 0.92rem;
   }
 
-  .cartBtn {
+  .cartBtn,
+  .iconBtn {
     padding: 0.3rem 0.4rem;
     font-size: 1.25rem;
   }
@@ -264,12 +280,14 @@
   }
 
   .languageBtn,
-  .cartBtn {
+  .cartBtn,
+  .iconBtn {
     padding: 0.42rem 0.78rem;
     font-size: 0.86rem;
   }
 
-  .cartBtn {
+  .cartBtn,
+  .iconBtn {
     padding: 0.28rem 0.38rem;
     font-size: 1.18rem;
   }
@@ -301,7 +319,15 @@
     display: inline-flex;
   }
 
+  .mobileProfileBtn {
+    display: inline-flex;
+  }
+
   .desktopCartBtn {
+    display: none;
+  }
+
+  .desktopProfileBtn {
     display: none;
   }
 
@@ -375,11 +401,13 @@
   }
 
   .languageBtn,
-  .cartBtn {
+  .cartBtn,
+  .iconBtn {
     padding: 0.52rem 1.05rem;
   }
 
-  .cartBtn {
+  .cartBtn,
+  .iconBtn {
     padding: 0.3rem 0.4rem;
     font-size: 1.2rem;
   }
@@ -408,12 +436,14 @@
   }
 
   .languageBtn,
-  .cartBtn {
+  .cartBtn,
+  .iconBtn {
     padding: 0.5rem 0.95rem;
     font-size: 0.86rem;
   }
 
-  .cartBtn {
+  .cartBtn,
+  .iconBtn {
     padding: 0.28rem 0.35rem;
     font-size: 1.15rem;
   }

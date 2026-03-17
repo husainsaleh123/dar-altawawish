@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import styles from './AuthPage.module.scss';
 import LoginForm from '../../components/LoginForm/LoginForm';
 import SignUpForm from '../../components/SignUpForm/SignUpForm';
-import Logo from '../../components/Logo/Logo';
 
 export default function AuthPage({ setUser, initialMode = 'login' }) {
   const [showLogin, setShowLogin] = useState(initialMode !== 'signup');
@@ -13,21 +12,43 @@ export default function AuthPage({ setUser, initialMode = 'login' }) {
     setShowLogin(initialMode !== 'signup');
   }, [initialMode]);
 
-  if (initialMode === 'signup') {
-    return (
-      <main className={styles.SignUpPage}>
-        <SignUpForm setUser={setUser} />
-      </main>
-    );
-  }
-
   return (
     <main className={styles.AuthPage}>
-      <div>
-        <Logo />
-        <h3 onClick={() => setShowLogin(!showLogin)}>{showLogin ? 'SIGN UP' : 'LOG IN'}</h3>
-      </div>
-      {showLogin ? <LoginForm setUser={setUser} /> : <SignUpForm setUser={setUser} />}
+      <section className={styles.authShell}>
+        <h1>{showLogin ? 'Welcome back' : 'Create your account'}</h1>
+        <p>
+          {showLogin
+            ? 'Log in to view your profile, points, and orders.'
+            : 'Sign up in a minute with email or continue with Google.'}
+        </p>
+
+        <div className={styles.modeSwitch} role="tablist" aria-label="Authentication mode">
+          <button
+            type="button"
+            className={`${styles.modeButton} ${showLogin ? styles.modeButtonActive : ''}`.trim()}
+            onClick={() => setShowLogin(true)}
+            aria-pressed={showLogin}
+          >
+            Log In
+          </button>
+          <button
+            type="button"
+            className={`${styles.modeButton} ${!showLogin ? styles.modeButtonActive : ''}`.trim()}
+            onClick={() => setShowLogin(false)}
+            aria-pressed={!showLogin}
+          >
+            Sign Up
+          </button>
+        </div>
+
+        <div className={styles.authCard}>
+          {showLogin ? (
+            <LoginForm setUser={setUser} onSwitchToSignUp={() => setShowLogin(false)} embedded />
+          ) : (
+            <SignUpForm setUser={setUser} onSwitchToLogin={() => setShowLogin(true)} embedded />
+          )}
+        </div>
+      </section>
     </main>
   );
 }

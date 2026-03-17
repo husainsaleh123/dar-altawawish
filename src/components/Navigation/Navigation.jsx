@@ -26,6 +26,9 @@ export default function Navigation({ cartCount = 0 }) {
       </NavLink>
 
       <div className={styles.headerControls}>
+        <Link to="/profile" className={`${styles.iconBtn} ${styles.mobileProfileBtn}`} aria-label="Profile">
+          <i className="fa fa-user" aria-hidden="true" />
+        </Link>
         <Link to="/orders" className={`${styles.cartBtn} ${styles.mobileCartBtn}`} aria-label="Cart">
           <i className="fa fa-shopping-cart" aria-hidden="true" />
           {cartCount > 0 && <span className={styles.cartCount}>{cartCount}</span>}
@@ -69,6 +72,9 @@ export default function Navigation({ cartCount = 0 }) {
           <button type="button" className={styles.languageBtn} aria-label="Current language EN">
             EN
           </button>
+          <Link to="/profile" className={`${styles.iconBtn} ${styles.desktopProfileBtn}`} aria-label="Profile">
+            <i className="fa fa-user" aria-hidden="true" />
+          </Link>
           <Link to="/orders" className={`${styles.cartBtn} ${styles.desktopCartBtn}`} aria-label="Cart">
             <i className="fa fa-shopping-cart" aria-hidden="true" />
             {cartCount > 0 && <span className={styles.cartCount}>{cartCount}</span>}

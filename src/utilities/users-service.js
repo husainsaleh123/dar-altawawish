@@ -3,8 +3,12 @@
 import * as usersAPI  from './users-api';
 
 export async function signUp(userData) {
+  const normalizedData = {
+    ...userData,
+    email: String(userData?.email || '').trim().toLowerCase()
+  };
   // The backend now returns { token: "...", user: {...} }
-  const response = await usersAPI.signUp(userData);
+  const response = await usersAPI.signUp(normalizedData);
   // Persist the token to localStorage
   localStorage.setItem('token', response.token);
   // Return the user object directly
@@ -12,8 +16,12 @@ export async function signUp(userData) {
 }
 
 export async function login(credentials) {
+  const normalizedCredentials = {
+    ...credentials,
+    email: String(credentials?.email || '').trim().toLowerCase()
+  };
   // The backend now returns { token: "...", user: {...} }
-  const response = await usersAPI.login(credentials);
+  const response = await usersAPI.login(normalizedCredentials);
   // Persist the token to localStorage
   localStorage.setItem('token', response.token);
   // Return the user object directly
@@ -28,6 +36,14 @@ export async function googleAuth(payload) {
 
 export async function getGoogleConfig() {
   return usersAPI.getGoogleConfig();
+}
+
+export async function getProfile() {
+  return usersAPI.getProfile();
+}
+
+export async function updatePassword(passwordData) {
+  return usersAPI.updatePassword(passwordData);
 }
 
 export function getToken() {
