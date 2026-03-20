@@ -1,6 +1,7 @@
 // ./controllers/api/products.js
 
 import Product from '../../models/product.js';
+import { syncProductCatalog } from '../../src/shared/productCatalogSync.js';
 
 export default {
   index,
@@ -14,9 +15,8 @@ export {
 // GET /api/products
 async function index(req, res) {
   try{
-    const products = await Product.find({}).sort('name').populate('category').exec();
-    // re-sort based upon the sortOrder of the categories
-    products.sort((a, b) => a.category.sortOrder - b.category.sortOrder);
+    await syncProductCatalog();
+    const products = await Product.find({}).sort('name').lean();
     res.status(200).json(products);
   }catch(e){
     res.status(400).json({ msg: e.message });

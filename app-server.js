@@ -14,6 +14,9 @@ import userRoutes from "./routes/api/users.js";
 import productRoutes from "./routes/api/products.js";
 import orderRoutes from "./routes/api/orders.js";
 import adminOrdersRoutes from "./routes/api/adminOrders.js";
+import adminUsersRoutes from "./routes/api/adminUsers.js";
+import adminProductsRoutes from "./routes/api/adminProducts.js";
+import adminNotificationsRoutes from "./routes/api/adminNotifications.js";
 import contactRoutes from "./routes/api/contact.js";
 // (optional later) import adminProductsRoutes from "./routes/api/adminProducts.js";
 
@@ -51,6 +54,9 @@ app.use("/api/orders", orderRoutes);
 
 // Admin only
 app.use("/api/admin/orders", ensureLoggedIn, requireAdmin, adminOrdersRoutes);
+app.use("/api/admin/users", ensureLoggedIn, requireAdmin, adminUsersRoutes);
+app.use("/api/admin/products", ensureLoggedIn, requireAdmin, adminProductsRoutes);
+app.use("/api/admin/notifications", ensureLoggedIn, requireAdmin, adminNotificationsRoutes);
 
 // Determine which directory to serve static files from
 const staticDir = process.env.NODE_ENV === "production" ? "dist" : "public";

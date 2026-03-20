@@ -15,6 +15,10 @@ import AboutPage from '../AboutPage/AboutPage';
 import ContactPage from '../ContactPage/ContactPage';
 import ProfilePage from '../ProfilePage/ProfilePage';
 import OrderDetailsPage from '../OrderDetailsPage/OrderDetailsPage';
+import AdminDashboardPage from '../AdminDashboardPage/AdminDashboardPage';
+import AdminUsersPage from '../AdminUsersPage/AdminUsersPage';
+import AdminProductsPage from '../AdminProductsPage/AdminProductsPage';
+import AdminOrdersPage from '../AdminOrdersPage/AdminOrdersPage';
 import Footer from '../../components/Footer/Footer';
 import { logOut } from '../../utilities/users-service';
 
@@ -88,7 +92,7 @@ export default function App() {
 
   return (
     <main className={styles.App}>
-      <Navigation cartCount={cartItems.reduce((sum, item) => sum + item.qty, 0)} />
+      <Navigation user={user} cartCount={cartItems.reduce((sum, item) => sum + item.qty, 0)} />
       <div key={location.pathname} className={styles.routeContent}>
         <Routes>
           <Route path="/" element={<HomePage />} />
@@ -125,6 +129,22 @@ export default function App() {
           <Route
             path="/profile/orders/:orderId"
             element={user ? <OrderDetailsPage /> : <AuthPage setUser={setUser} initialMode="login" />}
+          />
+          <Route
+            path="/admin"
+            element={user?.role === 'admin' ? <AdminDashboardPage /> : <Navigate to="/" />}
+          />
+          <Route
+            path="/admin/users"
+            element={user?.role === 'admin' ? <AdminUsersPage /> : <Navigate to="/" />}
+          />
+          <Route
+            path="/admin/products"
+            element={user?.role === 'admin' ? <AdminProductsPage /> : <Navigate to="/" />}
+          />
+          <Route
+            path="/admin/orders"
+            element={user?.role === 'admin' ? <AdminOrdersPage /> : <Navigate to="/" />}
           />
           <Route path="/*" element={<Navigate to="/" />} />
         </Routes>

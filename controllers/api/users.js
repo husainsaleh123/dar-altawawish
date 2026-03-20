@@ -2,6 +2,7 @@
 
 import User from '../../models/user.js';
 import Order from '../../models/order.js';
+import Notification from '../../models/notification.js';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
@@ -28,6 +29,7 @@ const dataController = {
 
       req.body.email = email;
       const user = await User.create(req.body)
+      await createRegistrationNotification(user);
       console.log(req.body)
       // token will be a string
       const token = createJWT(user)
@@ -93,6 +95,7 @@ const dataController = {
           countryCode: sanitizedCountryCode,
           phone: sanitizedPhone
         });
+        await createRegistrationNotification(user);
       } else {
         if (user.googleId && user.googleId !== googleId) {
           return res.status(400).json({ error: 'Google account mismatch for this email.' });
@@ -263,4 +266,22 @@ async function verifyGoogleCredential(credential) {
   }
 
   return payload;
+}
+
+async function createRegistrationNotification(user) {
+  if (!user?._id) return;
+
+  await Notification.create({
+    type: "user_registered",
+    title: "New user registration",
+    message: `${user.name} registered with ${user.email}.`,
+    entityType: "user",
+    entityId: user._id,
+    entityModel: "User",
+    metadata: {
+      email: user.email,
+      role: user.role,
+      authProvider: user.authProvider,
+    },
+  });
 }

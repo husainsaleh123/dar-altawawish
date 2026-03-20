@@ -11,9 +11,15 @@ const NAV_ITEMS = [
   { label: 'Contact', to: '/contact' }
 ];
 
-export default function Navigation({ cartCount = 0 }) {
+export default function Navigation({ user, cartCount = 0 }) {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navItems = user?.role === 'admin'
+    ? [
+        ...NAV_ITEMS.filter((item) => item.to !== '/contact'),
+        { label: 'Admin', to: '/admin' }
+      ]
+    : NAV_ITEMS;
 
   useEffect(() => {
     setIsMenuOpen(false);
@@ -50,7 +56,7 @@ export default function Navigation({ cartCount = 0 }) {
 
       <div id="primary-menu" className={`${styles.menuPanel} ${isMenuOpen ? styles.menuPanelOpen : ''}`}>
         <ul className={styles.links}>
-          {NAV_ITEMS.map((item) => {
+          {navItems.map((item) => {
             const isProductsRoute = item.to === '/orders/new' && location.pathname.startsWith('/orders');
             return (
               <li key={item.label}>
