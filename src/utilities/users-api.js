@@ -16,6 +16,10 @@ export function googleAuth(payload) {
   return sendRequest(`${BASE_URL}/google`, 'POST', payload, { includeToken: false });
 }
 
+export function googleLogin(payload) {
+  return sendRequest(`${BASE_URL}/google/login`, 'POST', payload, { includeToken: false });
+}
+
 export function getGoogleConfig() {
   return sendRequest(`${BASE_URL}/google/config`, 'GET', null, { includeToken: false });
 }

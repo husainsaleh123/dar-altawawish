@@ -34,6 +34,12 @@ export async function googleAuth(payload) {
   return response.user;
 }
 
+export async function googleLogin(payload) {
+  const response = await usersAPI.googleLogin(payload);
+  localStorage.setItem('token', response.token);
+  return response.user;
+}
+
 export async function getGoogleConfig() {
   return usersAPI.getGoogleConfig();
 }

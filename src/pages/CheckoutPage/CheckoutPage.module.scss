@@ -83,6 +83,25 @@
   padding: 1.25rem;
 }
 
+.gatewayNotice {
+  margin-top: 0.35rem;
+  padding: 1rem 1.05rem;
+  border-radius: 18px;
+  background: #f4efe1;
+  border: 1px solid #e0d1a6;
+}
+
+.gatewayNotice strong {
+  display: block;
+  color: #3f2f0f;
+}
+
+.gatewayNotice p {
+  margin: 0.35rem 0 0;
+  color: #6a5730;
+  line-height: 1.55;
+}
+
 .formSection {
   width: 100%;
 }

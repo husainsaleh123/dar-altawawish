@@ -2,9 +2,11 @@
 
 import Order from '../../models/order.js';
 import User from '../../models/user.js';
+import { buildApsHostedCheckoutPayload, checkApsPaymentStatus, getApsHostedCheckoutUrl, getAppBaseUrl, isApsConfigured, verifyApsResponseSignature } from '../../config/aps.js';
 
 export {
   createOrder,
+  handleApsReturn,
   cart,
   addToCart,
   setProductQtyInCart,
@@ -64,6 +66,7 @@ async function createOrder(req, res) {
     const totalPrice = roundCurrency(itemsPrice + shippingPrice - loyaltyDiscountAmount);
     const pointsRedeemed = canRedeemDiscount ? 100 : 0;
     const pointsEarned = user ? Math.floor(Math.max(itemsPrice - loyaltyDiscountAmount, 0)) : 0;
+    const isApsCardPayment = req.body.paymentMethod === "debit-card";
 
     const order = await Order.create({
       orderNumber: buildOrderNumber(),
@@ -87,13 +90,13 @@ async function createOrder(req, res) {
             }
           : undefined,
       paymentMethod:
-        req.body.paymentMethod === "debit-card"
+        isApsCardPayment
           ? "card"
           : req.body.paymentMethod === "benefitpay"
             ? "benefitpay"
             : "cash",
       payment: {
-        provider: req.body.paymentMethod === "debit-card" ? "manual" : null,
+        provider: isApsCardPayment ? "aps" : null,
         status: "pending",
       },
       loyalty: {
@@ -110,14 +113,122 @@ async function createOrder(req, res) {
       customerNote: String(req.body.notes || "").trim() || null,
     });
 
-    if (user) {
+    if (user && !isApsCardPayment) {
       user.points = Math.max(0, (Number(user.points) || 0) - pointsRedeemed) + pointsEarned;
       await user.save();
     }
 
-    res.status(201).json(order);
+    if (isApsCardPayment) {
+      if (!isApsConfigured()) {
+        await Order.findByIdAndDelete(order._id);
+        return res.status(400).json({ msg: "Amazon Payment Services is not configured yet." });
+      }
+
+      const baseUrl = getAppBaseUrl(req);
+      const returnUrl = `${baseUrl}/api/orders/aps/return`;
+      let apsPayload;
+
+      try {
+        apsPayload = buildApsHostedCheckoutPayload({
+          merchantReference: order.orderNumber,
+          amount: convertToMinorUnits(order.totalPrice, 'BHD'),
+          currency: 'BHD',
+          customerEmail: String(req.body.email || '').trim().toLowerCase(),
+          customerName: `${req.body.firstName || ''} ${req.body.lastName || ''}`.trim(),
+          phoneNumber: String(req.body.phone || '').trim(),
+          returnUrl,
+          orderDescription: `Order ${order.orderNumber}`,
+          orderId: String(order._id),
+          orderNumber: String(order.orderNumber)
+        });
+      } catch (error) {
+        await Order.findByIdAndDelete(order._id);
+        throw error;
+      }
+
+      await order.save();
+
+      return res.status(201).json({
+        order,
+        requiresRedirect: true,
+        paymentRedirectUrl: getApsHostedCheckoutUrl(),
+        paymentRedirectMethod: 'POST',
+        paymentRedirectFields: apsPayload
+      });
+    }
+
+    res.status(201).json({
+      order,
+      requiresRedirect: false
+    });
   } catch (e) {
     res.status(400).json({ msg: e.message });
+  }
+}
+
+async function handleApsReturn(req, res) {
+  try {
+    const apsParams = {
+      ...(req.query || {}),
+      ...(req.body || {})
+    };
+    const merchantReference = String(apsParams.merchant_reference || '').trim();
+
+    if (!merchantReference) {
+      return redirectToCheckoutResult(res, { success: false, message: 'Missing APS merchant reference.' });
+    }
+
+    const order = await Order.findOne({ orderNumber: merchantReference });
+    if (!order) {
+      return redirectToCheckoutResult(res, { success: false, message: 'Order not found.' });
+    }
+
+    if (order.payment?.provider !== 'aps') {
+      return redirectToCheckoutResult(res, { success: false, message: 'This order is not using Amazon Payment Services.', order });
+    }
+
+    if (!verifyApsResponseSignature(apsParams)) {
+      order.payment.status = 'signature_failed';
+      await order.save();
+      return redirectToCheckoutResult(res, { success: false, message: 'APS signature validation failed.', order });
+    }
+
+    if (order.isPaid) {
+      return redirectToCheckoutResult(res, { success: true, order });
+    }
+
+    const statusResponse = await checkApsPaymentStatus({
+      merchantReference,
+      fortId: String(apsParams.fort_id || '').trim()
+    });
+    const responseCode = String(statusResponse?.response_code || '');
+    const normalizedStatus = String(statusResponse?.status || '');
+    const isPaid = responseCode.startsWith('14') || normalizedStatus === '14' || normalizedStatus === '20';
+
+    order.payment.transactionId = String(statusResponse?.fort_id || apsParams.fort_id || '');
+    order.payment.status = isPaid ? 'paid' : String(statusResponse?.response_message || 'failed').toLowerCase();
+    order.payment.paidAt = isPaid ? new Date() : null;
+    order.isPaid = isPaid;
+
+    if (!isPaid) {
+      await order.save();
+      return redirectToCheckoutResult(res, {
+        success: false,
+        message: statusResponse?.response_message || 'Payment was not completed.',
+        order
+      });
+    }
+
+    const user = order.user ? await User.findById(order.user) : null;
+    if (user) {
+      applyLoyaltyToUser(user, order);
+      await user.save();
+    }
+
+    await order.save();
+    return redirectToCheckoutResult(res, { success: true, order });
+  } catch (e) {
+    return redirectToCheckoutResult(res, { success: false, message: e.message || 'APS payment verification failed.' });
   }
 }
 
@@ -240,4 +351,33 @@ async function adminUpdate(req, res) {
   } catch (e) {
     res.status(400).json({ msg: e.message });
   }
+}
+
+function applyLoyaltyToUser(user, order) {
+  if (!user || !order || order.isPaid !== true) return;
+
+  const currentPoints = Number(user.points) || 0;
+  const pointsRedeemed = Number(order.loyalty?.pointsRedeemed) || 0;
+  const pointsEarned = Number(order.loyalty?.pointsEarned) || 0;
+
+  user.points = Math.max(0, currentPoints - pointsRedeemed) + pointsEarned;
+}
+
+function convertToMinorUnits(amount, currency) {
+  const numericAmount = Number(amount) || 0;
+  const multiplier = currency === 'BHD' ? 1000 : 100;
+  return Math.round(numericAmount * multiplier);
+}
+
+function redirectToCheckoutResult(res, { success, message = '', order = null }) {
+  const params = new URLSearchParams({
+    success: success ? '1' : '0'
+  });
+
+  if (message) params.set('message', message);
+  if (order?._id) params.set('orderId', String(order._id));
+  if (order?.orderNumber) params.set('orderNumber', String(order.orderNumber));
+  if (order?.totalPrice !== undefined) params.set('total', String(order.totalPrice));
+
+  return res.redirect(`/checkout/aps-return?${params.toString()}`);
 }

@@ -2,12 +2,14 @@
 
 import express from 'express';
 import ensureLoggedIn from '../../config/ensureLoggedIn.js';
-import { createOrder, cart, addToCart, setProductQtyInCart, checkout, show, history } from '../../controllers/api/orders.js';
+import { createOrder, handleApsReturn, cart, addToCart, setProductQtyInCart, checkout, show, history } from '../../controllers/api/orders.js';
 
 const router = express.Router();
 
 // POST /api/orders
 router.post('/', createOrder);
+// GET/POST /api/orders/aps/return
+router.all('/aps/return', handleApsReturn);
 // GET /api/orders/cart
 router.get('/cart', ensureLoggedIn, cart);
 // GET /api/orders/history

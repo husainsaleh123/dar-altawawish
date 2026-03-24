@@ -30,10 +30,6 @@ export default function CheckoutPage({ cartItems = [], user, onCheckoutComplete 
     country: 'Bahrain',
     notes: '',
     paymentMethod: 'cash-on-hand',
-    cardName: user?.name || '',
-    cardNumber: '',
-    expiry: '',
-    cvv: '',
     saveInfo: false,
     agreeToTerms: false
   });
@@ -102,12 +98,6 @@ export default function CheckoutPage({ cartItems = [], user, onCheckoutComplete 
     }
     if (!formData.city.trim()) return 'City is required.';
     if (!formData.country.trim()) return 'Country is required.';
-    if (formData.paymentMethod === 'debit-card') {
-      if (!formData.cardName.trim()) return 'Name on card is required.';
-      if (!/^\d{13,19}$/.test(formData.cardNumber.replace(/\s+/g, ''))) return 'Enter a valid card number.';
-      if (!/^\d{2}\/\d{2}$/.test(formData.expiry.trim())) return 'Expiry must be in MM/YY format.';
-      if (!/^\d{3,4}$/.test(formData.cvv.trim())) return 'Enter a valid CVV.';
-    }
     if (!formData.agreeToTerms) return 'You must confirm the order details before placing the order.';
     return '';
   }
@@ -124,10 +114,25 @@ export default function CheckoutPage({ cartItems = [], user, onCheckoutComplete 
     setError('');
 
     try {
-      const createdOrder = await createOrder({
+      const checkoutResponse = await createOrder({
         ...formData,
         items: cartItems
       });
+
+      if (
+        checkoutResponse?.requiresRedirect
+        && checkoutResponse?.paymentRedirectUrl
+        && checkoutResponse?.paymentRedirectMethod === 'POST'
+        && checkoutResponse?.paymentRedirectFields
+      ) {
+        submitHostedPaymentForm(
+          checkoutResponse.paymentRedirectUrl,
+          checkoutResponse.paymentRedirectFields
+        );
+        return;
+      }
+
+      const createdOrder = checkoutResponse?.order || checkoutResponse;
 
       const order = {
         orderNumber: createdOrder.orderNumber,
@@ -348,36 +353,17 @@ export default function CheckoutPage({ cartItems = [], user, onCheckoutComplete 
                 />
                 <div>
                   <strong>Debit card</strong>
-                  <span>Pay now using your debit card details.</span>
+                  <span>Pay securely on Amazon Payment Services after reviewing your order.</span>
                 </div>
               </label>
             </div>
 
             {formData.paymentMethod === 'debit-card' && (
-              <div className={styles.formGrid}>
-                <label className={styles.fullWidth}>
-                  <span>Name on card</span>
-                  <input name="cardName" value={formData.cardName} onChange={handleChange} required />
-                </label>
-                <label className={styles.fullWidth}>
-                  <span>Card number</span>
-                  <input
-                    name="cardNumber"
-                    value={formData.cardNumber}
-                    onChange={handleChange}
-                    inputMode="numeric"
-                    placeholder="4111 1111 1111 1111"
-                    required
-                  />
-                </label>
-                <label>
-                  <span>Expiry</span>
-                  <input name="expiry" value={formData.expiry} onChange={handleChange} placeholder="MM/YY" required />
-                </label>
-                <label>
-                  <span>CVV</span>
-                  <input name="cvv" value={formData.cvv} onChange={handleChange} inputMode="numeric" required />
-                </label>
+              <div className={styles.gatewayNotice}>
+                <strong>APS hosted checkout</strong>
+                <p>
+                  After you place the order, we will redirect you to Amazon Payment Services to enter the card details securely.
+                </p>
               </div>
             )}
 
@@ -454,4 +440,21 @@ export default function CheckoutPage({ cartItems = [], user, onCheckoutComplete 
       </section>
     </main>
   );
+}
+
+function submitHostedPaymentForm(action, fields) {
+  const form = document.createElement('form');
+  form.method = 'POST';
+  form.action = action;
+
+  Object.entries(fields || {}).forEach(([name, value]) => {
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = name;
+    input.value = String(value ?? '');
+    form.appendChild(input);
+  });
+
+  document.body.appendChild(form);
+  form.submit();
 }

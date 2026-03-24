@@ -115,6 +115,48 @@ const dataController = {
       res.status(400).json({ error: error?.message || 'Google sign-in failed.' });
     }
   },
+  async googleLogin(req, res, next) {
+    try {
+      const { credential } = req.body || {};
+      const googleUser = await verifyGoogleCredential(credential);
+
+      const email = String(googleUser.email || '').trim().toLowerCase();
+      const name = String(googleUser.name || googleUser.given_name || '').trim();
+      const googleId = String(googleUser.sub || '').trim();
+
+      if (!email || !googleId) {
+        return res.status(400).json({ error: 'Invalid Google profile.' });
+      }
+
+      const user = await User.findOne({
+        $or: [{ googleId }, { email }]
+      });
+
+      if (!user) {
+        return res.status(400).json({ error: 'User not registered' });
+      }
+
+      if (user.googleId && user.googleId !== googleId) {
+        return res.status(400).json({ error: 'Google account mismatch for this email.' });
+      }
+
+      if (!user.googleId) {
+        user.googleId = googleId;
+      }
+
+      if (name && !user.name) {
+        user.name = name;
+      }
+
+      await user.save();
+
+      res.locals.data.user = user;
+      res.locals.data.token = createJWT(user);
+      next();
+    } catch (error) {
+      res.status(400).json({ error: error?.message || 'Google sign-in failed.' });
+    }
+  },
   googleConfig(req, res, next) {
     res.locals.data.googleClientId = process.env.GOOGLE_CLIENT_ID || '';
     next();

@@ -38,6 +38,81 @@
   color: inherit;
 }
 
+.googleButtonWrap {
+  width: 100%;
+}
+
+.googleButtonShell {
+  position: relative;
+  width: 100%;
+}
+
+.googleVisualButton {
+  width: 100%;
+  min-height: 56px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.85rem;
+  border: 1px solid #d7ddf6;
+  border-radius: 18px;
+  background: #ffffff;
+  color: #1b1b2e;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+}
+
+.googleVisualButton:hover {
+  transform: translateY(-1px);
+  border-color: #bcc7ef;
+  box-shadow: 0 16px 30px rgba(20, 20, 36, 0.1);
+}
+
+.googleVisualButtonDisabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+.googleIconBadge {
+  width: 32px;
+  height: 32px;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 999px;
+  background: #fff;
+}
+
+.googleIconBadge svg {
+  width: 18px;
+  height: 18px;
+}
+
+.googleButtonText {
+  line-height: 1;
+}
+
+.googleNativeButton {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.googleNativeButtonReady {
+  pointer-events: auto;
+}
+
+.orText {
+  margin: 0;
+  color: #6a6a82;
+  font-size: 0.95rem;
+  text-align: center;
+}
+
 .fieldBlock {
   display: grid;
   grid-template-columns: 1fr;

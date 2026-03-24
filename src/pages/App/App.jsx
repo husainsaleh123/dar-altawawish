@@ -9,6 +9,7 @@ import NewOrderPage from '../NewOrderPage/NewOrderPage';
 import OrderHistoryPage from '../OrderHistoryPage/OrderHistoryPage';
 import CheckoutAccessPage from '../CheckoutAccessPage/CheckoutAccessPage';
 import CheckoutPage from '../CheckoutPage/CheckoutPage';
+import ApsPaymentReturnPage from '../ApsPaymentReturnPage/ApsPaymentReturnPage';
 import Navigation from '../../components/Navigation/Navigation';
 import HomePage from '../HomePage/HomePage';
 import AboutPage from '../AboutPage/AboutPage';
@@ -111,6 +112,10 @@ export default function App() {
                 onCheckoutComplete={handleCheckoutComplete}
               />
             }
+          />
+          <Route
+            path="/checkout/aps-return"
+            element={<ApsPaymentReturnPage onCheckoutComplete={handleCheckoutComplete} />}
           />
           <Route
             path="/orders"
