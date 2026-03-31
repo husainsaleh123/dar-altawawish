@@ -46,7 +46,7 @@ export const DEFAULT_GEMSTONE_PRODUCTS = [
     subcategory: 'Malakite',
     description: 'Gemstone product priced per piece.',
     price: 0.5,
-    image: '',
+    image: '/products/van-cliff-malakite-10x10mm.jpg',
     countInStock: 0,
     unit: 'piece',
     requiresQuantitySelection: true
@@ -69,7 +69,7 @@ export const DEFAULT_GEMSTONE_PRODUCTS = [
     subcategory: 'Coral',
     description: 'Gemstone product priced per gram.',
     price: 2,
-    image: '',
+    image: '/products/coral-rounded-1.5mm.jpg',
     countInStock: 0,
     unit: 'gram'
   },
@@ -160,6 +160,39 @@ export const DEFAULT_GEMSTONE_PRODUCTS = [
     image: '',
     countInStock: 0,
     unit: 'gram'
+  },
+  {
+    _id: 'turquoise-half-rounded',
+    name: 'Turquoise Half-rounded',
+    category: 'Gemstones',
+    subcategory: 'Turquoise',
+    description: 'Gemstone product priced per gram.',
+    price: 0,
+    image: '',
+    countInStock: 0,
+    unit: 'gram'
+  },
+  {
+    _id: 'turquoise-teardrop',
+    name: 'Turquoise Teardrop',
+    category: 'Gemstones',
+    subcategory: 'Turquoise',
+    description: 'Gemstone product priced per gram.',
+    price: 0,
+    image: '',
+    countInStock: 0,
+    unit: 'gram'
+  },
+  {
+    _id: 'turquoise-oval',
+    name: 'Turquoise Oval',
+    category: 'Gemstones',
+    subcategory: 'Turquoise',
+    description: 'Gemstone product priced per gram.',
+    price: 0,
+    image: '',
+    countInStock: 0,
+    unit: 'gram'
   }
 ];
 
@@ -172,18 +205,8 @@ export const DEFAULT_MACHINE_PRODUCTS = [
     description:
       'A reliable money counting machine for fast and accurate cash handling, built for jewellery counters and daily retail operations.',
     price: 70,
-    image: '',
+    image: '/products/money-counting-machine.jpg',
     countInStock: 8
-  },
-  {
-    _id: 'sandplus-machine',
-    name: 'Sandplus machine',
-    category: 'Machines',
-    subcategory: null,
-    description: 'Machine product. Price will be updated.',
-    price: 0,
-    image: '',
-    countInStock: 0
   },
   {
     _id: 'benchgrinder-machine',
@@ -242,7 +265,7 @@ export const DEFAULT_MACHINE_PRODUCTS = [
     subcategory: null,
     description: 'Machine product.',
     price: 130,
-    image: '',
+    image: '/products/sandblast.jpg',
     countInStock: 0
   }
 ];
@@ -255,7 +278,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     subcategory: 'Crucibles',
     description: 'Tool product.',
     price: 5,
-    image: '',
+    image: '/products/electric-crucible.jpg',
     countInStock: 0
   },
   {
@@ -263,9 +286,9 @@ export const DEFAULT_TOOL_PRODUCTS = [
     name: 'Crucible No. 1',
     category: 'Tools',
     subcategory: 'Crucibles',
-    description: 'Tool product.',
+    description: 'Used for melting metals at high temperatures.',
     price: 1,
-    image: '',
+    image: '/products/graphite-crucible-1.jpg',
     countInStock: 0
   },
   {
@@ -273,9 +296,9 @@ export const DEFAULT_TOOL_PRODUCTS = [
     name: 'Crucible No. 1.5',
     category: 'Tools',
     subcategory: 'Crucibles',
-    description: 'Tool product.',
+    description: 'Used for melting metals at high temperatures.',
     price: 1.5,
-    image: '',
+    image: '/products/graphite-crucible-1.5.jpg',
     countInStock: 0
   },
   {
@@ -283,9 +306,9 @@ export const DEFAULT_TOOL_PRODUCTS = [
     name: 'Crucible No. 2',
     category: 'Tools',
     subcategory: 'Crucibles',
-    description: 'Tool product.',
+    description: 'Used for melting metals at high temperatures.',
     price: 2,
-    image: '',
+    image: '/products/graphite-crucible-2.jpg',
     countInStock: 0
   },
   {
@@ -293,9 +316,9 @@ export const DEFAULT_TOOL_PRODUCTS = [
     name: 'Crucible No. 3',
     category: 'Tools',
     subcategory: 'Crucibles',
-    description: 'Tool product.',
-    price: 2,
-    image: '',
+    description: 'Used for melting metals at high temperatures.',
+    price: 3,
+    image: '/products/graphite-crucible-3.jpg',
     countInStock: 0
   },
   {
@@ -303,9 +326,9 @@ export const DEFAULT_TOOL_PRODUCTS = [
     name: 'Crucible No. 4',
     category: 'Tools',
     subcategory: 'Crucibles',
-    description: 'Tool product.',
-    price: 2.5,
-    image: '',
+    description: 'Used for melting metals at high temperatures.',
+    price: 4,
+    image: '/products/graphite-crucible-4.jpg',
     countInStock: 0
   },
   {
@@ -313,9 +336,19 @@ export const DEFAULT_TOOL_PRODUCTS = [
     name: 'Crucible No. 5',
     category: 'Tools',
     subcategory: 'Crucibles',
-    description: 'Tool product.',
-    price: 3,
-    image: '',
+    description: 'Used for melting metals at high temperatures.',
+    price: 5,
+    image: '/products/graphite-crucible-5.jpg',
+    countInStock: 0
+  },
+  {
+    _id: 'crucible-no-6',
+    name: 'Crucible No. 6',
+    category: 'Tools',
+    subcategory: 'Crucibles',
+    description: 'Used for melting metals at high temperatures.',
+    price: 6,
+    image: '/products/graphite-crucible-6.jpg',
     countInStock: 0
   },
   {
@@ -395,7 +428,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     subcategory: 'Soldering',
     description: 'Tool product.',
     price: 0.8,
-    image: '',
+    image: '/products/Soldering-water-200ml.jpg',
     countInStock: 0
   },
   {
@@ -405,17 +438,17 @@ export const DEFAULT_TOOL_PRODUCTS = [
     subcategory: 'Soldering',
     description: 'Tool product.',
     price: 1,
-    image: '',
+    image: '/products/Soldering-water-400ml.jpg',
     countInStock: 0
   },
   {
     _id: 'soldering-water-1-ml',
-    name: 'Soldering Water (1 ML)',
+    name: 'Soldering Water (1L)',
     category: 'Tools',
     subcategory: 'Soldering',
     description: 'Tool product.',
     price: 2.5,
-    image: '',
+    image: '/products/Soldering-water-1L.jpg',
     countInStock: 0
   },
   {
@@ -485,7 +518,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     subcategory: 'Burners',
     description: 'Tool product.',
     price: 2,
-    image: '',
+    image: '/products/swaraj-burner-0.jpg',
     countInStock: 0
   },
   {
@@ -495,7 +528,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     subcategory: 'Burners',
     description: 'Tool product.',
     price: 2,
-    image: '',
+    image: '/products/swaraj-burner-3938.jpg',
     countInStock: 0
   },
   {
@@ -505,7 +538,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     subcategory: 'Burners',
     description: 'Tool product.',
     price: 2.5,
-    image: '',
+    image: '/products/swaraj-burner-3940.jpg',
     countInStock: 0
   },
   {
@@ -545,7 +578,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     subcategory: 'Burners',
     description: 'Tool product.',
     price: 3,
-    image: '',
+    image: '/products/gemka-burner-3939.jpg',
     countInStock: 0
   },
   {
@@ -579,8 +612,8 @@ export const DEFAULT_TOOL_PRODUCTS = [
     countInStock: 0
   },
   {
-    _id: 'right-brush-coarse-angled-brass-wire-brush',
-    name: 'Right brush (coarse / angled brass wire brush)',
+    _id: 'angled-brass-wire-brush',
+    name: 'Angled brass wire brush',
     category: 'Tools',
     subcategory: 'Brushes',
     description: 'Tool product.',
@@ -589,18 +622,8 @@ export const DEFAULT_TOOL_PRODUCTS = [
     countInStock: 0
   },
   {
-    _id: 'middle-brush-medium-brass-wire-brush',
-    name: 'Middle brush (medium brass wire brush)',
-    category: 'Tools',
-    subcategory: 'Brushes',
-    description: 'Tool product.',
-    price: 0.6,
-    image: '',
-    countInStock: 0
-  },
-  {
     _id: 'larger-brush-dense-brass-wire-brush',
-    name: 'Larger brush (dense brass wire brush)',
+    name: 'Dense brass wire brush',
     category: 'Tools',
     subcategory: 'Brushes',
     description: 'Tool product.',
@@ -625,7 +648,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     subcategory: 'Others',
     description: 'Tool product.',
     price: 2,
-    image: '',
+    image: '/products/stamp-21.jpg',
     countInStock: 0
   },
   {
@@ -665,7 +688,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     subcategory: 'Others',
     description: 'Tool product.',
     price: 5,
-    image: '',
+    image: '/products/castaldo-spray.jpg',
     countInStock: 0
   },
   {
@@ -675,7 +698,17 @@ export const DEFAULT_TOOL_PRODUCTS = [
     subcategory: 'Others',
     description: 'Tool product.',
     price: 3,
-    image: '',
+    image: '/products/ring-stick.jpg',
+    countInStock: 0
+  },
+  {
+    _id: 'ring-sizer',
+    name: 'Ring sizer',
+    category: 'Tools',
+    subcategory: 'Others',
+    description: 'Tool product.',
+    price: 5,
+    image: '/products/ring-sizer.jpg',
     countInStock: 0
   },
   {
@@ -689,13 +722,13 @@ export const DEFAULT_TOOL_PRODUCTS = [
     countInStock: 0
   },
   {
-    _id: 'sobre-urdu-shovel',
-    name: 'Sobre (Urdu)/Shovel',
+    _id: 'goldsmith-shovel',
+    name: 'Goldsmith Shovel',
     category: 'Tools',
     subcategory: 'Others',
     description: 'Tool product.',
     price: 0.5,
-    image: '',
+    image: '/products/shovel.jpg',
     countInStock: 0
   },
   {
@@ -705,7 +738,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     subcategory: 'Others',
     description: 'Tool product.',
     price: 5,
-    image: '',
+    image: '/products/wax.jpg',
     countInStock: 0
   },
   {
@@ -715,17 +748,17 @@ export const DEFAULT_TOOL_PRODUCTS = [
     subcategory: 'Others',
     description: 'Tool product.',
     price: 1.5,
-    image: '',
+    image: '/products/Araldite.jpg',
     countInStock: 0
   },
   {
-    _id: 'net-mesh-jalee-indian',
-    name: 'Net/Mesh (Jalee in Indian)',
+    _id: 'mesh',
+    name: 'Mesh',
     category: 'Tools',
     subcategory: 'Others',
     description: 'Tool product.',
     price: 0.5,
-    image: '',
+    image: '/products/mesh.jpg',
     countInStock: 0
   },
   {
@@ -749,8 +782,8 @@ export const DEFAULT_TOOL_PRODUCTS = [
     countInStock: 0
   },
   {
-    _id: 'goldbad-liquid-gold-cleaning',
-    name: 'Goldbad Liquid Gold Cleaning',
+    _id: 'liquid-gold-cleaning',
+    name: 'Liquid Gold Cleaning',
     category: 'Tools',
     subcategory: 'Gold and silver cleaners',
     description: 'Tool product.',
@@ -759,13 +792,13 @@ export const DEFAULT_TOOL_PRODUCTS = [
     countInStock: 0
   },
   {
-    _id: 'silver-jewelry-cleaner-liquid',
-    name: 'Silver Jewelry Cleaner Liquid',
+    _id: 'silver-cleaning-liquid',
+    name: 'Silver Cleaning Liquid',
     category: 'Tools',
     subcategory: 'Gold and silver cleaners',
     description: 'Tool product.',
-    price: 3,
-    image: '',
+    price: 4.5,
+    image: '/products/silver-cleaner.jpg',
     countInStock: 0
   },
   {
@@ -774,8 +807,8 @@ export const DEFAULT_TOOL_PRODUCTS = [
     category: 'Scales',
     subcategory: null,
     description: 'Scale product.',
-    price: 10,
-    image: '',
+    price: 12,
+    image: '/products/electronic-scale-100g.jpg',
     countInStock: 0
   }
 ];
@@ -787,18 +820,58 @@ export const DEFAULT_MINERAL_PRODUCTS = [
     category: 'Minerals',
     subcategory: null,
     description: 'Mineral product.',
-    price: 10,
-    image: '',
+    price: 23,
+    image: '/products/brass-cube.jpg',
     countInStock: 0
   },
   {
-    _id: 'copper-1kg',
-    name: 'Copper (1 kg)',
+    _id: 'copper-grains-100g',
+    name: 'Copper Grains (100 g)',
     category: 'Minerals',
     subcategory: null,
     description: 'Mineral product.',
-    price: 12,
-    image: '',
+    price: 1.3,
+    image: '/products/copper-grains-100g.jpg',
+    countInStock: 0
+  },
+  {
+    _id: 'copper-grains-500g',
+    name: 'Copper Grains (500 g)',
+    category: 'Minerals',
+    subcategory: null,
+    description: 'Mineral product.',
+    price: 6.5,
+    image: '/products/copper-grains-500g.jpg',
+    countInStock: 0
+  },
+  {
+    _id: 'copper-grains-1kg',
+    name: 'Copper Grains (1 kg)',
+    category: 'Minerals',
+    subcategory: null,
+    description: 'Mineral product.',
+    price: 13,
+    image: '/products/copper-grains-1kg.jpg',
+    countInStock: 0
+  },
+  {
+    _id: 'zinc-100g',
+    name: 'Zinc (100 g)',
+    category: 'Minerals',
+    subcategory: null,
+    description: 'Mineral product.',
+    price: 2.3,
+    image: '/products/zinc-grains-100g.jpg',
+    countInStock: 0
+  },
+  {
+    _id: 'zinc-500g',
+    name: 'Zinc (500 g)',
+    category: 'Minerals',
+    subcategory: null,
+    description: 'Mineral product.',
+    price: 11.5,
+    image: '/products/zinc-grains-500g.jpg',
     countInStock: 0
   },
   {
@@ -807,30 +880,30 @@ export const DEFAULT_MINERAL_PRODUCTS = [
     category: 'Minerals',
     subcategory: null,
     description: 'Mineral product.',
-    price: 22,
-    image: '',
+    price: 23,
+    image: '/products/zinc-grains-1kg.jpg',
     countInStock: 0
   },
   {
-    _id: 'auruna-264-100ml',
-    name: 'Auruna 264 (100ml)',
+    _id: 'auruna-264',
+    name: 'Auruna 264',
     category: 'Minerals',
     subcategory: null,
     description: 'Mineral product.',
     price: 120,
-    image: '',
+    image: '/products/auruna-264.jpg',
     countInStock: 0
   },
   {
-    _id: 'rhoduna-275-black-100ml',
-    name: 'Rhoduna 275 Black (100ml)',
+    _id: 'rhoduna-275-black',
+    name: 'Rhoduna 275 Black',
     category: 'Minerals',
     subcategory: null,
     description: 'Mineral product.',
     price: 350,
-    image: '',
+    image: '/products/rhoduna-275.jpg',
     countInStock: 0
-  }
+  },
 ];
 
 export const DEFAULT_PRODUCTS = [

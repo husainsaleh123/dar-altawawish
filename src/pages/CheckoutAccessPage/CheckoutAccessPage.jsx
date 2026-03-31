@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styles from './CheckoutAccessPage.module.scss';
 import * as usersService from '../../utilities/users-service';
@@ -14,6 +14,12 @@ export default function CheckoutAccessPage({ setUser, user }) {
   const isLoginDisabled = useMemo(() => {
     return !credentials.email.trim() || !credentials.password;
   }, [credentials]);
+
+  useEffect(() => {
+    if (user) {
+      navigate('/checkout', { replace: true, state: { checkoutMode: 'logged-in' } });
+    }
+  }, [navigate, user]);
 
   function handleContinueAsGuest() {
     navigate('/checkout', { state: { checkoutMode: 'guest' } });
@@ -35,19 +41,7 @@ export default function CheckoutAccessPage({ setUser, user }) {
     }
   }
 
-  if (user) {
-    return (
-      <main className={styles.CheckoutAccessPage}>
-        <section className={styles.loggedInCard}>
-          <h1>You are already logged in</h1>
-          <p>Continue to complete your checkout.</p>
-          <button type="button" onClick={() => navigate('/checkout')}>
-            Continue to checkout
-          </button>
-        </section>
-      </main>
-    );
-  }
+  if (user) return null;
 
   return (
     <main className={styles.CheckoutAccessPage}>

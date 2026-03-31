@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styles from "./AdminOrdersPage.module.scss";
-import { getAdminOrders, updateAdminOrder } from "../../utilities/admin-api";
+import { deleteAdminOrder, getAdminOrders, updateAdminOrder } from "../../utilities/admin-api";
 import {
   formatAdminDate,
   formatAdminPrice,
@@ -13,6 +13,7 @@ export default function AdminOrdersPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
   const [savingId, setSavingId] = useState("");
+  const [deletingId, setDeletingId] = useState("");
 
   useEffect(() => {
     let isMounted = true;
@@ -53,6 +54,24 @@ export default function AdminOrdersPage() {
     }
   }
 
+  async function handleDelete(orderId, orderNumber) {
+    const confirmed = window.confirm(
+      `Delete order ${orderNumber}? This will also roll back the customer's loyalty points for this order.`
+    );
+    if (!confirmed) return;
+
+    try {
+      setDeletingId(orderId);
+      setError("");
+      await deleteAdminOrder(orderId);
+      setOrders((current) => current.filter((order) => order._id !== orderId));
+    } catch (deleteError) {
+      setError(deleteError.message || "Unable to delete order.");
+    } finally {
+      setDeletingId("");
+    }
+  }
+
   return (
     <main className={styles.AdminOrdersPage}>
       <section className={styles.header}>
@@ -80,6 +99,7 @@ export default function AdminOrdersPage() {
                   <th>Total</th>
                   <th>Status</th>
                   <th>Placed</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -102,6 +122,16 @@ export default function AdminOrdersPage() {
                       </select>
                     </td>
                     <td>{formatAdminDate(order.createdAt)}</td>
+                    <td>
+                      <button
+                        type="button"
+                        className={styles.deleteButton}
+                        disabled={deletingId === order._id}
+                        onClick={() => handleDelete(order._id, order.orderNumber)}
+                      >
+                        {deletingId === order._id ? "Deleting..." : "Delete"}
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>

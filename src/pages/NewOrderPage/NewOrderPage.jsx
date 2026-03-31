@@ -5,10 +5,20 @@ import { useNavigate } from 'react-router-dom';
 import {
   ALL_GEMSTONES_OPTION,
   ALL_TOOLS_OPTION,
+  DEFAULT_PRODUCTS,
   GEMSTONE_SUBCATEGORIES,
   MAIN_CATEGORIES,
   TOOL_SUBCATEGORIES
 } from '../../shared/productCatalog';
+
+const PRODUCT_IMAGE_BY_KEY = new Map(
+  DEFAULT_PRODUCTS
+    .map((product) => [String(product?._id || '').trim().toLowerCase(), String(product?.image || '').trim()])
+    .filter(([catalogKey, image]) => catalogKey && image)
+);
+const PRODUCT_IMAGE_CACHE_VERSION = import.meta.env.DEV
+  ? String(Date.now())
+  : '2026-03-30-1005';
 
 function inferMainCategory(product) {
   const source = [
@@ -93,20 +103,233 @@ function formatPrice(value) {
   }).format(value);
 }
 
+function getVersionedProductImageSrc(imageSrc, versionSeed) {
+  const normalizedSrc = String(imageSrc || '').trim();
+  if (!normalizedSrc) return '';
+  if (!normalizedSrc.startsWith('/products/')) return normalizedSrc;
+
+  const normalizedSeed = String(versionSeed || '').trim();
+  const finalSeed = normalizedSeed
+    ? `${normalizedSeed}-${PRODUCT_IMAGE_CACHE_VERSION}`
+    : PRODUCT_IMAGE_CACHE_VERSION;
+
+  const separator = normalizedSrc.includes('?') ? '&' : '?';
+  return `${normalizedSrc}${separator}v=${encodeURIComponent(finalSeed)}`;
+}
+
+function getResolvedProductImage(product) {
+  const configuredImage = String(product?.image || '').trim();
+  if (configuredImage) return configuredImage;
+
+  const catalogKey = String(product?.catalogKey || product?._id || '').trim().toLowerCase();
+  return PRODUCT_IMAGE_BY_KEY.get(catalogKey) || '';
+}
+
+function getBundleCoverImage(variants) {
+  if (!Array.isArray(variants) || !variants.length) return '';
+  return variants.find((variant) => String(variant?.image || '').trim())?.image || '';
+}
+
+const SOLDERING_WATER_ORDER = ['200 ML', '400 ML', '1L'];
+const GRAPHITE_CRUCIBLE_ORDER = ['No. 1', 'No. 1.5', 'No. 2', 'No. 3', 'No. 4', 'No. 5', 'No. 6'];
+const ROUND_GEMSTONE_SIZE_ORDER = ['1 mm', '1.5 mm', '2 mm', '3.5 mm', '5 mm'];
+const YELLOW_COTTON_BUFF_ORDER = ['small 3x50', 'medium 6x50'];
+const WHITE_COTTON_BUFF_ORDER = ['3x50', 'medium 6x50'];
+const GRAPHITE_CRUCIBLE_DIMENSIONS = {
+  'No. 1': '9 cm width x 8.5 cm height',
+  'No. 1.5': '10 cm width x 10.5 cm height',
+  'No. 2': '11 cm width x 12 cm height',
+  'No. 3': '12 cm width x 13.5 cm height',
+  'No. 4': '13.5 cm width x 14 cm height',
+  'No. 5': '14.5 cm width x 16.5 cm height',
+  'No. 6': '15 cm width x 16.5 cm height'
+};
+
+function isSolderingWaterProduct(product) {
+  return String(product?.name || '').toLowerCase().startsWith('soldering water');
+}
+
+function getSolderingWaterSizeLabel(product) {
+  const match = String(product?.name || '').match(/\(([^)]+)\)/);
+  return match ? match[1].trim() : '';
+}
+
+function isGraphiteCrucibleProduct(product) {
+  return /^crucible no\./i.test(String(product?.name || '').trim());
+}
+
+function getGraphiteCrucibleSizeLabel(product) {
+  const match = String(product?.name || '').match(/(No\.\s*[0-9.]+)/i);
+  return match ? match[1].replace(/\s+/g, ' ').trim() : '';
+}
+
+function getGraphiteCrucibleDimensionLabel(product) {
+  return GRAPHITE_CRUCIBLE_DIMENSIONS[getGraphiteCrucibleSizeLabel(product)] || '';
+}
+
+function getGraphiteCrucibleBaseDescription(product) {
+  return String(product?.description || '').replace(/\s+/g, ' ').trim().replace(/[.:\s]+$/, '');
+}
+
+function isRoundCoralProduct(product) {
+  const name = String(product?.name || '').toLowerCase();
+  return (
+    String(product?.subcategory || '').toLowerCase() === 'coral' &&
+    name.includes('round')
+  );
+}
+
+function isRoundTurquoiseProduct(product) {
+  const name = String(product?.name || '').toLowerCase();
+  return (
+    String(product?.subcategory || '').toLowerCase() === 'turquoise' &&
+    name.includes('round')
+  );
+}
+
+function isVanCliffMalakiteProduct(product) {
+  const name = String(product?.name || '').toLowerCase();
+  return (
+    String(product?.subcategory || '').toLowerCase() === 'malakite' &&
+    name.includes('van cliff malakite')
+  );
+}
+
+function getRoundGemstoneSizeLabel(product) {
+  const match = String(product?.name || '').match(/(\d+(?:\.\d+)?)\s*mm/i);
+  return match ? `${match[1]} mm` : '';
+}
+
+function getVanCliffMalakiteSizeLabel(product) {
+  const match = String(product?.name || '').match(/\(([^)]+)\)/);
+  return match ? match[1].trim() : '';
+}
+
+function isCopperGrainsProduct(product) {
+  return String(product?.name || '').toLowerCase().startsWith('copper grains');
+}
+
+function getCopperGrainsSizeLabel(product) {
+  const match = String(product?.name || '').match(/\(([^)]+)\)/);
+  return match ? match[1].trim() : '';
+}
+
+function getCopperGrainsVariantImage(product) {
+  const configuredImage = String(product?.image || '').trim();
+  if (configuredImage) return configuredImage;
+
+  const sizeLabel = getCopperGrainsSizeLabel(product).toLowerCase();
+  if (sizeLabel === '100 g') return '/products/copper-grains-100g.jpg';
+  if (sizeLabel === '500 g') return '/products/copper-grains-500g.jpg';
+  if (sizeLabel === '1 kg') return '/products/copper-grains-1kg.jpg';
+  return '';
+}
+
+function isLegacyCopperProduct(product) {
+  return String(product?.name || '').toLowerCase() === 'copper (1 kg)';
+}
+
+function isZincProduct(product) {
+  return String(product?.name || '').toLowerCase().startsWith('zinc');
+}
+
+function getZincSizeLabel(product) {
+  const match = String(product?.name || '').match(/\(([^)]+)\)/);
+  return match ? match[1].trim() : '';
+}
+
+function getZincVariantImage(product) {
+  const configuredImage = String(product?.image || '').trim();
+  if (configuredImage) return configuredImage;
+
+  const sizeLabel = getZincSizeLabel(product).toLowerCase();
+  if (sizeLabel === '100 g') return '/products/zinc-grains-100g.jpg';
+  if (sizeLabel === '500 g') return '/products/zinc-grains-500g.jpg';
+  if (sizeLabel === '1 kg') return '/products/zinc-grains-1kg.jpg';
+  return '';
+}
+
+function isGemkaBurnerProduct(product) {
+  return String(product?.name || '').toLowerCase().startsWith('gemka burner');
+}
+
+function getGemkaBurnerSizeLabel(product) {
+  const match = String(product?.name || '').match(/(\d+)$/);
+  return match ? match[1] : '';
+}
+
+function isSawingBladeProduct(product) {
+  return String(product?.name || '').toLowerCase().startsWith('sawing blade');
+}
+
+function isYellowCottonBuffProduct(product) {
+  return String(product?.name || '').toLowerCase().startsWith('yellow cotton buff');
+}
+
+function getYellowCottonBuffSizeLabel(product) {
+  const match = String(product?.name || '').toLowerCase().match(/yellow cotton buff\s*(?:\(([^)]+)\))?\s*\(([^)]+)\)/);
+  if (!match) return '';
+
+  const descriptor = String(match[1] || '').trim();
+  const size = String(match[2] || '').trim();
+  return descriptor ? `${descriptor} ${size}` : size;
+}
+
+function isWhiteCottonBuffProduct(product) {
+  return String(product?.name || '').toLowerCase().startsWith('white cotton buff');
+}
+
+function getWhiteCottonBuffSizeLabel(product) {
+  const match = String(product?.name || '').toLowerCase().match(/white cotton buff\s*(?:\(([^)]+)\))?\s*\(([^)]+)\)/);
+  if (!match) return '';
+
+  const descriptor = String(match[1] || '').trim();
+  const size = String(match[2] || '').trim();
+  return descriptor ? `${descriptor} ${size}` : size;
+}
+
+function getSawingBladeSizeLabel(product) {
+  const match = String(product?.name || '').match(/(\d+(?:\.\d+)?)$/);
+  return match ? match[1] : '';
+}
+
+function isSolderingSheetProduct(product) {
+  return String(product?.name || '').toLowerCase().startsWith('soldering sheet');
+}
+
+function getSolderingSheetSizeLabel(product) {
+  const match = String(product?.name || '').match(/\(([^)]+)\)/);
+  return match ? match[1].trim() : '';
+}
+
+function isHiddenLegacyProduct(product) {
+  const name = String(product?.name || '').trim().toLowerCase();
+  return (
+    name === 'net/mesh (jalee in indian)' ||
+    name === 'rhoduna 275 black (100ml)' ||
+    name === 'auruna 264 (100ml)' ||
+    name === 'aurum 264 (100ml)' ||
+    name === 'silver jewelry cleaner liquid'
+  );
+}
+
 export default function NewOrderPage({ onAddToCart }) {
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [activeCategory, setActiveCategory] = useState('All Products');
   const [activeGemstoneSubcategory, setActiveGemstoneSubcategory] = useState(ALL_GEMSTONES_OPTION);
   const [activeToolSubcategory, setActiveToolSubcategory] = useState(ALL_TOOLS_OPTION);
-  const [sortBy, setSortBy] = useState('latest');
+  const [sortBy, setSortBy] = useState('name-a-z');
   const [searchTerm, setSearchTerm] = useState('');
   const [gemstoneModalProduct, setGemstoneModalProduct] = useState(null);
   const [gemstoneModalGrams, setGemstoneModalGrams] = useState('1');
   const [pieceModalProduct, setPieceModalProduct] = useState(null);
   const [pieceModalQuantity, setPieceModalQuantity] = useState('1');
+  const [bundleModalProduct, setBundleModalProduct] = useState(null);
+  const [selectedBundleOptionId, setSelectedBundleOptionId] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(16);
+  const [bundlePreviewOptionIds, setBundlePreviewOptionIds] = useState({});
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [addedProductName, setAddedProductName] = useState('');
   const [loading, setLoading] = useState(true);
@@ -129,15 +352,448 @@ export default function NewOrderPage({ onAddToCart }) {
     loadProducts();
   }, []);
 
-  const categorizedProducts = useMemo(
-    () => {
-      return products.map((product) => ({
-        ...product,
-        mainCategory: inferMainCategory(product)
-      }));
-    },
-    [products]
-  );
+  const categorizedProducts = useMemo(() => {
+    const withCategories = products.map((product) => ({
+      ...product,
+      image: getResolvedProductImage(product),
+      mainCategory: inferMainCategory(product)
+    }));
+
+    const groupedProducts = [];
+    const solderingWaterVariants = [];
+    const graphiteCrucibleVariants = [];
+    const roundCoralVariants = [];
+    const roundTurquoiseVariants = [];
+    const vanCliffMalakiteVariants = [];
+    const copperGrainsVariants = [];
+    const zincVariants = [];
+    const gemkaBurnerVariants = [];
+    const sawingBladeVariants = [];
+    const yellowCottonBuffVariants = [];
+    const whiteCottonBuffVariants = [];
+    const solderingSheetVariants = [];
+
+    withCategories.forEach((product) => {
+      if (isHiddenLegacyProduct(product)) {
+        return;
+      }
+      if (isSolderingWaterProduct(product)) {
+        solderingWaterVariants.push(product);
+        return;
+      }
+      if (isGraphiteCrucibleProduct(product)) {
+        graphiteCrucibleVariants.push(product);
+        return;
+      }
+      if (isRoundCoralProduct(product)) {
+        roundCoralVariants.push(product);
+        return;
+      }
+      if (isRoundTurquoiseProduct(product)) {
+        roundTurquoiseVariants.push(product);
+        return;
+      }
+      if (isVanCliffMalakiteProduct(product)) {
+        vanCliffMalakiteVariants.push(product);
+        return;
+      }
+      if (isCopperGrainsProduct(product)) {
+        copperGrainsVariants.push(product);
+        return;
+      }
+      if (isZincProduct(product)) {
+        zincVariants.push(product);
+        return;
+      }
+      if (isLegacyCopperProduct(product)) {
+        copperGrainsVariants.push({
+          ...product,
+          _id: 'copper-grains-1kg-legacy',
+          name: 'Copper Grains (1 kg)',
+          price: 13
+        });
+        return;
+      }
+      if (isGemkaBurnerProduct(product)) {
+        gemkaBurnerVariants.push(product);
+        return;
+      }
+      if (isSawingBladeProduct(product)) {
+        sawingBladeVariants.push(product);
+        return;
+      }
+      if (isYellowCottonBuffProduct(product)) {
+        yellowCottonBuffVariants.push(product);
+        return;
+      }
+      if (isWhiteCottonBuffProduct(product)) {
+        whiteCottonBuffVariants.push(product);
+        return;
+      }
+      if (isSolderingSheetProduct(product)) {
+        solderingSheetVariants.push(product);
+        return;
+      }
+      groupedProducts.push(product);
+    });
+
+    if (solderingWaterVariants.length) {
+      const variants = [...solderingWaterVariants]
+        .map((product) => ({
+          ...product,
+          sizeLabel: getSolderingWaterSizeLabel(product)
+        }))
+        .sort((a, b) => {
+          const aIndex = SOLDERING_WATER_ORDER.indexOf(a.sizeLabel);
+          const bIndex = SOLDERING_WATER_ORDER.indexOf(b.sizeLabel);
+          const safeA = aIndex === -1 ? Number.MAX_SAFE_INTEGER : aIndex;
+          const safeB = bIndex === -1 ? Number.MAX_SAFE_INTEGER : bIndex;
+          return safeA - safeB;
+        });
+
+      const firstVariant = variants[0];
+      const lowestPrice = variants.reduce((min, variant) => Math.min(min, Number(variant.price) || 0), Infinity);
+
+      groupedProducts.push({
+        ...firstVariant,
+        _id: 'soldering-water',
+        name: 'Soldering Water',
+        image: firstVariant?.image || '',
+        price: Number.isFinite(lowestPrice) ? lowestPrice : Number(firstVariant?.price) || 0,
+        description: 'Select your preferred size before adding to cart.',
+        isBundleProduct: true,
+        bundleOptions: variants,
+        bundleLabel: 'size',
+        bundleDescription: `Comes in the following sizes: ${variants.map((variant) => variant.sizeLabel).join(', ')}.`
+      });
+    }
+
+    if (graphiteCrucibleVariants.length) {
+      const variants = [...graphiteCrucibleVariants]
+        .map((product) => ({
+          ...product,
+          sizeLabel: getGraphiteCrucibleSizeLabel(product),
+          dimensionLabel: getGraphiteCrucibleDimensionLabel(product),
+          baseDescription: getGraphiteCrucibleBaseDescription(product)
+        }))
+        .sort((a, b) => {
+          const aIndex = GRAPHITE_CRUCIBLE_ORDER.indexOf(a.sizeLabel);
+          const bIndex = GRAPHITE_CRUCIBLE_ORDER.indexOf(b.sizeLabel);
+          const safeA = aIndex === -1 ? Number.MAX_SAFE_INTEGER : aIndex;
+          const safeB = bIndex === -1 ? Number.MAX_SAFE_INTEGER : bIndex;
+          return safeA - safeB;
+        });
+
+      const firstVariant = variants[0];
+      const lowestPrice = variants.reduce((min, variant) => Math.min(min, Number(variant.price) || 0), Infinity);
+      const baseDescription = variants.find((variant) => variant.baseDescription)?.baseDescription || 'Graphite crucible';
+
+      groupedProducts.push({
+        ...firstVariant,
+        _id: 'graphite-crucible',
+        name: 'Graphite Crucible',
+        image: '/products/4.jpg',
+        price: Number.isFinite(lowestPrice) ? lowestPrice : Number(firstVariant?.price) || 0,
+        description: `${baseDescription}.`,
+        isBundleProduct: true,
+        bundleOptions: variants,
+        bundleLabel: 'crucible number',
+        bundleDescription: `${baseDescription}.`
+      });
+    }
+
+    if (roundCoralVariants.length) {
+      const variants = [...roundCoralVariants]
+        .map((product) => ({
+          ...product,
+          sizeLabel: getRoundGemstoneSizeLabel(product)
+        }))
+        .sort((a, b) => {
+          const aIndex = ROUND_GEMSTONE_SIZE_ORDER.indexOf(a.sizeLabel);
+          const bIndex = ROUND_GEMSTONE_SIZE_ORDER.indexOf(b.sizeLabel);
+          const safeA = aIndex === -1 ? Number.MAX_SAFE_INTEGER : aIndex;
+          const safeB = bIndex === -1 ? Number.MAX_SAFE_INTEGER : bIndex;
+          return safeA - safeB;
+        });
+
+      const firstVariant = variants[0];
+      const lowestPrice = variants.reduce((min, variant) => Math.min(min, Number(variant.price) || 0), Infinity);
+
+      groupedProducts.push({
+        ...firstVariant,
+        _id: 'coral-round',
+        name: 'Coral Round',
+        image: getBundleCoverImage(variants),
+        price: Number.isFinite(lowestPrice) ? lowestPrice : Number(firstVariant?.price) || 0,
+        description: 'Select your preferred coral size before choosing how many grams to add to cart.',
+        isBundleProduct: true,
+        bundleOptions: variants,
+        bundleLabel: 'size',
+        bundleDescription: `Available in the following sizes: ${variants.map((variant) => variant.sizeLabel).join(', ')}.`
+      });
+    }
+
+    if (roundTurquoiseVariants.length) {
+      const variants = [...roundTurquoiseVariants]
+        .map((product) => ({
+          ...product,
+          sizeLabel: getRoundGemstoneSizeLabel(product)
+        }))
+        .sort((a, b) => {
+          const aIndex = ROUND_GEMSTONE_SIZE_ORDER.indexOf(a.sizeLabel);
+          const bIndex = ROUND_GEMSTONE_SIZE_ORDER.indexOf(b.sizeLabel);
+          const safeA = aIndex === -1 ? Number.MAX_SAFE_INTEGER : aIndex;
+          const safeB = bIndex === -1 ? Number.MAX_SAFE_INTEGER : bIndex;
+          return safeA - safeB;
+        });
+
+      const firstVariant = variants[0];
+      const lowestPrice = variants.reduce((min, variant) => Math.min(min, Number(variant.price) || 0), Infinity);
+
+      groupedProducts.push({
+        ...firstVariant,
+        _id: 'turquoise-round',
+        name: 'Turquoise Round',
+        image: firstVariant?.image || '',
+        price: Number.isFinite(lowestPrice) ? lowestPrice : Number(firstVariant?.price) || 0,
+        description: 'Select your preferred turquoise size before choosing how many grams to add to cart.',
+        isBundleProduct: true,
+        bundleOptions: variants,
+        bundleLabel: 'size',
+        bundleDescription: `Available in the following sizes: ${variants.map((variant) => variant.sizeLabel).join(', ')}.`
+      });
+    }
+
+    if (vanCliffMalakiteVariants.length) {
+      const variants = [...vanCliffMalakiteVariants]
+        .map((product) => ({
+          ...product,
+          sizeLabel: getVanCliffMalakiteSizeLabel(product)
+        }))
+        .sort((a, b) => a.sizeLabel.localeCompare(b.sizeLabel, undefined, { numeric: true }));
+
+      const firstVariant = variants[0];
+      const lowestPrice = variants.reduce((min, variant) => Math.min(min, Number(variant.price) || 0), Infinity);
+
+      groupedProducts.push({
+        ...firstVariant,
+        _id: 'van-cliff-malakite',
+        name: 'Van Cliff Malakite',
+        image: firstVariant?.image || '',
+        price: Number.isFinite(lowestPrice) ? lowestPrice : Number(firstVariant?.price) || 0,
+        description: 'Select your preferred size before choosing how many pieces to add to cart.',
+        isBundleProduct: true,
+        bundleOptions: variants,
+        bundleLabel: 'size',
+        bundleDescription: `Available in the following sizes: ${variants.map((variant) => variant.sizeLabel).join(', ')}.`
+      });
+    }
+
+    if (copperGrainsVariants.length) {
+      const variants = [...copperGrainsVariants]
+        .map((product) => ({
+          ...product,
+          sizeLabel: getCopperGrainsSizeLabel(product),
+          image: getCopperGrainsVariantImage(product)
+        }))
+        .sort((a, b) => a.price - b.price);
+
+      const firstVariant = variants[0];
+      const coverImage =
+        variants.find((variant) => getCopperGrainsSizeLabel(variant).toLowerCase() === '1 kg')?.image ||
+        variants.find((variant) => String(variant?.image || '').trim())?.image ||
+        '';
+      const lowestPrice = variants.reduce((min, variant) => Math.min(min, Number(variant.price) || 0), Infinity);
+
+      groupedProducts.push({
+        ...firstVariant,
+        _id: 'copper-grains',
+        name: 'Copper Grains',
+        image: coverImage,
+        price: Number.isFinite(lowestPrice) ? lowestPrice : Number(firstVariant?.price) || 0,
+        description: 'Select your preferred weight before adding to cart.',
+        isBundleProduct: true,
+        bundleOptions: variants,
+        bundleLabel: 'size',
+        bundleDescription: `Available in the following weights: ${variants.map((variant) => variant.sizeLabel).join(', ')}.`
+      });
+    }
+
+    if (zincVariants.length) {
+      const variants = [...zincVariants]
+        .map((product) => ({
+          ...product,
+          sizeLabel: getZincSizeLabel(product),
+          image: getZincVariantImage(product)
+        }))
+        .sort((a, b) => a.price - b.price);
+
+      const firstVariant = variants[0];
+      const coverImage =
+        variants.find((variant) => getZincSizeLabel(variant).toLowerCase() === '1 kg')?.image ||
+        variants.find((variant) => String(variant?.image || '').trim())?.image ||
+        '';
+      const lowestPrice = variants.reduce((min, variant) => Math.min(min, Number(variant.price) || 0), Infinity);
+
+      groupedProducts.push({
+        ...firstVariant,
+        _id: 'zinc',
+        name: 'Zinc',
+        image: coverImage,
+        price: Number.isFinite(lowestPrice) ? lowestPrice : Number(firstVariant?.price) || 0,
+        description: 'Select your preferred weight before adding to cart.',
+        isBundleProduct: true,
+        bundleOptions: variants,
+        bundleLabel: 'size',
+        bundleDescription: `Available in the following weights: ${variants.map((variant) => variant.sizeLabel).join(', ')}.`
+      });
+    }
+
+    if (gemkaBurnerVariants.length) {
+      const variants = [...gemkaBurnerVariants]
+        .map((product) => ({
+          ...product,
+          sizeLabel: getGemkaBurnerSizeLabel(product)
+        }))
+        .sort((a, b) => Number(a.sizeLabel || 0) - Number(b.sizeLabel || 0));
+
+      const firstVariant = variants[0];
+      const preferredVariant =
+        variants.find((variant) => String(variant.sizeLabel || '').trim() === '3939') || firstVariant;
+      const coverImage =
+        variants.find((variant) => String(variant?.image || '').trim())?.image ||
+        String(preferredVariant?.image || '').trim() ||
+        '';
+      const lowestPrice = variants.reduce((min, variant) => Math.min(min, Number(variant.price) || 0), Infinity);
+
+      groupedProducts.push({
+        ...firstVariant,
+        _id: 'gemka-burner',
+        name: preferredVariant?.name || 'Gemka Burner',
+        image: coverImage,
+        price: Number.isFinite(lowestPrice) ? lowestPrice : Number(firstVariant?.price) || 0,
+        description: 'Select your preferred burner type before adding to cart.',
+        isBundleProduct: true,
+        bundleOptions: variants,
+        bundleLabel: 'size',
+        bundleDescription: `Available in the following burner types: ${variants.map((variant) => variant.sizeLabel).join(', ')}.`
+      });
+    }
+
+    if (sawingBladeVariants.length) {
+      const variants = [...sawingBladeVariants]
+        .map((product) => ({
+          ...product,
+          sizeLabel: getSawingBladeSizeLabel(product)
+        }))
+        .sort((a, b) => Number(a.sizeLabel || 0) - Number(b.sizeLabel || 0));
+
+      const firstVariant = variants[0];
+      const lowestPrice = variants.reduce((min, variant) => Math.min(min, Number(variant.price) || 0), Infinity);
+
+      groupedProducts.push({
+        ...firstVariant,
+        _id: 'sawing-blade',
+        name: 'Sawing Blade',
+        image: firstVariant?.image || '',
+        price: Number.isFinite(lowestPrice) ? lowestPrice : Number(firstVariant?.price) || 0,
+        description: 'Select your preferred blade size before adding to cart.',
+        isBundleProduct: true,
+        bundleOptions: variants,
+        bundleLabel: 'size',
+        bundleDescription: `Available in the following blade sizes: ${variants.map((variant) => variant.sizeLabel).join(', ')}.`
+      });
+    }
+
+    if (yellowCottonBuffVariants.length) {
+      const variants = [...yellowCottonBuffVariants]
+        .map((product) => ({
+          ...product,
+          sizeLabel: getYellowCottonBuffSizeLabel(product)
+        }))
+        .sort((a, b) => {
+          const aIndex = YELLOW_COTTON_BUFF_ORDER.indexOf(a.sizeLabel.toLowerCase());
+          const bIndex = YELLOW_COTTON_BUFF_ORDER.indexOf(b.sizeLabel.toLowerCase());
+          const safeA = aIndex === -1 ? Number.MAX_SAFE_INTEGER : aIndex;
+          const safeB = bIndex === -1 ? Number.MAX_SAFE_INTEGER : bIndex;
+          return safeA - safeB;
+        });
+
+      const firstVariant = variants[0];
+      const lowestPrice = variants.reduce((min, variant) => Math.min(min, Number(variant.price) || 0), Infinity);
+
+      groupedProducts.push({
+        ...firstVariant,
+        _id: 'yellow-cotton-buff',
+        name: 'Yellow cotton buff',
+        image: firstVariant?.image || '',
+        price: Number.isFinite(lowestPrice) ? lowestPrice : Number(firstVariant?.price) || 0,
+        description: 'Select your preferred yellow cotton buff size before adding to cart.',
+        isBundleProduct: true,
+        bundleOptions: variants,
+        bundleLabel: 'size',
+        bundleDescription: `Available in the following sizes: ${variants.map((variant) => variant.sizeLabel).join(', ')}.`
+      });
+    }
+
+    if (whiteCottonBuffVariants.length) {
+      const variants = [...whiteCottonBuffVariants]
+        .map((product) => ({
+          ...product,
+          sizeLabel: getWhiteCottonBuffSizeLabel(product)
+        }))
+        .sort((a, b) => {
+          const aIndex = WHITE_COTTON_BUFF_ORDER.indexOf(a.sizeLabel.toLowerCase());
+          const bIndex = WHITE_COTTON_BUFF_ORDER.indexOf(b.sizeLabel.toLowerCase());
+          const safeA = aIndex === -1 ? Number.MAX_SAFE_INTEGER : aIndex;
+          const safeB = bIndex === -1 ? Number.MAX_SAFE_INTEGER : bIndex;
+          return safeA - safeB;
+        });
+
+      const firstVariant = variants[0];
+      const lowestPrice = variants.reduce((min, variant) => Math.min(min, Number(variant.price) || 0), Infinity);
+
+      groupedProducts.push({
+        ...firstVariant,
+        _id: 'white-cotton-buff',
+        name: 'White cotton buff',
+        image: firstVariant?.image || '',
+        price: Number.isFinite(lowestPrice) ? lowestPrice : Number(firstVariant?.price) || 0,
+        description: 'Select your preferred white cotton buff size before adding to cart.',
+        isBundleProduct: true,
+        bundleOptions: variants,
+        bundleLabel: 'size',
+        bundleDescription: `Available in the following sizes: ${variants.map((variant) => variant.sizeLabel).join(', ')}.`
+      });
+    }
+
+    if (solderingSheetVariants.length) {
+      const variants = [...solderingSheetVariants]
+        .map((product) => ({
+          ...product,
+          sizeLabel: getSolderingSheetSizeLabel(product)
+        }))
+        .sort((a, b) => Number(a.price || 0) - Number(b.price || 0));
+
+      const firstVariant = variants[0];
+      const lowestPrice = variants.reduce((min, variant) => Math.min(min, Number(variant.price) || 0), Infinity);
+
+      groupedProducts.push({
+        ...firstVariant,
+        _id: 'soldering-sheet',
+        name: 'Soldering Sheet',
+        image: firstVariant?.image || '',
+        price: Number.isFinite(lowestPrice) ? lowestPrice : Number(firstVariant?.price) || 0,
+        description: 'Select your preferred sheet size before adding to cart.',
+        isBundleProduct: true,
+        bundleOptions: variants,
+        bundleLabel: 'size',
+        bundleDescription: `Available in the following sheet sizes: ${variants.map((variant) => variant.sizeLabel).join(', ')}.`
+      });
+    }
+
+    return groupedProducts;
+  }, [products]);
 
   const categoryFilteredProducts = useMemo(() => {
     if (activeCategory === 'All Products') return categorizedProducts;
@@ -164,6 +820,7 @@ export default function NewOrderPage({ onAddToCart }) {
 
     return subcategoryFilteredProducts.filter((product) => {
       const haystack = [product.name, product.description, product.category, product.subcategory]
+        .concat(product.isBundleProduct ? product.bundleOptions.map((variant) => variant.sizeLabel) : [])
         .filter(Boolean)
         .join(' ')
         .toLowerCase();
@@ -185,7 +842,13 @@ export default function NewOrderPage({ onAddToCart }) {
       return Number.isFinite(price) ? price : 0;
     };
 
+    const getName = (product) => String(product?.name || '').toLocaleLowerCase();
+
     switch (sortBy) {
+      case 'name-a-z':
+        return list.sort((a, b) => getName(a).localeCompare(getName(b)));
+      case 'name-z-a':
+        return list.sort((a, b) => getName(b).localeCompare(getName(a)));
       case 'oldest':
         return list.sort((a, b) => getTimestamp(a) - getTimestamp(b));
       case 'price-low-high':
@@ -275,6 +938,13 @@ export default function NewOrderPage({ onAddToCart }) {
     const requiresPieceQuantitySelection =
       product.unit === 'piece' && product.requiresQuantitySelection;
 
+    if (product.isBundleProduct) {
+      const firstVariant = product.bundleOptions?.[0] || null;
+      setBundleModalProduct(product);
+      setSelectedBundleOptionId(firstVariant?._id || '');
+      return;
+    }
+
     if (requiresPieceQuantitySelection) {
       setPieceModalProduct(product);
       setPieceModalQuantity('1');
@@ -299,6 +969,20 @@ export default function NewOrderPage({ onAddToCart }) {
   function closePieceModal() {
     setPieceModalProduct(null);
     setPieceModalQuantity('1');
+  }
+
+  function closeBundleModal() {
+    setBundleModalProduct(null);
+    setSelectedBundleOptionId('');
+  }
+
+  function openProductDetails(product) {
+    if (!product) return;
+    if (product.isBundleProduct) {
+      const firstVariant = product.bundleOptions?.[0] || null;
+      setSelectedBundleOptionId(firstVariant?._id || '');
+    }
+    setSelectedProduct(product);
   }
 
   function handleConfirmGemstoneAddToCart() {
@@ -339,6 +1023,77 @@ export default function NewOrderPage({ onAddToCart }) {
     closePieceModal();
   }
 
+  function handleConfirmBundleAddToCart() {
+    if (!bundleModalProduct) return;
+
+    const selectedVariant = bundleModalProduct.bundleOptions?.find(
+      (variant) => variant._id === selectedBundleOptionId
+    );
+
+    if (!selectedVariant) return;
+
+    const isGemstoneByWeight =
+      selectedVariant.mainCategory === 'Gemstones' && selectedVariant.unit !== 'piece';
+
+    if (isGemstoneByWeight) {
+      setGemstoneModalProduct(selectedVariant);
+      setGemstoneModalGrams('1');
+      closeBundleModal();
+      return;
+    }
+
+    if (selectedVariant.unit === 'piece' && selectedVariant.requiresQuantitySelection) {
+      setPieceModalProduct(selectedVariant);
+      setPieceModalQuantity('1');
+      closeBundleModal();
+      return;
+    }
+
+    onAddToCart?.({
+      ...selectedVariant,
+      qty: 1
+    });
+    setAddedProductName(selectedVariant.name || bundleModalProduct.name || 'Product');
+    closeBundleModal();
+  }
+
+  function handleConfirmSelectedBundleAddToCart() {
+    if (!selectedProduct?.isBundleProduct) return;
+
+    const selectedVariant = selectedProduct.bundleOptions?.find(
+      (variant) => variant._id === selectedBundleOptionId
+    );
+
+    if (!selectedVariant) return;
+
+    const isGemstoneByWeight =
+      selectedVariant.mainCategory === 'Gemstones' && selectedVariant.unit !== 'piece';
+
+    if (isGemstoneByWeight) {
+      setGemstoneModalProduct(selectedVariant);
+      setGemstoneModalGrams('1');
+      setSelectedProduct(null);
+      setSelectedBundleOptionId('');
+      return;
+    }
+
+    if (selectedVariant.unit === 'piece' && selectedVariant.requiresQuantitySelection) {
+      setPieceModalProduct(selectedVariant);
+      setPieceModalQuantity('1');
+      setSelectedProduct(null);
+      setSelectedBundleOptionId('');
+      return;
+    }
+
+    onAddToCart?.({
+      ...selectedVariant,
+      qty: 1
+    });
+    setAddedProductName(selectedVariant.name || selectedProduct.name || 'Product');
+    setSelectedProduct(null);
+    setSelectedBundleOptionId('');
+  }
+
   function handleCheckout() {
     setAddedProductName('');
     navigate('/orders');
@@ -348,7 +1103,31 @@ export default function NewOrderPage({ onAddToCart }) {
     setAddedProductName('');
   }
 
+  function showBundlePreview(productId, optionId) {
+    if (!productId || !optionId) return;
+    setBundlePreviewOptionIds((current) => ({
+      ...current,
+      [productId]: optionId
+    }));
+  }
+
+  function clearBundlePreview(productId) {
+    if (!productId) return;
+    setBundlePreviewOptionIds((current) => {
+      if (!(productId in current)) return current;
+      const next = { ...current };
+      delete next[productId];
+      return next;
+    });
+  }
+
   const selectedProductInStock = selectedProduct && Number(selectedProduct.countInStock || 0) > 0;
+  const activeBundleVariant = bundleModalProduct?.bundleOptions?.find(
+    (variant) => variant._id === selectedBundleOptionId
+  ) || bundleModalProduct?.bundleOptions?.[0] || null;
+  const activeSelectedBundleVariant = selectedProduct?.bundleOptions?.find(
+    (variant) => variant._id === selectedBundleOptionId
+  ) || selectedProduct?.bundleOptions?.[0] || null;
 
   return (
     <main className={styles.NewOrderPage}>
@@ -463,6 +1242,8 @@ export default function NewOrderPage({ onAddToCart }) {
                     <label className={styles.sortControl}>
                       <span>Sort</span>
                       <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className={styles.sortSelect}>
+                        <option value="name-a-z">Name: A to Z</option>
+                        <option value="name-z-a">Name: Z to A</option>
                         <option value="latest">Latest items</option>
                         <option value="oldest">Oldest items</option>
                         <option value="price-low-high">Price: Lowest to Highest</option>
@@ -476,22 +1257,49 @@ export default function NewOrderPage({ onAddToCart }) {
                   {paginatedProducts.map((product) => {
                     const isGemstone = product.mainCategory === 'Gemstones';
                     const pricePerGram = Number(product.price) || 0;
+                    const allowBundleCardPreview = product._id !== 'graphite-crucible';
+                    const previewVariant = product.isBundleProduct
+                      ? product.bundleOptions?.find(
+                          (variant) => variant._id === bundlePreviewOptionIds[product._id]
+                        ) || null
+                      : null;
+                    const productCardImage =
+                      allowBundleCardPreview ? (previewVariant?.image || product.image) : product.image;
+                    const productCardImageSrc = getVersionedProductImageSrc(
+                      productCardImage,
+                      previewVariant?.updatedAt || product.updatedAt || previewVariant?._id || product._id
+                    );
+                    const isGramBasedGemstoneBundle =
+                      product.isBundleProduct &&
+                      product.mainCategory === 'Gemstones' &&
+                      product.bundleOptions?.some((variant) => variant.unit !== 'piece');
+                    const productPriceLabel = product._id === 'copper-grains'
+                      ? 'BHD 13 per kg'
+                      : product._id === 'zinc'
+                        ? 'BHD 23 per kg'
+                      : isGramBasedGemstoneBundle
+                        ? '0.5 - 2 BD per gram'
+                      : product.isBundleProduct
+                        ? `From ${formatPrice(product.price)}`
+                        : isGemstone
+                        ? `${formatPrice(pricePerGram)} / ${product.unit === 'piece' ? 'piece' : 'g'}`
+                        : formatPrice(product.price);
                     return (
                     <article
                       key={product._id}
                       className={styles.productCard}
-                      onClick={() => setSelectedProduct(product)}
+                      onClick={() => openProductDetails(product)}
                       role="button"
                       tabIndex={0}
                       onKeyDown={(e) => {
                         if (e.key === 'Enter' || e.key === ' ') {
                           e.preventDefault();
-                          setSelectedProduct(product);
+                          openProductDetails(product);
                         }
                       }}
                     >
                       <div className={styles.productImagePlaceholder} aria-hidden="true">
-                        {product.image ? <img src={product.image} alt="" /> : 'Image Placeholder'}
+                        {productCardImageSrc ? <img src={productCardImageSrc} alt="" /> : 'Image Placeholder'}
                       </div>
                       <h3>{product.name}</h3>
                       <p className={styles.productCategory}>
@@ -502,10 +1310,40 @@ export default function NewOrderPage({ onAddToCart }) {
                           : product.mainCategory || 'Uncategorized'}
                       </p>
                       <p className={styles.productPrice}>
-                        {isGemstone
-                          ? `${formatPrice(pricePerGram)} / ${product.unit === 'piece' ? 'piece' : 'g'}`
-                          : formatPrice(product.price)}
+                        {productPriceLabel}
                       </p>
+                      {product.isBundleProduct && (
+                        <div
+                          className={styles.productVariantHints}
+                          aria-label="Available sizes"
+                          onMouseLeave={() => clearBundlePreview(product._id)}
+                          onBlur={(e) => {
+                            if (!e.currentTarget.contains(e.relatedTarget)) {
+                              clearBundlePreview(product._id);
+                            }
+                          }}
+                        >
+                          {product.bundleOptions.map((variant) => (
+                            <span
+                              key={variant._id}
+                              className={styles.productVariantChip}
+                              onMouseEnter={() => {
+                                if (allowBundleCardPreview) {
+                                  showBundlePreview(product._id, variant._id);
+                                }
+                              }}
+                              onFocus={() => {
+                                if (allowBundleCardPreview) {
+                                  showBundlePreview(product._id, variant._id);
+                                }
+                              }}
+                              tabIndex={0}
+                            >
+                              {variant.sizeLabel}
+                            </span>
+                          ))}
+                        </div>
+                      )}
                       <button
                         type="button"
                         className={styles.addToCartButton}
@@ -563,6 +1401,14 @@ export default function NewOrderPage({ onAddToCart }) {
             aria-modal="true"
             aria-labelledby="gemstone-grams-title"
           >
+            <button
+              type="button"
+              className={styles.modalCloseButton}
+              onClick={closeGemstoneModal}
+              aria-label="Close dialog"
+            >
+              ×
+            </button>
             <h2 id="gemstone-grams-title">How many grams?</h2>
             <p className={styles.gemstoneModalProductName}>{gemstoneModalProduct.name}</p>
             <p className={styles.gemstoneModalRate}>
@@ -610,6 +1456,14 @@ export default function NewOrderPage({ onAddToCart }) {
             aria-modal="true"
             aria-labelledby="piece-quantity-title"
           >
+            <button
+              type="button"
+              className={styles.modalCloseButton}
+              onClick={closePieceModal}
+              aria-label="Close dialog"
+            >
+              ×
+            </button>
             <h2 id="piece-quantity-title">How many pieces?</h2>
             <p className={styles.gemstoneModalProductName}>{pieceModalProduct.name}</p>
             <p className={styles.gemstoneModalRate}>
@@ -642,6 +1496,69 @@ export default function NewOrderPage({ onAddToCart }) {
         </div>
       )}
 
+      {bundleModalProduct && activeBundleVariant && (
+        <div className={styles.modalOverlay} onClick={closeBundleModal} role="presentation">
+          <div
+            className={styles.modalCard}
+            onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="bundle-option-title"
+          >
+            <button
+              type="button"
+              className={styles.modalCloseButton}
+              onClick={closeBundleModal}
+              aria-label="Close dialog"
+            >
+              ×
+            </button>
+            <div className={styles.modalImagePlaceholder} aria-hidden="true">
+              {activeBundleVariant.image ? (
+                <img
+                  src={getVersionedProductImageSrc(
+                    activeBundleVariant.image,
+                    activeBundleVariant.updatedAt || bundleModalProduct.updatedAt || activeBundleVariant._id
+                  )}
+                  alt=""
+                />
+              ) : 'Image Placeholder'}
+            </div>
+
+            <h2 id="bundle-option-title">Choose an option</h2>
+            <p className={styles.gemstoneModalProductName}>{bundleModalProduct.name}</p>
+            <p className={styles.modalBundleDescription}>
+              {bundleModalProduct.bundleDescription}
+            </p>
+            <label className={styles.gemstoneModalField}>
+              <span>{bundleModalProduct.bundleLabel === 'crucible number' ? 'Crucible number' : 'Size'}</span>
+              <select
+                value={selectedBundleOptionId}
+                onChange={(e) => setSelectedBundleOptionId(e.target.value)}
+              >
+                {bundleModalProduct.bundleOptions.map((variant) => (
+                  <option key={variant._id} value={variant._id}>
+                    {variant.sizeLabel} - {formatPrice(Number(variant.price) || 0)}
+                    {variant.dimensionLabel ? ` (${variant.dimensionLabel})` : ''}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <p className={styles.gemstoneModalTotal}>
+              Price: {formatPrice(Number(activeBundleVariant.price) || 0)}
+            </p>
+            <div className={styles.gemstoneModalActions}>
+              <button type="button" className={styles.continueShoppingButton} onClick={closeBundleModal}>
+                Cancel
+              </button>
+              <button type="button" className={styles.checkoutButton} onClick={handleConfirmBundleAddToCart}>
+                Add to cart
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {selectedProduct && (
         <div className={styles.modalOverlay} onClick={() => setSelectedProduct(null)} role="presentation">
           <div
@@ -651,8 +1568,27 @@ export default function NewOrderPage({ onAddToCart }) {
             aria-modal="true"
             aria-labelledby="product-modal-title"
           >
+            <button
+              type="button"
+              className={styles.modalCloseButton}
+              onClick={() => setSelectedProduct(null)}
+              aria-label="Close dialog"
+            >
+              ×
+            </button>
             <div className={styles.modalImagePlaceholder} aria-hidden="true">
-              {selectedProduct.image ? <img src={selectedProduct.image} alt="" /> : 'Image Placeholder'}
+              {(activeSelectedBundleVariant?.image || selectedProduct.image) ? (
+                <img
+                  src={getVersionedProductImageSrc(
+                    activeSelectedBundleVariant?.image || selectedProduct.image,
+                    activeSelectedBundleVariant?.updatedAt ||
+                      selectedProduct.updatedAt ||
+                      activeSelectedBundleVariant?._id ||
+                      selectedProduct._id
+                  )}
+                  alt=""
+                />
+              ) : 'Image Placeholder'}
             </div>
 
             <h2 id="product-modal-title">{selectedProduct.name}</h2>
@@ -660,7 +1596,9 @@ export default function NewOrderPage({ onAddToCart }) {
             <div className={styles.modalMeta}>
               <p>
                 <strong>Price:</strong>{' '}
-                {selectedProduct.mainCategory === 'Gemstones'
+                {selectedProduct.isBundleProduct
+                  ? formatPrice(Number(activeSelectedBundleVariant?.price) || 0)
+                  : selectedProduct.mainCategory === 'Gemstones'
                   ? `${formatPrice(selectedProduct.price)} / ${selectedProduct.unit === 'piece' ? 'piece' : 'g'}`
                   : formatPrice(selectedProduct.price)}
               </p>
@@ -672,10 +1610,36 @@ export default function NewOrderPage({ onAddToCart }) {
               </p>
             </div>
 
-            <p>{selectedProduct.description || 'No description available.'}</p>
-            <button type="button" className={styles.closeModalButton} onClick={() => setSelectedProduct(null)}>
-              Close
-            </button>
+            <p>
+              {selectedProduct.isBundleProduct
+                ? selectedProduct.bundleDescription
+                : (selectedProduct.description || 'No description available.')}
+            </p>
+            {selectedProduct.isBundleProduct && activeSelectedBundleVariant ? (
+              <>
+                <label className={styles.gemstoneModalField}>
+                  <span>{selectedProduct.bundleLabel === 'crucible number' ? 'Crucible number' : 'Size'}</span>
+                  <select
+                    value={selectedBundleOptionId}
+                    onChange={(e) => setSelectedBundleOptionId(e.target.value)}
+                  >
+                    {selectedProduct.bundleOptions.map((variant) => (
+                      <option key={variant._id} value={variant._id}>
+                        {variant.sizeLabel} - {formatPrice(Number(variant.price) || 0)}
+                        {variant.dimensionLabel ? ` (${variant.dimensionLabel})` : ''}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <div className={styles.gemstoneModalActions}>
+                  <button type="button" className={styles.checkoutButton} onClick={handleConfirmSelectedBundleAddToCart}>
+                    Add selected option
+                  </button>
+                </div>
+              </>
+            ) : (
+              null
+            )}
           </div>
         </div>
       )}

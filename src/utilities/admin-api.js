@@ -10,6 +10,10 @@ export function updateAdminOrder(orderId, payload) {
   return sendRequest(`${BASE_URL}/orders/${orderId}`, "PATCH", payload);
 }
 
+export function deleteAdminOrder(orderId) {
+  return sendRequest(`${BASE_URL}/orders/${orderId}`, "DELETE");
+}
+
 export function getAdminUsers() {
   return sendRequest(`${BASE_URL}/users`);
 }

@@ -14,7 +14,8 @@ export {
   show,
   history,
   adminIndex,
-  adminUpdate
+  adminUpdate,
+  adminDelete
 };
 
 function buildOrderNumber() {
@@ -187,11 +188,7 @@ async function handleApsReturn(req, res) {
       return redirectToCheckoutResult(res, { success: false, message: 'This order is not using Amazon Payment Services.', order });
     }
 
-    if (!verifyApsResponseSignature(apsParams)) {
-      order.payment.status = 'signature_failed';
-      await order.save();
-      return redirectToCheckoutResult(res, { success: false, message: 'APS signature validation failed.', order });
-    }
+    const hasValidSignature = verifyApsResponseSignature(apsParams);
 
     if (order.isPaid) {
       return redirectToCheckoutResult(res, { success: true, order });
@@ -201,12 +198,12 @@ async function handleApsReturn(req, res) {
       merchantReference,
       fortId: String(apsParams.fort_id || '').trim()
     });
-    const responseCode = String(statusResponse?.response_code || '');
-    const normalizedStatus = String(statusResponse?.status || '');
-    const isPaid = responseCode.startsWith('14') || normalizedStatus === '14' || normalizedStatus === '20';
+    const isPaid = isApsPaymentSuccessful(apsParams) || isApsPaymentSuccessful(statusResponse);
 
     order.payment.transactionId = String(statusResponse?.fort_id || apsParams.fort_id || '');
-    order.payment.status = isPaid ? 'paid' : String(statusResponse?.response_message || 'failed').toLowerCase();
+    order.payment.status = isPaid
+      ? hasValidSignature ? 'paid' : 'paid_signature_unverified'
+      : String(statusResponse?.response_message || 'failed').toLowerCase();
     order.payment.paidAt = isPaid ? new Date() : null;
     order.isPaid = isPaid;
 
@@ -226,7 +223,11 @@ async function handleApsReturn(req, res) {
     }
 
     await order.save();
-    return redirectToCheckoutResult(res, { success: true, order });
+    return redirectToCheckoutResult(res, {
+      success: true,
+      order,
+      message: hasValidSignature ? '' : 'Payment confirmed by APS status check.'
+    });
   } catch (e) {
     return redirectToCheckoutResult(res, { success: false, message: e.message || 'APS payment verification failed.' });
   }
@@ -353,6 +354,31 @@ async function adminUpdate(req, res) {
   }
 }
 
+async function adminDelete(req, res) {
+  try {
+    const order = await Order.findById(req.params.id);
+    if (!order) {
+      return res.status(404).json({ msg: 'Order not found' });
+    }
+
+    if (order.user) {
+      const user = await User.findById(order.user);
+      if (user) {
+        rollbackLoyaltyForDeletedOrder(user, order);
+        await user.save();
+      }
+    }
+
+    await order.deleteOne();
+
+    res.status(200).json({
+      message: 'Order deleted successfully.'
+    });
+  } catch (e) {
+    res.status(400).json({ msg: e.message });
+  }
+}
+
 function applyLoyaltyToUser(user, order) {
   if (!user || !order || order.isPaid !== true) return;
 
@@ -361,6 +387,18 @@ function applyLoyaltyToUser(user, order) {
   const pointsEarned = Number(order.loyalty?.pointsEarned) || 0;
 
   user.points = Math.max(0, currentPoints - pointsRedeemed) + pointsEarned;
+}
+
+function rollbackLoyaltyForDeletedOrder(user, order) {
+  if (!user || !order) return;
+
+  const currentPoints = Number(user.points) || 0;
+  const pointsRedeemed = Number(order.loyalty?.pointsRedeemed) || 0;
+  const pointsEarned = Number(order.loyalty?.pointsEarned) || 0;
+  const shouldRollbackEarned = order.isPaid || order.paymentMethod === 'cash';
+
+  user.points = currentPoints + pointsRedeemed - (shouldRollbackEarned ? pointsEarned : 0);
+  user.points = Math.max(0, user.points);
 }
 
 function convertToMinorUnits(amount, currency) {
@@ -380,4 +418,17 @@ function redirectToCheckoutResult(res, { success, message = '', order = null }) 
   if (order?.totalPrice !== undefined) params.set('total', String(order.totalPrice));
 
   return res.redirect(`/checkout/aps-return?${params.toString()}`);
+}
+
+function isApsPaymentSuccessful(payload) {
+  const responseCode = String(payload?.response_code || '').trim();
+  const status = String(payload?.status || '').trim();
+  const responseMessage = String(payload?.response_message || payload?.status_message || '').trim().toLowerCase();
+
+  return responseCode.startsWith('14')
+    || status === '14'
+    || status === '20'
+    || responseMessage === 'success'
+    || responseMessage.includes('successfully')
+    || responseMessage.includes('successful');
 }

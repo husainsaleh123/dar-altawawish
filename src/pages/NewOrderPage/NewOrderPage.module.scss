@@ -240,6 +240,8 @@
 }
 
 .productCard {
+  display: grid;
+  grid-template-rows: auto auto auto auto minmax(0, auto) auto;
   background: #ffffff;
   border: 1px solid #e2e5ef;
   border-radius: 12px;
@@ -275,6 +277,40 @@
   line-height: 1.5;
 }
 
+.productVariantHints {
+  margin-top: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-self: start;
+  gap: 0.4rem;
+  opacity: 0;
+  max-height: 0;
+  min-height: 0;
+  overflow: hidden;
+  transform: translateY(-4px);
+  transition: opacity 140ms ease, max-height 140ms ease, transform 140ms ease, margin-top 140ms ease;
+}
+
+.productCard:hover .productVariantHints,
+.productCard:focus-within .productVariantHints {
+  margin-top: 0.45rem;
+  opacity: 1;
+  max-height: 72px;
+  transform: translateY(0);
+  margin-bottom: 0.1rem;
+}
+
+.productVariantChip {
+  border: 1px solid #d2d8ea;
+  border-radius: 999px;
+  padding: 0.22rem 0.5rem;
+  background: #f6f8fe;
+  color: #24335e;
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
 .gemstoneControls {
   margin-top: 0.3rem;
   display: grid;
@@ -306,9 +342,10 @@
 
 .productImagePlaceholder {
   width: 100%;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 1 / 1;
   border-radius: 10px;
   background: #f0f2f8;
+  overflow: hidden;
   color: #7a7f8e;
   display: grid;
   place-items: center;
@@ -319,13 +356,13 @@
 .productImagePlaceholder img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  border-radius: 10px;
   display: block;
+  object-fit: contain;
+  object-position: center;
 }
 
 .addToCartButton {
-  margin: 0.65rem auto 0;
+  margin: 0.85rem auto 0;
   width: 100%;
   display: block;
   border: 0;
@@ -363,15 +400,38 @@
 }
 
 .modalCard {
+  position: relative;
   width: min(100%, 560px);
   background: #fff;
   border-radius: 14px;
   padding: 1.6rem 1.35rem;
 }
 
+.modalCloseButton {
+  position: absolute;
+  top: 0.85rem;
+  right: 0.95rem;
+  border: 0;
+  background: transparent;
+  color: #c7223a;
+  font-size: 2rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0.1rem 0.3rem;
+}
+
+.modalCloseButton:hover {
+  color: #a3172d;
+}
+
+.modalCloseButton:focus-visible {
+  outline: 2px solid #c7223a33;
+  border-radius: 8px;
+}
+
 .modalImagePlaceholder {
   width: 100%;
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 1 / 1;
   border-radius: 10px;
   background: #ececf0;
   color: #7a7f8e;
@@ -383,9 +443,7 @@
 
 .modalImagePlaceholder img {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 10px;
+  height: auto;
   display: block;
 }
 
@@ -424,7 +482,8 @@
   margin-bottom: 0.45rem;
 }
 
-.gemstoneModalField input {
+.gemstoneModalField input,
+.gemstoneModalField select {
   border: 1px solid #d7ddea;
   border-radius: 8px;
   padding: 0.62rem 0.72rem;
@@ -438,6 +497,11 @@
   font-size: 0.95rem;
   font-weight: 700;
   color: #1b2a57;
+}
+
+.modalBundleDescription {
+  margin: 0 0 1rem !important;
+  color: #4a5577 !important;
 }
 
 .gemstoneModalActions {
@@ -472,17 +536,6 @@
   margin: 0;
   line-height: 1.65;
   color: #35384a;
-}
-
-.closeModalButton {
-  margin-top: 1rem;
-  border: 0;
-  border-radius: 8px;
-  padding: 0.58rem 1rem;
-  background: #1c0094;
-  color: #fff;
-  font-weight: 600;
-  cursor: pointer;
 }
 
 .cartSuccessOverlay {

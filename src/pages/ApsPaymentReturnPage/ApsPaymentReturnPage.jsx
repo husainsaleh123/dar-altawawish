@@ -16,6 +16,7 @@ export default function ApsPaymentReturnPage({ onCheckoutComplete }) {
   const message = params.get('message') || '';
   const orderNumber = params.get('orderNumber') || '';
   const total = params.get('total') || '0';
+  const confettiPieces = Array.from({ length: 20 }, (_, index) => index);
 
   useEffect(() => {
     if (isSuccess) {
@@ -25,9 +26,23 @@ export default function ApsPaymentReturnPage({ onCheckoutComplete }) {
 
   return (
     <main className={styles.page}>
+      {isSuccess ? (
+        <div className={styles.confettiLayer} aria-hidden="true">
+          {confettiPieces.map((piece) => (
+            <span
+              key={piece}
+              className={styles.confetti}
+              style={{
+                left: `${(piece * 5) % 100}%`,
+                animationDelay: `${(piece % 6) * 110}ms`
+              }}
+            />
+          ))}
+        </div>
+      ) : null}
       <section className={styles.card}>
         <span className={styles.eyebrow}>Amazon Payment Services</span>
-        <h1>{isSuccess ? 'Payment successful' : 'Payment not completed'}</h1>
+        <h1>{isSuccess ? 'Payment completed' : 'Payment not completed'}</h1>
         <p>
           {isSuccess
             ? `Order ${orderNumber} has been paid and confirmed.`
