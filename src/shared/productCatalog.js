@@ -1073,7 +1073,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     subcategory: null,
     description: 'Scale product.',
     price: 25,
-    image: '/products/electronic-scale-100g.jpg',
+    image: '/products/electronic-scale-600g.jpg',
     countInStock: 0
   },
   {
