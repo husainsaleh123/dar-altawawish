@@ -6,7 +6,7 @@ export const MAIN_CATEGORIES = [
   'Machines',
   'Minerals',
   'Plastic',
-  'Threads'
+  'Beads'
 ];
 
 export const GEMSTONE_SUBCATEGORIES = [
@@ -20,7 +20,8 @@ export const GEMSTONE_SUBCATEGORIES = [
   'Golden Stone',
   'Zarcoon',
   'Black Onyx',
-  'Lapis'
+  'Lapis',
+  'Quartz'
 ];
 
 export const ALL_GEMSTONES_OPTION = 'All Gemstones';
@@ -50,6 +51,86 @@ export const DEFAULT_GEMSTONE_PRODUCTS = [
     countInStock: 0,
     unit: 'piece',
     requiresQuantitySelection: true
+  },
+  {
+    _id: 'blue-lapis',
+    name: 'Blue Lapis',
+    category: 'Gemstones',
+    subcategory: 'Lapis',
+    description: 'Gemstone product priced per piece.',
+    price: 2,
+    image: '/products/blue-lapis.jpg',
+    countInStock: 0,
+    unit: 'piece',
+    requiresQuantitySelection: true
+  },
+  {
+    _id: 'blue-eye-stone-flat-round',
+    name: 'Blue eye stone - Flat round',
+    category: 'Gemstones',
+    subcategory: 'Eye Stone',
+    description: 'Select your preferred flat round blue eye stone size before choosing how many grams to add to cart.',
+    price: 0,
+    image: '/products/blue-eye-stone.jpg',
+    countInStock: 0,
+    unit: 'gram',
+    isBundleProduct: true,
+    bundleLabel: 'size',
+    bundleDescription: 'Available in the following sizes: 5 mm.',
+    bundleOptions: [
+      {
+        _id: 'blue-eye-stone-flat-round-5mm',
+        name: 'Blue eye stone - Flat round 5 mm',
+        category: 'Gemstones',
+        subcategory: 'Eye Stone',
+        description: 'Gemstone product priced per gram.',
+        price: 0,
+        image: '/products/blue-eye-stone.jpg',
+        countInStock: 0,
+        unit: 'gram',
+        sizeLabel: '5 mm'
+      }
+    ]
+  },
+  {
+    _id: 'quartz',
+    name: 'Quartz',
+    category: 'Gemstones',
+    subcategory: 'Quartz',
+    description: 'Select your preferred quartz size before choosing how many grams to add to cart.',
+    price: 0,
+    image: '/products/quartz-7-10.jpg',
+    countInStock: 0,
+    unit: 'gram',
+    isBundleProduct: true,
+    bundleLabel: 'size',
+    bundleDescription: 'Available in the following sizes: 7 * 10 mm, 17mm * 25mm.',
+    bundleOptions: [
+      {
+        _id: 'quartz-7-10mm',
+        name: 'Quartz 7 * 10 mm',
+        category: 'Gemstones',
+        subcategory: 'Quartz',
+        description: 'Gemstone product priced per gram.',
+        price: 0,
+        image: '/products/quartz-7-10.jpg',
+        countInStock: 0,
+        unit: 'gram',
+        sizeLabel: '7 * 10 mm'
+      },
+      {
+        _id: 'quartz-oval-17-25mm',
+        name: 'Quartz oval 17mm * 25mm',
+        category: 'Gemstones',
+        subcategory: 'Quartz',
+        description: 'Gemstone product priced per gram.',
+        price: 0,
+        image: '/products/quartz-17-25.jpg',
+        countInStock: 0,
+        unit: 'gram',
+        sizeLabel: '17mm * 25mm'
+      }
+    ]
   },
   {
     _id: 'coral-1mm-round',
@@ -113,7 +194,7 @@ export const DEFAULT_GEMSTONE_PRODUCTS = [
     subcategory: 'Turquoise',
     description: 'Gemstone product priced per gram.',
     price: 2,
-    image: '',
+    image: '/products/round-turquoise-1mm.jpg',
     countInStock: 0,
     unit: 'gram'
   },
@@ -124,7 +205,7 @@ export const DEFAULT_GEMSTONE_PRODUCTS = [
     subcategory: 'Turquoise',
     description: 'Gemstone product priced per gram.',
     price: 2,
-    image: '',
+    image: '/products/round-turquoise-1.5mm.jpg',
     countInStock: 0,
     unit: 'gram'
   },
@@ -135,18 +216,29 @@ export const DEFAULT_GEMSTONE_PRODUCTS = [
     subcategory: 'Turquoise',
     description: 'Gemstone product priced per gram.',
     price: 2,
-    image: '',
+    image: '/products/round-turquoise-2mm.jpg',
     countInStock: 0,
     unit: 'gram'
   },
   {
-    _id: 'turquoise-round-3-5mm',
-    name: 'Turquoise Round 3.5 mm',
+    _id: 'turquoise-round-3mm',
+    name: 'Turquoise Round 3 mm',
     category: 'Gemstones',
     subcategory: 'Turquoise',
     description: 'Gemstone product priced per gram.',
     price: 1,
-    image: '',
+    image: '/products/round-turquoise-3mm.jpg',
+    countInStock: 0,
+    unit: 'gram'
+  },
+  {
+    _id: 'turquoise-round-4mm',
+    name: 'Turquoise Round 4 mm',
+    category: 'Gemstones',
+    subcategory: 'Turquoise',
+    description: 'Gemstone product priced per gram.',
+    price: 1,
+    image: '/products/round-turquoise-4mm.jpg',
     countInStock: 0,
     unit: 'gram'
   },
@@ -157,7 +249,7 @@ export const DEFAULT_GEMSTONE_PRODUCTS = [
     subcategory: 'Turquoise',
     description: 'Gemstone product priced per gram.',
     price: 0.5,
-    image: '',
+    image: '/products/round-turquoise-5mm.jpg',
     countInStock: 0,
     unit: 'gram'
   },
@@ -188,9 +280,72 @@ export const DEFAULT_GEMSTONE_PRODUCTS = [
     name: 'Turquoise Oval',
     category: 'Gemstones',
     subcategory: 'Turquoise',
+    description: 'Select your preferred turquoise oval size before choosing how many grams to add to cart.',
+    price: 0.5,
+    image: '/products/oval-turquoise-cover.jpg',
+    countInStock: 0,
+    unit: 'gram',
+    isBundleProduct: true,
+    bundleLabel: 'size',
+    bundleDescription: 'Available in the following sizes: 1-2 mm, 2-3 mm, 4-5 mm.',
+    bundleOptions: [
+      {
+        _id: 'turquoise-oval-1-2mm',
+        name: 'Turquoise Oval 1-2 mm',
+        category: 'Gemstones',
+        subcategory: 'Turquoise',
+        description: 'Gemstone product priced per gram.',
+        price: 2,
+        image: '/products/oval-turquoise-cover.jpg',
+        countInStock: 0,
+        unit: 'gram',
+        sizeLabel: '1-2 mm'
+      },
+      {
+        _id: 'turquoise-oval-2-3mm',
+        name: 'Turquoise Oval 2-3 mm',
+        category: 'Gemstones',
+        subcategory: 'Turquoise',
+        description: 'Gemstone product priced per gram.',
+        price: 1,
+        image: '/products/oval-turquoise-cover.jpg',
+        countInStock: 0,
+        unit: 'gram',
+        sizeLabel: '2-3 mm'
+      },
+      {
+        _id: 'turquoise-oval-4-5mm',
+        name: 'Turquoise Oval 4-5 mm',
+        category: 'Gemstones',
+        subcategory: 'Turquoise',
+        description: 'Gemstone product priced per gram.',
+        price: 0.5,
+        image: '/products/oval-turquoise-cover.jpg',
+        countInStock: 0,
+        unit: 'gram',
+        sizeLabel: '4-5 mm'
+      }
+    ]
+  },
+  {
+    _id: 'white-zarcon-small',
+    name: 'White Zarcon Small',
+    category: 'Gemstones',
+    subcategory: 'Zarcoon',
     description: 'Gemstone product priced per gram.',
-    price: 0,
-    image: '',
+    price: 0.8,
+    image: '/products/white-zarcon-small.jpg',
+    countInStock: 0,
+    unit: 'gram'
+  },
+  {
+    _id: 'white-zarcon-large',
+    name: 'White Zarcon Large',
+    category: 'Gemstones',
+    subcategory: 'Zarcoon',
+    description: 'Gemstone product priced per gram.',
+    price: 0.5,
+    image: '/products/white-zarcon-large.jpg',
     countInStock: 0,
     unit: 'gram'
   }
@@ -215,17 +370,17 @@ export const DEFAULT_MACHINE_PRODUCTS = [
     subcategory: null,
     description: 'Machine product. Price will be updated.',
     price: 12,
-    image: '',
+    image: '/products/benchgrinder.jpg',
     countInStock: 0
   },
   {
     _id: 'freedom-machine',
-    name: 'Freedom',
+    name: 'Foredom',
     category: 'Machines',
     subcategory: null,
     description: 'Machine product. Price will be updated.',
-    price: 0,
-    image: '',
+    price: 25,
+    image: '/products/foredom.jpg',
     countInStock: 0
   },
   {
@@ -234,8 +389,8 @@ export const DEFAULT_MACHINE_PRODUCTS = [
     category: 'Machines',
     subcategory: null,
     description: 'Machine product. Price will be updated.',
-    price: 0,
-    image: '',
+    price: 160,
+    image: '/products/furnace-machine.jpg',
     countInStock: 0
   },
   {
@@ -244,8 +399,8 @@ export const DEFAULT_MACHINE_PRODUCTS = [
     category: 'Machines',
     subcategory: null,
     description: 'Machine product.',
-    price: 160,
-    image: '',
+    price: 175,
+    image: '/products/ultrasonic-12L.jpg',
     countInStock: 0
   },
   {
@@ -254,8 +409,28 @@ export const DEFAULT_MACHINE_PRODUCTS = [
     category: 'Machines',
     subcategory: null,
     description: 'Machine product.',
-    price: 140,
-    image: '',
+    price: 145,
+    image: '/products/ultrasonic-5.7L.jpg',
+    countInStock: 0
+  },
+  {
+    _id: 'ultrasonic-cleaner-1-8l',
+    name: 'Ultrasonic 1.8L',
+    category: 'Machines',
+    subcategory: null,
+    description: 'Machine product.',
+    price: 30,
+    image: '/products/ultrasonic-1.8L.jpg',
+    countInStock: 0
+  },
+  {
+    _id: 'ultrasonic-cleaner-1-8l-v2',
+    name: 'Ultrasonic 1.8L - v2',
+    category: 'Machines',
+    subcategory: null,
+    description: 'Machine product.',
+    price: 35,
+    image: '/products/ultrasonic-1.8L - v2.jpg',
     countInStock: 0
   },
   {
@@ -266,6 +441,16 @@ export const DEFAULT_MACHINE_PRODUCTS = [
     description: 'Machine product.',
     price: 130,
     image: '/products/sandblast.jpg',
+    countInStock: 0
+  },
+  {
+    _id: 'ring-expander-and-reducer',
+    name: 'Ring Expander and Reducer',
+    category: 'Machines',
+    subcategory: null,
+    description: 'Machine product.',
+    price: 50,
+    image: '/products/ring-expander-and-reducer.jpg',
     countInStock: 0
   }
 ];
@@ -353,12 +538,22 @@ export const DEFAULT_TOOL_PRODUCTS = [
   },
   {
     _id: 'yellow-cotton-buff-medium-6x50',
-    name: 'Yellow cotton buff (medium) (6x50)',
+    name: 'Yellow cotton buff (large) (6x50)',
     category: 'Tools',
     subcategory: 'Cotton Buff',
     description: 'Tool product.',
     price: 1.5,
-    image: '',
+    image: '/products/yellow-buff-6-50.jpg',
+    countInStock: 0
+  },
+  {
+    _id: 'yellow-cotton-buff-medium-4x50',
+    name: 'Yellow cotton buff (medium) (4x50)',
+    category: 'Tools',
+    subcategory: 'Cotton Buff',
+    description: 'Tool product.',
+    price: 1,
+    image: '/products/yellow-buff-4-50.jpg',
     countInStock: 0
   },
   {
@@ -367,18 +562,28 @@ export const DEFAULT_TOOL_PRODUCTS = [
     category: 'Tools',
     subcategory: 'Cotton Buff',
     description: 'Tool product.',
-    price: 1,
-    image: '',
+    price: 0.5,
+    image: '/products/yellow-buff-3-50.jpg',
     countInStock: 0
   },
   {
     _id: 'white-cotton-buff-medium-6x50',
-    name: 'White cotton buff (medium) (6x50)',
+    name: 'White cotton buff (6x50)',
     category: 'Tools',
     subcategory: 'Cotton Buff',
     description: 'Tool product.',
     price: 1.5,
-    image: '',
+    image: '/products/white-buff-6-50.jpg',
+    countInStock: 0
+  },
+  {
+    _id: 'white-cotton-buff-4x50',
+    name: 'White cotton buff (4x50)',
+    category: 'Tools',
+    subcategory: 'Cotton Buff',
+    description: 'Tool product.',
+    price: 1,
+    image: '/products/white-buff-4-50.jpg',
     countInStock: 0
   },
   {
@@ -387,8 +592,8 @@ export const DEFAULT_TOOL_PRODUCTS = [
     category: 'Tools',
     subcategory: 'Cotton Buff',
     description: 'Tool product.',
-    price: 1,
-    image: '',
+    price: 0.5,
+    image: '/products/white-buff-3-50.jpg',
     countInStock: 0
   },
   {
@@ -397,8 +602,8 @@ export const DEFAULT_TOOL_PRODUCTS = [
     category: 'Tools',
     subcategory: 'Sawing Blades',
     description: 'Tool product.',
-    price: 1,
-    image: '',
+    price: 5,
+    image: '/products/sawing-blades-2.0.jpg',
     countInStock: 0
   },
   {
@@ -407,8 +612,18 @@ export const DEFAULT_TOOL_PRODUCTS = [
     category: 'Tools',
     subcategory: 'Sawing Blades',
     description: 'Tool product.',
-    price: 1,
-    image: '',
+    price: 5,
+    image: '/products/sawing-blades-3.0.jpg',
+    countInStock: 0
+  },
+  {
+    _id: 'sawing-blade-5-0',
+    name: 'Sawing Blade 5.0',
+    category: 'Tools',
+    subcategory: 'Sawing Blades',
+    description: 'Tool product.',
+    price: 8,
+    image: '/products/sawing-blades-5.0.jpg',
     countInStock: 0
   },
   {
@@ -417,8 +632,8 @@ export const DEFAULT_TOOL_PRODUCTS = [
     category: 'Tools',
     subcategory: 'Sawing Blades',
     description: 'Tool product.',
-    price: 1,
-    image: '',
+    price: 8,
+    image: '/products/sawing-blades-6.0.jpg',
     countInStock: 0
   },
   {
@@ -452,23 +667,13 @@ export const DEFAULT_TOOL_PRODUCTS = [
     countInStock: 0
   },
   {
-    _id: 'soldering-sheet-25x12-5-cm',
-    name: 'Soldering Sheet (25 cm * 12.5 cm)',
-    category: 'Tools',
-    subcategory: 'Soldering',
-    description: 'Tool product.',
-    price: 1,
-    image: '',
-    countInStock: 0
-  },
-  {
-    _id: 'soldering-sheet-30x15-cm',
-    name: 'Soldering Sheet (30 cm * 15 cm)',
+    _id: 'soldering-sheet-15x30-cm',
+    name: 'Soldering Sheet (15 cm * 30 cm)',
     category: 'Tools',
     subcategory: 'Soldering',
     description: 'Tool product.',
     price: 1.5,
-    image: '',
+    image: '/products/soldering-sheet-15-30.jpg',
     countInStock: 0
   },
   {
@@ -478,17 +683,17 @@ export const DEFAULT_TOOL_PRODUCTS = [
     subcategory: 'Soldering',
     description: 'Tool product.',
     price: 2,
-    image: '',
+    image: '/products/soldering-sheet-25-25.jpg',
     countInStock: 0
   },
   {
-    _id: 'soldering-sheet-30x25-cm',
-    name: 'Soldering Sheet (30 cm * 25 cm)',
+    _id: 'soldering-sheet-25-5x30-cm',
+    name: 'Soldering Sheet (25.5 cm * 30 cm)',
     category: 'Tools',
     subcategory: 'Soldering',
     description: 'Tool product.',
     price: 2.5,
-    image: '',
+    image: '/products/soldering-sheet-25.5-30.jpg',
     countInStock: 0
   },
   {
@@ -497,18 +702,18 @@ export const DEFAULT_TOOL_PRODUCTS = [
     category: 'Tools',
     subcategory: 'Soldering',
     description: 'Tool product.',
-    price: 3,
-    image: '',
+    price: 3.5,
+    image: '/products/soldering-sheet-30-30.jpg',
     countInStock: 0
   },
   {
-    _id: 'soldering-sheet-35x25-5-cm',
-    name: 'Soldering Sheet (35 cm * 25.5 cm)',
+    _id: 'soldering-sheet-25-5x35-cm',
+    name: 'Soldering Sheet (25.5 cm * 35 cm)',
     category: 'Tools',
     subcategory: 'Soldering',
     description: 'Tool product.',
     price: 3,
-    image: '',
+    image: '/products/soldering-sheet-25.5-35.jpg',
     countInStock: 0
   },
   {
@@ -542,23 +747,13 @@ export const DEFAULT_TOOL_PRODUCTS = [
     countInStock: 0
   },
   {
-    _id: 'swaraj-gas-burner-2942',
-    name: 'Swaraj Gas Burner 2942',
-    category: 'Tools',
-    subcategory: 'Burners',
-    description: 'Tool product.',
-    price: 5,
-    image: '',
-    countInStock: 0
-  },
-  {
     _id: 'sievert-gas-burner-2941',
     name: 'Sievert Gas Burner 2941',
     category: 'Tools',
     subcategory: 'Burners',
     description: 'Tool product.',
     price: 8,
-    image: '',
+    image: '/products/sievert-gas-burner-2941.jpg',
     countInStock: 0
   },
   {
@@ -602,43 +797,73 @@ export const DEFAULT_TOOL_PRODUCTS = [
     countInStock: 0
   },
   {
-    _id: 'wheel-brush-black',
-    name: 'Wheel brush black',
+    _id: 'diamond-needle-files',
+    name: 'Diamond Needle Files',
+    category: 'Tools',
+    subcategory: 'File',
+    description: 'Tool product.',
+    price: 10,
+    image: '/products/diamond-needle-files.jpg',
+    countInStock: 0
+  },
+  {
+    _id: 'diamond-selector-tool',
+    name: 'Diamond Selector Tool',
+    category: 'Tools',
+    subcategory: 'Others',
+    description: 'Tool product.',
+    price: 10,
+    image: '/products/diamond-selector-tool.jpg',
+    countInStock: 0
+  },
+  {
+    _id: 'wheel-brush-black-small',
+    name: 'Wheel brush black (small)',
     category: 'Tools',
     subcategory: 'Brushes',
     description: 'Tool product.',
     price: 0.4,
-    image: '',
+    image: '/products/wheel-brush-black-small.jpg',
     countInStock: 0
   },
   {
-    _id: 'angled-brass-wire-brush',
-    name: 'Angled brass wire brush',
+    _id: 'wheel-brush-black-large',
+    name: 'Wheel brush black (large)',
     category: 'Tools',
     subcategory: 'Brushes',
     description: 'Tool product.',
     price: 0.5,
-    image: '',
+    image: '/products/wheel-brush-black-large.jpg',
     countInStock: 0
   },
   {
-    _id: 'larger-brush-dense-brass-wire-brush',
-    name: 'Dense brass wire brush',
+    _id: 'brass-wire-brush-small',
+    name: 'Angled brass wire brush (small)',
+    category: 'Tools',
+    subcategory: 'Brushes',
+    description: 'Tool product.',
+    price: 0.5,
+    image: '/products/angled-brass-wire-brush-small.jpg',
+    countInStock: 0
+  },
+  {
+    _id: 'brass-wire-brush-medium',
+    name: 'Angled brass wire brush (medium)',
+    category: 'Tools',
+    subcategory: 'Brushes',
+    description: 'Tool product.',
+    price: 0.6,
+    image: '/products/angled-brass-wire-brush-medium.jpg',
+    countInStock: 0
+  },
+  {
+    _id: 'brass-wire-brush-large',
+    name: 'Angled brass wire brush (large)',
     category: 'Tools',
     subcategory: 'Brushes',
     description: 'Tool product.',
     price: 0.8,
-    image: '',
-    countInStock: 0
-  },
-  {
-    _id: 'magnetic-pen-1kg',
-    name: 'Magnetic Pen (1 kg)',
-    category: 'Tools',
-    subcategory: 'Others',
-    description: 'Tool product.',
-    price: 18,
-    image: '',
+    image: '/products/angled-brass-wire-brush-large.jpg',
     countInStock: 0
   },
   {
@@ -649,36 +874,6 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: 'Tool product.',
     price: 2,
     image: '/products/stamp-21.jpg',
-    countInStock: 0
-  },
-  {
-    _id: 'tar',
-    name: 'Tar',
-    category: 'Tools',
-    subcategory: 'Others',
-    description: '0.3 BD per one (0.25 BD if more).',
-    price: 0.3,
-    image: '',
-    countInStock: 0
-  },
-  {
-    _id: 'casting-sand-1kg',
-    name: 'Casting Sand (1 kg)',
-    category: 'Tools',
-    subcategory: 'Others',
-    description: 'Tool product.',
-    price: 1.5,
-    image: '',
-    countInStock: 0
-  },
-  {
-    _id: 'screw-plate',
-    name: 'Screw Plate',
-    category: 'Tools',
-    subcategory: 'Others',
-    description: 'Tool product.',
-    price: 1,
-    image: '',
     countInStock: 0
   },
   {
@@ -712,13 +907,33 @@ export const DEFAULT_TOOL_PRODUCTS = [
     countInStock: 0
   },
   {
+    _id: 'thickness-gauge-10mm',
+    name: 'Thickness Gauge (10mm)',
+    category: 'Tools',
+    subcategory: 'Others',
+    description: 'Tool product.',
+    price: 6,
+    image: '/products/measurement-gauge-10mm.jpg',
+    countInStock: 0
+  },
+  {
+    _id: 'thickness-gauge-20mm',
+    name: 'Thickness Gauge (20mm)',
+    category: 'Tools',
+    subcategory: 'Others',
+    description: 'Tool product.',
+    price: 7,
+    image: '/products/measurement-gauge-20mm.jpg',
+    countInStock: 0
+  },
+  {
     _id: 'red-black-polish',
     name: 'Red/black polish',
     category: 'Tools',
     subcategory: 'Others',
     description: 'Tool product.',
     price: 2,
-    image: '',
+    image: '/products/red-and-black-polish.jpg',
     countInStock: 0
   },
   {
@@ -762,23 +977,53 @@ export const DEFAULT_TOOL_PRODUCTS = [
     countInStock: 0
   },
   {
+    _id: 'steel-cylinder-small',
+    name: 'Steel Cylinder (Small)',
+    category: 'Tools',
+    subcategory: 'Others',
+    description: 'Small steel cylinder: 12 cm x 9.5 cm.',
+    price: 6,
+    image: '/products/steel-cylinder-small.jpg',
+    countInStock: 0
+  },
+  {
+    _id: 'steel-cylinder-medium',
+    name: 'Steel Cylinder (Medium)',
+    category: 'Tools',
+    subcategory: 'Others',
+    description: 'Medium steel cylinder: 20 cm x 10 cm.',
+    price: 8,
+    image: '/products/steel-cylinder-medium.jpg',
+    countInStock: 0
+  },
+  {
+    _id: 'steel-cylinder-large',
+    name: 'Steel Cylinder (Large)',
+    category: 'Tools',
+    subcategory: 'Others',
+    description: 'Large steel cylinder: 25 cm x 12.5 cm.',
+    price: 12,
+    image: '/products/steel-cylinder-large.jpg',
+    countInStock: 0
+  },
+  {
     _id: 'gold-jewelry-polishing-cloth',
     name: 'Gold Jewelry Polishing Cloth',
     category: 'Tools',
     subcategory: 'Gold and silver cleaners',
     description: 'Tool product.',
-    price: 2,
-    image: '',
+    price: 4,
+    image: '/products/gold-jewelry-cleaner-cloth.jpg',
     countInStock: 0
   },
   {
     _id: 'silver-jewelry-polishing-cloth',
-    name: 'Silver Jewelry Polishing Cloth',
+    name: 'Silver Polishing Cloth',
     category: 'Tools',
     subcategory: 'Gold and silver cleaners',
     description: 'Tool product.',
-    price: 2,
-    image: '',
+    price: 4,
+    image: '/products/silver-jewelry-cleaner-cloth.jpg',
     countInStock: 0
   },
   {
@@ -788,7 +1033,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     subcategory: 'Gold and silver cleaners',
     description: 'Tool product.',
     price: 3,
-    image: '',
+    image: '/products/goldbad.jpg',
     countInStock: 0
   },
   {
@@ -802,13 +1047,186 @@ export const DEFAULT_TOOL_PRODUCTS = [
     countInStock: 0
   },
   {
+    _id: 'gold-star-omega',
+    name: 'Gold Star Omega',
+    category: 'Tools',
+    subcategory: 'Others',
+    description: '45 kg.',
+    price: 35,
+    image: '/products/gold-star-omega.jpg',
+    countInStock: 0
+  },
+  {
     _id: 'electronic-scale-100g',
-    name: 'Electronic scale 100g',
+    name: 'Electronic Scale (100g)',
     category: 'Scales',
     subcategory: null,
     description: 'Scale product.',
     price: 12,
     image: '/products/electronic-scale-100g.jpg',
+    countInStock: 0
+  },
+  {
+    _id: 'electronic-scale-600g',
+    name: 'Electronic Scale (600g)',
+    category: 'Scales',
+    subcategory: null,
+    description: 'Scale product.',
+    price: 25,
+    image: '/products/electronic-scale-100g.jpg',
+    countInStock: 0
+  },
+  {
+    _id: 'electronic-scale-3kg',
+    name: 'Electronic Scale (3 kg)',
+    category: 'Scales',
+    subcategory: null,
+    description: 'Scale product.',
+    price: 180,
+    image: '/products/electronic-scale-100g.jpg',
+    countInStock: 0
+  },
+  {
+    _id: 'calibration-weight',
+    name: 'Calibration weight',
+    category: 'Scales',
+    subcategory: null,
+    description: 'Select your preferred calibration weight before adding to cart.',
+    price: 15,
+    image: '/products/calibration-weight-1kg.jpg',
+    countInStock: 0,
+    isBundleProduct: true,
+    bundleLabel: 'weight',
+    bundleDescription: 'Available in the following weights: 500g, 1 kg.',
+    bundleOptions: [
+      {
+        _id: 'calibration-weight-500g',
+        name: 'Calibration weight 500g',
+        category: 'Scales',
+        subcategory: null,
+        description: 'Calibration weight.',
+        price: 8,
+        image: '/products/calibration-weight-500g.jpg',
+        countInStock: 0,
+        sizeLabel: '500g'
+      },
+      {
+        _id: 'calibration-weight-1kg',
+        name: 'Calibration weight 1 kg',
+        category: 'Scales',
+        subcategory: null,
+        description: 'Calibration weight.',
+        price: 15,
+        image: '/products/calibration-weight-1kg.jpg',
+        countInStock: 0,
+        sizeLabel: '1 kg'
+      }
+    ]
+  }
+];
+
+export const DEFAULT_PLASTIC_PRODUCTS = [
+  {
+    _id: 'nylon-plastic-bags-6-8',
+    name: 'Nylon Plastic Bags (6 cm x 8 cm)',
+    category: 'Plastic',
+    subcategory: null,
+    description: 'Plastic bag product.',
+    price: 0.5,
+    image: '/products/plastic-bag-6-8.jpg',
+    countInStock: 0
+  },
+  {
+    _id: 'nylon-plastic-bags-7-10',
+    name: 'Nylon Plastic Bags (7 cm x 10 cm)',
+    category: 'Plastic',
+    subcategory: null,
+    description: 'Plastic bag product.',
+    price: 0.5,
+    image: '/products/plastic-bag-7-10.jpg',
+    countInStock: 0
+  },
+  {
+    _id: 'nylon-plastic-bags-9-13',
+    name: 'Nylon Plastic Bags (9 cm x 13 cm)',
+    category: 'Plastic',
+    subcategory: null,
+    description: 'Plastic bag product.',
+    price: 1,
+    image: '/products/plastic-bag-9-13.jpg',
+    countInStock: 0
+  },
+  {
+    _id: 'nylon-plastic-bags-12-17',
+    name: 'Nylon Plastic Bags (12 cm x 17 cm)',
+    category: 'Plastic',
+    subcategory: null,
+    description: 'Plastic bag product.',
+    price: 1,
+    image: '/products/plastic-bag-12-17.jpg',
+    countInStock: 0
+  }
+];
+
+export const DEFAULT_BEAD_PRODUCTS = [
+  {
+    _id: 'natural-amber-bracelet',
+    name: 'Natural Amber Bracelet',
+    category: 'Beads',
+    subcategory: null,
+    description: 'Select your preferred bracelet weight before adding to cart.',
+    price: 0,
+    image: '/products/natural-amber-bracelet.jpg',
+    countInStock: 0
+  },
+  {
+    _id: 'natural-amber-bracelet-13g',
+    name: 'Natural Amber Bracelet (13g)',
+    category: 'Beads',
+    subcategory: null,
+    description: 'Natural amber bracelet.',
+    price: 26,
+    image: '/products/natural-amber-bracelet-26-bd.jpg',
+    countInStock: 0
+  },
+  {
+    _id: 'natural-amber-bracelet-16g',
+    name: 'Natural Amber Bracelet (16g)',
+    category: 'Beads',
+    subcategory: null,
+    description: 'Natural amber bracelet.',
+    price: 32,
+    image: '/products/natural-amber-bracelet-32-bd.jpg',
+    countInStock: 0
+  },
+  {
+    _id: 'natural-amber-bracelet-19g',
+    name: 'Natural Amber Bracelet (19g)',
+    category: 'Beads',
+    subcategory: null,
+    description: 'Natural amber bracelet.',
+    price: 38,
+    image: '/products/natural-amber-bracelet-38-bd.jpg',
+    countInStock: 0
+  },
+  {
+    _id: 'natural-amber-bracelet-25g',
+    name: 'Natural Amber Bracelet (25g)',
+    category: 'Beads',
+    subcategory: null,
+    description: 'Natural amber bracelet.',
+    price: 50,
+    image: '/products/natural-amber-bracelet-50-bd.jpg',
+    countInStock: 0
+  },
+  {
+    _id: 'natural-amber-bracelet-30g',
+    name: 'Natural Amber Bracelet (30g)',
+    category: 'Beads',
+    subcategory: null,
+    description: 'Natural amber bracelet.',
+    price: 60,
+    image: '/products/natural-amber-bracelet-60-bd.jpg',
     countInStock: 0
   }
 ];
@@ -910,5 +1328,7 @@ export const DEFAULT_PRODUCTS = [
   ...DEFAULT_MACHINE_PRODUCTS,
   ...DEFAULT_TOOL_PRODUCTS,
   ...DEFAULT_GEMSTONE_PRODUCTS,
+  ...DEFAULT_PLASTIC_PRODUCTS,
+  ...DEFAULT_BEAD_PRODUCTS,
   ...DEFAULT_MINERAL_PRODUCTS
 ];

@@ -1,4 +1,5 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import styles from './HomePage.module.scss';
 import productsAvailableImage from '../../assets/images/products_available.png';
 import yearsImage from '../../assets/images/Years.png';
@@ -13,6 +14,9 @@ import alrayaJewelleryLogoImage from '../../assets/images/alraya-jewellery.png';
 import alshabibJewelleryLogoImage from '../../assets/images/alshabib-jewellery.png';
 
 export default function HomePage() {
+  const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState('');
+
   const clients = [
     { name: 'AL ZAIN', logo: alzainLogoImage },
     { name: 'Client 02', logo: manamaPearlLogoImage },
@@ -24,25 +28,34 @@ export default function HomePage() {
     { name: 'AL SHABIB JEWELRIES', logo: alshabibJewelleryLogoImage }
   ];
 
+  function handleSearchSubmit(event) {
+    event.preventDefault();
+    const query = searchTerm.trim();
+    navigate(query ? `/orders/new?search=${encodeURIComponent(query)}` : '/orders/new');
+  }
+
   return (
     <>
       <section className={styles.hero}>
         <h1>Welcome to our website!</h1>
 
-        <label className={styles.searchBar} htmlFor="home-search">
+        <form className={styles.searchBar} onSubmit={handleSearchSubmit} role="search">
+          <label className={styles.searchLabel} htmlFor="home-search">Search items</label>
           <input
             id="home-search"
             type="search"
+            value={searchTerm}
+            onChange={(event) => setSearchTerm(event.target.value)}
             placeholder="Search items here..."
             aria-label="Search items"
           />
-          <span className={styles.searchIcon} aria-hidden="true">
+          <button type="submit" className={styles.searchIcon} aria-label="Search products">
             <svg viewBox="0 0 24 24" focusable="false">
               <circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" strokeWidth="2" />
               <path d="M16 16l4.5 4.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
             </svg>
-          </span>
-        </label>
+          </button>
+        </form>
 
         <p className={styles.introText}>
           <span className={styles.introLineTop}>Find the finest goldsmith materials and gemstones</span>

@@ -12,14 +12,22 @@ function normalizeCatalogProduct(product) {
     image: String(product?.image || "").trim(),
     images: Array.isArray(product?.images) ? product.images.filter(Boolean) : [],
     countInStock: Math.max(0, Number(product?.countInStock) || 0),
+    unit: product?.unit ? String(product.unit).trim() : "",
+    requiresQuantitySelection: product?.requiresQuantitySelection === true,
+    isBundleProduct: product?.isBundleProduct === true,
+    bundleLabel: product?.bundleLabel ? String(product.bundleLabel).trim() : "",
+    bundleDescription: product?.bundleDescription ? String(product.bundleDescription).trim() : "",
+    bundleOptions: Array.isArray(product?.bundleOptions) ? product.bundleOptions : [],
     isActive: product?.isActive !== false,
   };
 }
 
 export async function syncProductCatalog() {
-  const operations = DEFAULT_PRODUCTS
+  const normalizedProducts = DEFAULT_PRODUCTS
     .map(normalizeCatalogProduct)
-    .filter((product) => product.catalogKey && product.name && product.category)
+    .filter((product) => product.catalogKey && product.name && product.category);
+
+  const operations = normalizedProducts
     .map((product) => ({
       updateOne: {
         filter: { catalogKey: product.catalogKey },
@@ -32,6 +40,12 @@ export async function syncProductCatalog() {
             price: product.price,
             image: product.image,
             images: product.images,
+            unit: product.unit,
+            requiresQuantitySelection: product.requiresQuantitySelection,
+            isBundleProduct: product.isBundleProduct,
+            bundleLabel: product.bundleLabel,
+            bundleDescription: product.bundleDescription,
+            bundleOptions: product.bundleOptions,
           },
           $setOnInsert: {
             catalogKey: product.catalogKey,
@@ -43,6 +57,11 @@ export async function syncProductCatalog() {
       },
     }));
 
+  const activeCatalogKeys = normalizedProducts.map((product) => product.catalogKey);
+
   if (!operations.length) return;
   await Product.bulkWrite(operations, { ordered: false });
+  await Product.deleteMany({
+    catalogKey: { $exists: true, $nin: activeCatalogKeys },
+  });
 }

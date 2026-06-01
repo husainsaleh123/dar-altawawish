@@ -3,7 +3,11 @@
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 dotenv.config()
-mongoose.connect(process.env.MONGO_URI);
+mongoose.connect(process.env.MONGO_URI, {
+  serverSelectionTimeoutMS: 5000,
+}).catch((err) => {
+  console.error("Initial MongoDB connection failed:", err);
+});
 
 const db = mongoose.connection;
 

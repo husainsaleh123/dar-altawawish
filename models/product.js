@@ -30,6 +30,18 @@ const productSchema = new mongoose.Schema(
 
     countInStock: { type: Number, default: 0, min: 0 },
 
+    unit: { type: String, default: "" },
+
+    requiresQuantitySelection: { type: Boolean, default: false },
+
+    isBundleProduct: { type: Boolean, default: false },
+
+    bundleLabel: { type: String, default: "" },
+
+    bundleDescription: { type: String, default: "" },
+
+    bundleOptions: [{ type: mongoose.Schema.Types.Mixed }],
+
     isActive: { type: Boolean, default: true },
   },
   { timestamps: true }

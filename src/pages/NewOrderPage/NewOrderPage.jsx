@@ -1,7 +1,7 @@
 import styles from './NewOrderPage.module.scss';
 import { useEffect, useMemo, useState } from 'react';
 import { getAll } from '../../utilities/products-api';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   ALL_GEMSTONES_OPTION,
   ALL_TOOLS_OPTION,
@@ -19,8 +19,100 @@ const PRODUCT_IMAGE_BY_KEY = new Map(
 const PRODUCT_IMAGE_CACHE_VERSION = import.meta.env.DEV
   ? String(Date.now())
   : '2026-03-30-1005';
+const PRODUCT_IMAGE_MAGNIFICATION = 2.35;
+
+function getImagePointerOrigin(event) {
+  const rect = event.currentTarget.getBoundingClientRect();
+  const x = ((event.clientX - rect.left) / rect.width) * 100;
+  const y = ((event.clientY - rect.top) / rect.height) * 100;
+
+  return `${Math.min(100, Math.max(0, x))}% ${Math.min(100, Math.max(0, y))}%`;
+}
+
+function MagnifiableProductImage({ src, alt }) {
+  const [isMagnifying, setIsMagnifying] = useState(false);
+  const [isPointerInside, setIsPointerInside] = useState(false);
+  const [transformOrigin, setTransformOrigin] = useState('50% 50%');
+
+  function moveMagnifier(event) {
+    if (!src) return;
+    setTransformOrigin(getImagePointerOrigin(event));
+    setIsMagnifying(Boolean(event.ctrlKey));
+  }
+
+  useEffect(() => {
+    if (!isPointerInside) return undefined;
+
+    function handleKeyDown(event) {
+      if (event.key === 'Control') {
+        setIsMagnifying(true);
+      }
+    }
+
+    function handleKeyUp(event) {
+      if (event.key === 'Control') {
+        setIsMagnifying(false);
+        setTransformOrigin('50% 50%');
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
+  }, [isPointerInside]);
+
+  if (!src) {
+    return <div className={styles.modalImagePlaceholder}>Image Placeholder</div>;
+  }
+
+  return (
+    <div className={styles.magnifierFrame}>
+      <div
+        className={styles.modalImagePlaceholder}
+        onPointerEnter={(event) => {
+          setIsPointerInside(true);
+          moveMagnifier(event);
+        }}
+        onPointerMove={moveMagnifier}
+        onPointerLeave={() => {
+          setIsPointerInside(false);
+          setIsMagnifying(false);
+          setTransformOrigin('50% 50%');
+        }}
+        onPointerDown={moveMagnifier}
+        onPointerUp={() => setIsMagnifying(false)}
+        onBlur={() => {
+          setIsMagnifying(false);
+          setTransformOrigin('50% 50%');
+        }}
+        role="img"
+        aria-label={alt || 'Product image'}
+        tabIndex={0}
+      >
+        <img
+          src={src}
+          alt=""
+          style={{
+            transform: isMagnifying ? `scale(${PRODUCT_IMAGE_MAGNIFICATION})` : 'scale(1)',
+            transformOrigin
+          }}
+        />
+      </div>
+      <p className={styles.magnifierHint}>Hold Ctrl and hover over the image to magnify</p>
+    </div>
+  );
+}
 
 function inferMainCategory(product) {
+  const directCategory = String(product?.category || '').trim();
+  if (MAIN_CATEGORIES.includes(directCategory) && directCategory !== 'All Products') {
+    return directCategory;
+  }
+
   const source = [
     product?.category,
     product?.subcategory,
@@ -42,7 +134,7 @@ function inferMainCategory(product) {
   if (source.includes('machine')) return 'Machines';
   if (source.includes('mineral')) return 'Minerals';
   if (source.includes('plastic')) return 'Plastic';
-  if (source.includes('thread')) return 'Threads';
+  if (source.includes('bead') || source.includes('bracelet') || source.includes('thread')) return 'Beads';
   return null;
 }
 
@@ -132,9 +224,23 @@ function getBundleCoverImage(variants) {
 
 const SOLDERING_WATER_ORDER = ['200 ML', '400 ML', '1L'];
 const GRAPHITE_CRUCIBLE_ORDER = ['No. 1', 'No. 1.5', 'No. 2', 'No. 3', 'No. 4', 'No. 5', 'No. 6'];
-const ROUND_GEMSTONE_SIZE_ORDER = ['1 mm', '1.5 mm', '2 mm', '3.5 mm', '5 mm'];
-const YELLOW_COTTON_BUFF_ORDER = ['small 3x50', 'medium 6x50'];
-const WHITE_COTTON_BUFF_ORDER = ['3x50', 'medium 6x50'];
+const ROUND_GEMSTONE_SIZE_ORDER = ['1 mm', '1.5 mm', '2 mm', '3 mm', '4 mm', '5 mm'];
+const OVAL_TURQUOISE_SIZE_ORDER = ['1-2 mm', '2-3 mm', '4-5 mm'];
+const WHITE_ZARCON_ORDER = ['small', 'large'];
+const YELLOW_COTTON_BUFF_ORDER = ['small 3x50', 'medium 4x50', 'large 6x50'];
+const WHITE_COTTON_BUFF_ORDER = ['3x50', '4x50', '6x50'];
+const WHEEL_BRUSH_BLACK_ORDER = ['small', 'large'];
+const ANGLED_BRASS_WIRE_BRUSH_ORDER = ['small', 'medium', 'large'];
+const STEEL_CYLINDER_ORDER = ['small', 'medium', 'large'];
+const NYLON_PLASTIC_BAG_ORDER = ['6 cm x 8 cm', '7 cm x 10 cm', '9 cm x 13 cm', '12 cm x 17 cm'];
+const ELECTRONIC_SCALE_ORDER = ['100g', '600g', '3 kg'];
+const ULTRASONIC_CLEANER_ORDER = ['1.8L', '1.8L - v2', '5.7L Medium', '12L Large'];
+const NATURAL_AMBER_BRACELET_ORDER = ['13g', '16g', '19g', '25g', '30g'];
+const STEEL_CYLINDER_DIMENSIONS = {
+  small: '12 cm x 9.5 cm',
+  medium: '20 cm x 10 cm',
+  large: '25 cm x 12.5 cm'
+};
 const GRAPHITE_CRUCIBLE_DIMENSIONS = {
   'No. 1': '9 cm width x 8.5 cm height',
   'No. 1.5': '10 cm width x 10.5 cm height',
@@ -187,6 +293,15 @@ function isRoundTurquoiseProduct(product) {
   );
 }
 
+function isOvalTurquoiseProduct(product) {
+  const name = String(product?.name || '').toLowerCase();
+  return (
+    !product?.isBundleProduct &&
+    String(product?.subcategory || '').toLowerCase() === 'turquoise' &&
+    name.includes('oval')
+  );
+}
+
 function isVanCliffMalakiteProduct(product) {
   const name = String(product?.name || '').toLowerCase();
   return (
@@ -200,9 +315,23 @@ function getRoundGemstoneSizeLabel(product) {
   return match ? `${match[1]} mm` : '';
 }
 
+function getOvalTurquoiseSizeLabel(product) {
+  const match = String(product?.name || '').match(/(\d+(?:\.\d+)?)\s*-\s*(\d+(?:\.\d+)?)\s*mm/i);
+  return match ? `${match[1]}-${match[2]} mm` : '';
+}
+
 function getVanCliffMalakiteSizeLabel(product) {
   const match = String(product?.name || '').match(/\(([^)]+)\)/);
   return match ? match[1].trim() : '';
+}
+
+function isWhiteZarconProduct(product) {
+  return String(product?.name || '').toLowerCase().startsWith('white zarcon');
+}
+
+function getWhiteZarconSizeLabel(product) {
+  const match = String(product?.name || '').toLowerCase().match(/white zarcon\s+(small|large)\b/);
+  return match ? String(match[1] || '').trim() : '';
 }
 
 function isCopperGrainsProduct(product) {
@@ -262,6 +391,15 @@ function isSawingBladeProduct(product) {
   return String(product?.name || '').toLowerCase().startsWith('sawing blade');
 }
 
+function isThicknessGaugeProduct(product) {
+  return String(product?.name || '').toLowerCase().startsWith('thickness gauge');
+}
+
+function getThicknessGaugeSizeLabel(product) {
+  const match = String(product?.name || '').match(/\(([^)]+)\)/);
+  return match ? match[1].trim() : '';
+}
+
 function isYellowCottonBuffProduct(product) {
   return String(product?.name || '').toLowerCase().startsWith('yellow cotton buff');
 }
@@ -288,6 +426,37 @@ function getWhiteCottonBuffSizeLabel(product) {
   return descriptor ? `${descriptor} ${size}` : size;
 }
 
+function isWheelBrushBlackProduct(product) {
+  return String(product?.name || '').toLowerCase().startsWith('wheel brush black');
+}
+
+function getWheelBrushBlackSizeLabel(product) {
+  const match = String(product?.name || '').toLowerCase().match(/wheel brush black\s*\(([^)]+)\)/);
+  return match ? String(match[1] || '').trim() : '';
+}
+
+function isAngledBrassWireBrushProduct(product) {
+  return String(product?.name || '').toLowerCase().startsWith('angled brass wire brush');
+}
+
+function getAngledBrassWireBrushSizeLabel(product) {
+  const match = String(product?.name || '').toLowerCase().match(/angled brass wire brush\s*\(([^)]+)\)/);
+  return match ? String(match[1] || '').trim() : '';
+}
+
+function isSteelCylinderProduct(product) {
+  return String(product?.name || '').toLowerCase().startsWith('steel cylinder');
+}
+
+function getSteelCylinderSizeLabel(product) {
+  const match = String(product?.name || '').match(/steel cylinder\s*\(([^)]+)\)/i);
+  return match ? String(match[1] || '').trim() : '';
+}
+
+function getSteelCylinderDimensionLabel(product) {
+  return STEEL_CYLINDER_DIMENSIONS[getSteelCylinderSizeLabel(product).toLowerCase()] || '';
+}
+
 function getSawingBladeSizeLabel(product) {
   const match = String(product?.name || '').match(/(\d+(?:\.\d+)?)$/);
   return match ? match[1] : '';
@@ -300,6 +469,61 @@ function isSolderingSheetProduct(product) {
 function getSolderingSheetSizeLabel(product) {
   const match = String(product?.name || '').match(/\(([^)]+)\)/);
   return match ? match[1].trim() : '';
+}
+
+function isNylonPlasticBagProduct(product) {
+  return String(product?.name || '').toLowerCase().startsWith('nylon plastic bags');
+}
+
+function getNylonPlasticBagSizeLabel(product) {
+  const match = String(product?.name || '').match(/\(([^)]+)\)/);
+  return match ? match[1].trim() : '';
+}
+
+function isElectronicScaleProduct(product) {
+  return String(product?.name || '').toLowerCase().startsWith('electronic scale');
+}
+
+function getElectronicScaleSizeLabel(product) {
+  const match = String(product?.name || '').match(/\(([^)]+)\)/);
+  if (match) return match[1].trim();
+
+  const fallbackMatch = String(product?.name || '').match(/(\d+\s*(?:g|kg))$/i);
+  return fallbackMatch ? fallbackMatch[1].replace(/\s+/g, ' ').trim() : '';
+}
+
+function isUltrasonicCleanerProduct(product) {
+  return String(product?.name || '').toLowerCase().startsWith('ultrasonic');
+}
+
+function getUltrasonicCleanerSizeLabel(product) {
+  const name = String(product?.name || '').trim();
+  const match = name.match(/\(([^)]+)\)/);
+  if (match) return match[1].trim();
+  return name.replace(/^ultrasonic\s*cleaner\s*/i, '').replace(/^ultrasonic\s*/i, '').trim();
+}
+
+function isNaturalAmberBraceletProduct(product) {
+  const key = String(product?.catalogKey || product?._id || '').trim().toLowerCase();
+  return (
+    key.startsWith('natural-amber-bracelet') ||
+    String(product?.name || '').trim().toLowerCase().startsWith('natural amber bracelet')
+  );
+}
+
+function getNaturalAmberBraceletWeightLabel(product) {
+  const nameMatch = String(product?.name || '').match(/\((\d+\s*g)\)/i);
+  if (nameMatch) return nameMatch[1].replace(/\s+/g, '').toLowerCase();
+
+  const keyMatch = String(product?.catalogKey || product?._id || '').match(/-(\d+)g$/i);
+  return keyMatch ? `${keyMatch[1]}g` : '';
+}
+
+function getBundleLabelText(bundleLabel) {
+  if (bundleLabel === 'crucible number') return 'Crucible number';
+  if (bundleLabel === 'capacity') return 'Capacity';
+  if (bundleLabel === 'weight') return 'Weight';
+  return 'Size';
 }
 
 function isHiddenLegacyProduct(product) {
@@ -315,12 +539,14 @@ function isHiddenLegacyProduct(product) {
 
 export default function NewOrderPage({ onAddToCart }) {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const initialSearchTerm = searchParams.get('search') || '';
   const [products, setProducts] = useState([]);
   const [activeCategory, setActiveCategory] = useState('All Products');
   const [activeGemstoneSubcategory, setActiveGemstoneSubcategory] = useState(ALL_GEMSTONES_OPTION);
   const [activeToolSubcategory, setActiveToolSubcategory] = useState(ALL_TOOLS_OPTION);
   const [sortBy, setSortBy] = useState('name-a-z');
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState(initialSearchTerm);
   const [gemstoneModalProduct, setGemstoneModalProduct] = useState(null);
   const [gemstoneModalGrams, setGemstoneModalGrams] = useState('1');
   const [pieceModalProduct, setPieceModalProduct] = useState(null);
@@ -334,6 +560,10 @@ export default function NewOrderPage({ onAddToCart }) {
   const [addedProductName, setAddedProductName] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    setSearchTerm(searchParams.get('search') || '');
+  }, [searchParams]);
 
   useEffect(() => {
     async function loadProducts() {
@@ -352,11 +582,39 @@ export default function NewOrderPage({ onAddToCart }) {
     loadProducts();
   }, []);
 
+  useEffect(() => {
+    const isAnyModalOpen = Boolean(
+      gemstoneModalProduct || pieceModalProduct || bundleModalProduct || selectedProduct
+    );
+
+    if (!isAnyModalOpen) return;
+
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  }, [gemstoneModalProduct, pieceModalProduct, bundleModalProduct, selectedProduct]);
+
   const categorizedProducts = useMemo(() => {
     const withCategories = products.map((product) => ({
       ...product,
       image: getResolvedProductImage(product),
-      mainCategory: inferMainCategory(product)
+      mainCategory: inferMainCategory(product),
+      bundleOptions: Array.isArray(product.bundleOptions)
+        ? product.bundleOptions.map((variant) => {
+          const variantWithProductCategory = {
+            ...variant,
+            category: variant.category || product.category,
+            subcategory: variant.subcategory || product.subcategory
+          };
+
+          return {
+            ...variantWithProductCategory,
+            image: getResolvedProductImage(variantWithProductCategory) || getResolvedProductImage(product),
+            mainCategory: inferMainCategory(variantWithProductCategory)
+          };
+        })
+        : product.bundleOptions
     }));
 
     const groupedProducts = [];
@@ -364,17 +622,31 @@ export default function NewOrderPage({ onAddToCart }) {
     const graphiteCrucibleVariants = [];
     const roundCoralVariants = [];
     const roundTurquoiseVariants = [];
+    const ovalTurquoiseVariants = [];
     const vanCliffMalakiteVariants = [];
+    const whiteZarconVariants = [];
     const copperGrainsVariants = [];
     const zincVariants = [];
     const gemkaBurnerVariants = [];
     const sawingBladeVariants = [];
+    const thicknessGaugeVariants = [];
     const yellowCottonBuffVariants = [];
     const whiteCottonBuffVariants = [];
+    const wheelBrushBlackVariants = [];
+    const angledBrassWireBrushVariants = [];
+    const steelCylinderVariants = [];
     const solderingSheetVariants = [];
+    const nylonPlasticBagVariants = [];
+    const electronicScaleVariants = [];
+    const ultrasonicCleanerVariants = [];
+    const naturalAmberBraceletVariants = [];
 
     withCategories.forEach((product) => {
       if (isHiddenLegacyProduct(product)) {
+        return;
+      }
+      if (isNaturalAmberBraceletProduct(product)) {
+        naturalAmberBraceletVariants.push(product);
         return;
       }
       if (isSolderingWaterProduct(product)) {
@@ -393,8 +665,16 @@ export default function NewOrderPage({ onAddToCart }) {
         roundTurquoiseVariants.push(product);
         return;
       }
+      if (isOvalTurquoiseProduct(product)) {
+        ovalTurquoiseVariants.push(product);
+        return;
+      }
       if (isVanCliffMalakiteProduct(product)) {
         vanCliffMalakiteVariants.push(product);
+        return;
+      }
+      if (isWhiteZarconProduct(product)) {
+        whiteZarconVariants.push(product);
         return;
       }
       if (isCopperGrainsProduct(product)) {
@@ -422,6 +702,10 @@ export default function NewOrderPage({ onAddToCart }) {
         sawingBladeVariants.push(product);
         return;
       }
+      if (isThicknessGaugeProduct(product)) {
+        thicknessGaugeVariants.push(product);
+        return;
+      }
       if (isYellowCottonBuffProduct(product)) {
         yellowCottonBuffVariants.push(product);
         return;
@@ -430,12 +714,70 @@ export default function NewOrderPage({ onAddToCart }) {
         whiteCottonBuffVariants.push(product);
         return;
       }
+      if (isWheelBrushBlackProduct(product)) {
+        wheelBrushBlackVariants.push(product);
+        return;
+      }
+      if (isAngledBrassWireBrushProduct(product)) {
+        angledBrassWireBrushVariants.push(product);
+        return;
+      }
+      if (isSteelCylinderProduct(product)) {
+        steelCylinderVariants.push(product);
+        return;
+      }
       if (isSolderingSheetProduct(product)) {
         solderingSheetVariants.push(product);
         return;
       }
+      if (isNylonPlasticBagProduct(product)) {
+        nylonPlasticBagVariants.push(product);
+        return;
+      }
+      if (isElectronicScaleProduct(product)) {
+        electronicScaleVariants.push(product);
+        return;
+      }
+      if (isUltrasonicCleanerProduct(product)) {
+        ultrasonicCleanerVariants.push(product);
+        return;
+      }
       groupedProducts.push(product);
     });
+
+    if (naturalAmberBraceletVariants.length) {
+      const variants = [...naturalAmberBraceletVariants]
+        .map((product) => ({
+          ...product,
+          sizeLabel: getNaturalAmberBraceletWeightLabel(product)
+        }))
+        .filter((product) => product.sizeLabel)
+        .sort((a, b) => {
+          const aIndex = NATURAL_AMBER_BRACELET_ORDER.indexOf(a.sizeLabel);
+          const bIndex = NATURAL_AMBER_BRACELET_ORDER.indexOf(b.sizeLabel);
+          const safeA = aIndex === -1 ? Number.MAX_SAFE_INTEGER : aIndex;
+          const safeB = bIndex === -1 ? Number.MAX_SAFE_INTEGER : bIndex;
+          return safeA - safeB;
+        });
+
+      const firstVariant = variants[0];
+      const lowestPrice = variants.reduce((min, variant) => Math.min(min, Number(variant.price) || 0), Infinity);
+
+      if (firstVariant) {
+        groupedProducts.push({
+          ...firstVariant,
+          _id: 'natural-amber-bracelet',
+          name: 'Natural Amber Bracelet',
+          image: '/products/natural-amber-bracelet.jpg',
+          price: Number.isFinite(lowestPrice) ? lowestPrice : Number(firstVariant?.price) || 0,
+          description: 'Select your preferred bracelet weight before adding to cart.',
+          isBundleProduct: true,
+          bundleOptions: variants,
+          bundleLabel: 'weight',
+          bundleDescription: `Available in the following weights: ${variants.map((variant) => variant.sizeLabel).join(', ')}.`
+        });
+      }
+    }
 
     if (solderingWaterVariants.length) {
       const variants = [...solderingWaterVariants]
@@ -492,7 +834,7 @@ export default function NewOrderPage({ onAddToCart }) {
         ...firstVariant,
         _id: 'graphite-crucible',
         name: 'Graphite Crucible',
-        image: '/products/4.jpg',
+        image: '/products/copied%20graphite-crucible-6.jpg',
         price: Number.isFinite(lowestPrice) ? lowestPrice : Number(firstVariant?.price) || 0,
         description: `${baseDescription}.`,
         isBundleProduct: true,
@@ -564,6 +906,37 @@ export default function NewOrderPage({ onAddToCart }) {
       });
     }
 
+    if (ovalTurquoiseVariants.length) {
+      const variants = [...ovalTurquoiseVariants]
+        .map((product) => ({
+          ...product,
+          sizeLabel: getOvalTurquoiseSizeLabel(product)
+        }))
+        .sort((a, b) => {
+          const aIndex = OVAL_TURQUOISE_SIZE_ORDER.indexOf(a.sizeLabel);
+          const bIndex = OVAL_TURQUOISE_SIZE_ORDER.indexOf(b.sizeLabel);
+          const safeA = aIndex === -1 ? Number.MAX_SAFE_INTEGER : aIndex;
+          const safeB = bIndex === -1 ? Number.MAX_SAFE_INTEGER : bIndex;
+          return safeA - safeB;
+        });
+
+      const firstVariant = variants[0];
+      const lowestPrice = variants.reduce((min, variant) => Math.min(min, Number(variant.price) || 0), Infinity);
+
+      groupedProducts.push({
+        ...firstVariant,
+        _id: 'turquoise-oval',
+        name: 'Turquoise Oval',
+        image: getBundleCoverImage(variants),
+        price: Number.isFinite(lowestPrice) ? lowestPrice : Number(firstVariant?.price) || 0,
+        description: 'Select your preferred turquoise oval size before choosing how many grams to add to cart.',
+        isBundleProduct: true,
+        bundleOptions: variants,
+        bundleLabel: 'size',
+        bundleDescription: `Available in the following sizes: ${variants.map((variant) => variant.sizeLabel).join(', ')}.`
+      });
+    }
+
     if (vanCliffMalakiteVariants.length) {
       const variants = [...vanCliffMalakiteVariants]
         .map((product) => ({
@@ -582,6 +955,37 @@ export default function NewOrderPage({ onAddToCart }) {
         image: firstVariant?.image || '',
         price: Number.isFinite(lowestPrice) ? lowestPrice : Number(firstVariant?.price) || 0,
         description: 'Select your preferred size before choosing how many pieces to add to cart.',
+        isBundleProduct: true,
+        bundleOptions: variants,
+        bundleLabel: 'size',
+        bundleDescription: `Available in the following sizes: ${variants.map((variant) => variant.sizeLabel).join(', ')}.`
+      });
+    }
+
+    if (whiteZarconVariants.length) {
+      const variants = [...whiteZarconVariants]
+        .map((product) => ({
+          ...product,
+          sizeLabel: getWhiteZarconSizeLabel(product)
+        }))
+        .sort((a, b) => {
+          const aIndex = WHITE_ZARCON_ORDER.indexOf(a.sizeLabel.toLowerCase());
+          const bIndex = WHITE_ZARCON_ORDER.indexOf(b.sizeLabel.toLowerCase());
+          const safeA = aIndex === -1 ? Number.MAX_SAFE_INTEGER : aIndex;
+          const safeB = bIndex === -1 ? Number.MAX_SAFE_INTEGER : bIndex;
+          return safeA - safeB;
+        });
+
+      const firstVariant = variants[0];
+      const lowestPrice = variants.reduce((min, variant) => Math.min(min, Number(variant.price) || 0), Infinity);
+
+      groupedProducts.push({
+        ...firstVariant,
+        _id: 'white-zarcon',
+        name: 'White Zarcon',
+        image: firstVariant?.image || '',
+        price: Number.isFinite(lowestPrice) ? lowestPrice : Number(firstVariant?.price) || 0,
+        description: 'Select your preferred White Zarcon size before choosing how many grams to add to cart.',
         isBundleProduct: true,
         bundleOptions: variants,
         bundleLabel: 'size',
@@ -705,6 +1109,31 @@ export default function NewOrderPage({ onAddToCart }) {
       });
     }
 
+    if (thicknessGaugeVariants.length) {
+      const variants = [...thicknessGaugeVariants]
+        .map((product) => ({
+          ...product,
+          sizeLabel: getThicknessGaugeSizeLabel(product)
+        }))
+        .sort((a, b) => Number.parseFloat(a.sizeLabel) - Number.parseFloat(b.sizeLabel));
+
+      const firstVariant = variants[0];
+      const lowestPrice = variants.reduce((min, variant) => Math.min(min, Number(variant.price) || 0), Infinity);
+
+      groupedProducts.push({
+        ...firstVariant,
+        _id: 'thickness-gauge',
+        name: 'Thickness Gauge',
+        image: firstVariant?.image || '',
+        price: Number.isFinite(lowestPrice) ? lowestPrice : Number(firstVariant?.price) || 0,
+        description: 'Select your preferred gauge size before adding to cart.',
+        isBundleProduct: true,
+        bundleOptions: variants,
+        bundleLabel: 'size',
+        bundleDescription: `Available in the following sizes: ${variants.map((variant) => variant.sizeLabel).join(', ')}.`
+      });
+    }
+
     if (yellowCottonBuffVariants.length) {
       const variants = [...yellowCottonBuffVariants]
         .map((product) => ({
@@ -726,7 +1155,7 @@ export default function NewOrderPage({ onAddToCart }) {
         ...firstVariant,
         _id: 'yellow-cotton-buff',
         name: 'Yellow cotton buff',
-        image: firstVariant?.image || '',
+        image: '/products/yellow-buff-6-50.jpg',
         price: Number.isFinite(lowestPrice) ? lowestPrice : Number(firstVariant?.price) || 0,
         description: 'Select your preferred yellow cotton buff size before adding to cart.',
         isBundleProduct: true,
@@ -757,13 +1186,109 @@ export default function NewOrderPage({ onAddToCart }) {
         ...firstVariant,
         _id: 'white-cotton-buff',
         name: 'White cotton buff',
-        image: firstVariant?.image || '',
+        image: '/products/white-buff-6-50.jpg',
         price: Number.isFinite(lowestPrice) ? lowestPrice : Number(firstVariant?.price) || 0,
         description: 'Select your preferred white cotton buff size before adding to cart.',
         isBundleProduct: true,
         bundleOptions: variants,
         bundleLabel: 'size',
         bundleDescription: `Available in the following sizes: ${variants.map((variant) => variant.sizeLabel).join(', ')}.`
+      });
+    }
+
+    if (wheelBrushBlackVariants.length) {
+      const variants = [...wheelBrushBlackVariants]
+        .map((product) => ({
+          ...product,
+          sizeLabel: getWheelBrushBlackSizeLabel(product)
+        }))
+        .sort((a, b) => {
+          const aIndex = WHEEL_BRUSH_BLACK_ORDER.indexOf(a.sizeLabel.toLowerCase());
+          const bIndex = WHEEL_BRUSH_BLACK_ORDER.indexOf(b.sizeLabel.toLowerCase());
+          const safeA = aIndex === -1 ? Number.MAX_SAFE_INTEGER : aIndex;
+          const safeB = bIndex === -1 ? Number.MAX_SAFE_INTEGER : bIndex;
+          return safeA - safeB;
+        });
+
+      const firstVariant = variants[0];
+      const lowestPrice = variants.reduce((min, variant) => Math.min(min, Number(variant.price) || 0), Infinity);
+
+      groupedProducts.push({
+        ...firstVariant,
+        _id: 'wheel-brush-black',
+        name: 'Wheel brush black',
+        image: '/products/wheel-brush-black-large.jpg',
+        price: Number.isFinite(lowestPrice) ? lowestPrice : Number(firstVariant?.price) || 0,
+        description: 'Select your preferred wheel brush size before adding to cart.',
+        isBundleProduct: true,
+        bundleOptions: variants,
+        bundleLabel: 'size',
+        bundleDescription: `Available in the following sizes: ${variants.map((variant) => variant.sizeLabel).join(', ')}.`
+      });
+    }
+
+    if (angledBrassWireBrushVariants.length) {
+      const variants = [...angledBrassWireBrushVariants]
+        .map((product) => ({
+          ...product,
+          sizeLabel: getAngledBrassWireBrushSizeLabel(product)
+        }))
+        .sort((a, b) => {
+          const aIndex = ANGLED_BRASS_WIRE_BRUSH_ORDER.indexOf(a.sizeLabel.toLowerCase());
+          const bIndex = ANGLED_BRASS_WIRE_BRUSH_ORDER.indexOf(b.sizeLabel.toLowerCase());
+          const safeA = aIndex === -1 ? Number.MAX_SAFE_INTEGER : aIndex;
+          const safeB = bIndex === -1 ? Number.MAX_SAFE_INTEGER : bIndex;
+          return safeA - safeB;
+        });
+
+      const firstVariant = variants[0];
+      const lowestPrice = variants.reduce((min, variant) => Math.min(min, Number(variant.price) || 0), Infinity);
+
+      groupedProducts.push({
+        ...firstVariant,
+        _id: 'angled-brass-wire-brush',
+        name: 'Angled brass wire brush',
+        image: '/products/angled-brass-wire-brush-large.jpg',
+        price: Number.isFinite(lowestPrice) ? lowestPrice : Number(firstVariant?.price) || 0,
+        description: 'Select your preferred brush size before adding to cart.',
+        isBundleProduct: true,
+        bundleOptions: variants,
+        bundleLabel: 'size',
+        bundleDescription: `Available in the following sizes: ${variants.map((variant) => variant.sizeLabel).join(', ')}.`
+      });
+    }
+
+    if (steelCylinderVariants.length) {
+      const variants = [...steelCylinderVariants]
+        .map((product) => ({
+          ...product,
+          sizeLabel: getSteelCylinderSizeLabel(product),
+          dimensionLabel: getSteelCylinderDimensionLabel(product)
+        }))
+        .sort((a, b) => {
+          const aIndex = STEEL_CYLINDER_ORDER.indexOf(a.sizeLabel.toLowerCase());
+          const bIndex = STEEL_CYLINDER_ORDER.indexOf(b.sizeLabel.toLowerCase());
+          const safeA = aIndex === -1 ? Number.MAX_SAFE_INTEGER : aIndex;
+          const safeB = bIndex === -1 ? Number.MAX_SAFE_INTEGER : bIndex;
+          return safeA - safeB;
+        });
+
+      const firstVariant = variants[0];
+      const lowestPrice = variants.reduce((min, variant) => Math.min(min, Number(variant.price) || 0), Infinity);
+
+      groupedProducts.push({
+        ...firstVariant,
+        _id: 'steel-cylinder',
+        name: 'Steel Cylinder',
+        image: '/products/steel-cylinder-medium.jpg',
+        price: Number.isFinite(lowestPrice) ? lowestPrice : Number(firstVariant?.price) || 0,
+        description: 'Select your preferred steel cylinder size before adding to cart.',
+        isBundleProduct: true,
+        bundleOptions: variants,
+        bundleLabel: 'size',
+        bundleDescription: `Available in the following sizes: ${variants
+          .map((variant) => `${variant.sizeLabel} (${variant.dimensionLabel})`)
+          .join(', ')}.`
       });
     }
 
@@ -776,19 +1301,122 @@ export default function NewOrderPage({ onAddToCart }) {
         .sort((a, b) => Number(a.price || 0) - Number(b.price || 0));
 
       const firstVariant = variants[0];
+      const coverVariant =
+        variants.find((variant) => variant.image === '/products/soldering-sheet-25-25.jpg') || firstVariant;
       const lowestPrice = variants.reduce((min, variant) => Math.min(min, Number(variant.price) || 0), Infinity);
 
       groupedProducts.push({
         ...firstVariant,
         _id: 'soldering-sheet',
         name: 'Soldering Sheet',
-        image: firstVariant?.image || '',
+        image: coverVariant?.image || '',
         price: Number.isFinite(lowestPrice) ? lowestPrice : Number(firstVariant?.price) || 0,
         description: 'Select your preferred sheet size before adding to cart.',
         isBundleProduct: true,
         bundleOptions: variants,
         bundleLabel: 'size',
         bundleDescription: `Available in the following sheet sizes: ${variants.map((variant) => variant.sizeLabel).join(', ')}.`
+      });
+    }
+
+    if (nylonPlasticBagVariants.length) {
+      const variants = [...nylonPlasticBagVariants]
+        .map((product) => ({
+          ...product,
+          sizeLabel: getNylonPlasticBagSizeLabel(product)
+        }))
+        .sort((a, b) => {
+          const aIndex = NYLON_PLASTIC_BAG_ORDER.indexOf(a.sizeLabel);
+          const bIndex = NYLON_PLASTIC_BAG_ORDER.indexOf(b.sizeLabel);
+          const safeA = aIndex === -1 ? Number.MAX_SAFE_INTEGER : aIndex;
+          const safeB = bIndex === -1 ? Number.MAX_SAFE_INTEGER : bIndex;
+          return safeA - safeB;
+        });
+
+      const firstVariant = variants[0];
+      const lowestPrice = variants.reduce((min, variant) => Math.min(min, Number(variant.price) || 0), Infinity);
+      const coverImage =
+        variants.find((variant) => getNylonPlasticBagSizeLabel(variant) === '7 cm x 10 cm')?.image ||
+        variants.find((variant) => String(variant?.image || '').trim())?.image ||
+        '';
+
+      groupedProducts.push({
+        ...firstVariant,
+        _id: 'nylon-plastic-bags',
+        name: 'Nylon Plastic Bags',
+        image: coverImage,
+        price: Number.isFinite(lowestPrice) ? lowestPrice : Number(firstVariant?.price) || 0,
+        description: 'Select your preferred bag size before adding to cart.',
+        isBundleProduct: true,
+        bundleOptions: variants,
+        bundleLabel: 'size',
+        bundleDescription: `Available in the following sizes: ${variants.map((variant) => variant.sizeLabel).join(', ')}.`
+      });
+    }
+
+    if (electronicScaleVariants.length) {
+      const variants = [...electronicScaleVariants]
+        .map((product) => ({
+          ...product,
+          sizeLabel: getElectronicScaleSizeLabel(product)
+        }))
+        .sort((a, b) => {
+          const aIndex = ELECTRONIC_SCALE_ORDER.indexOf(a.sizeLabel);
+          const bIndex = ELECTRONIC_SCALE_ORDER.indexOf(b.sizeLabel);
+          const safeA = aIndex === -1 ? Number.MAX_SAFE_INTEGER : aIndex;
+          const safeB = bIndex === -1 ? Number.MAX_SAFE_INTEGER : bIndex;
+          return safeA - safeB;
+        });
+
+      const firstVariant = variants[0];
+      const lowestPrice = variants.reduce((min, variant) => Math.min(min, Number(variant.price) || 0), Infinity);
+
+      groupedProducts.push({
+        ...firstVariant,
+        _id: 'electronic-scale',
+        name: 'Electronic Scale',
+        image: firstVariant?.image || '',
+        price: Number.isFinite(lowestPrice) ? lowestPrice : Number(firstVariant?.price) || 0,
+        description: 'Select your preferred capacity before adding to cart.',
+        isBundleProduct: true,
+        bundleOptions: variants,
+        bundleLabel: 'capacity',
+        bundleDescription: `Available in the following capacities: ${variants.map((variant) => variant.sizeLabel).join(', ')}.`
+      });
+    }
+
+    if (ultrasonicCleanerVariants.length) {
+      const variants = [...ultrasonicCleanerVariants]
+        .map((product) => ({
+          ...product,
+          sizeLabel: getUltrasonicCleanerSizeLabel(product)
+        }))
+        .sort((a, b) => {
+          const aIndex = ULTRASONIC_CLEANER_ORDER.indexOf(a.sizeLabel);
+          const bIndex = ULTRASONIC_CLEANER_ORDER.indexOf(b.sizeLabel);
+          const safeA = aIndex === -1 ? Number.MAX_SAFE_INTEGER : aIndex;
+          const safeB = bIndex === -1 ? Number.MAX_SAFE_INTEGER : bIndex;
+          return safeA - safeB;
+        });
+
+      const firstVariant = variants[0];
+      const lowestPrice = variants.reduce((min, variant) => Math.min(min, Number(variant.price) || 0), Infinity);
+      const coverImage =
+        variants.find((variant) => getUltrasonicCleanerSizeLabel(variant) === '1.8L')?.image ||
+        variants.find((variant) => String(variant?.image || '').trim())?.image ||
+        '';
+
+      groupedProducts.push({
+        ...firstVariant,
+        _id: 'ultrasonic-cleaner',
+        name: 'Ultrasonic Cleaner',
+        image: coverImage,
+        price: Number.isFinite(lowestPrice) ? lowestPrice : Number(firstVariant?.price) || 0,
+        description: 'Select your preferred ultrasonic cleaner size or version before adding to cart.',
+        isBundleProduct: true,
+        bundleOptions: variants,
+        bundleLabel: 'size',
+        bundleDescription: `Available in the following options: ${variants.map((variant) => variant.sizeLabel).join(', ')}.`
       });
     }
 
@@ -976,6 +1604,11 @@ export default function NewOrderPage({ onAddToCart }) {
     setSelectedBundleOptionId('');
   }
 
+  function closeProductDetails() {
+    setSelectedProduct(null);
+    setSelectedBundleOptionId('');
+  }
+
   function openProductDetails(product) {
     if (!product) return;
     if (product.isBundleProduct) {
@@ -1072,16 +1705,14 @@ export default function NewOrderPage({ onAddToCart }) {
     if (isGemstoneByWeight) {
       setGemstoneModalProduct(selectedVariant);
       setGemstoneModalGrams('1');
-      setSelectedProduct(null);
-      setSelectedBundleOptionId('');
+      closeProductDetails();
       return;
     }
 
     if (selectedVariant.unit === 'piece' && selectedVariant.requiresQuantitySelection) {
       setPieceModalProduct(selectedVariant);
       setPieceModalQuantity('1');
-      setSelectedProduct(null);
-      setSelectedBundleOptionId('');
+      closeProductDetails();
       return;
     }
 
@@ -1090,8 +1721,7 @@ export default function NewOrderPage({ onAddToCart }) {
       qty: 1
     });
     setAddedProductName(selectedVariant.name || selectedProduct.name || 'Product');
-    setSelectedProduct(null);
-    setSelectedBundleOptionId('');
+    closeProductDetails();
   }
 
   function handleCheckout() {
@@ -1128,6 +1758,23 @@ export default function NewOrderPage({ onAddToCart }) {
   const activeSelectedBundleVariant = selectedProduct?.bundleOptions?.find(
     (variant) => variant._id === selectedBundleOptionId
   ) || selectedProduct?.bundleOptions?.[0] || null;
+
+  const activeBundleImageSrc = activeBundleVariant?.image
+    ? getVersionedProductImageSrc(
+        activeBundleVariant.image,
+        activeBundleVariant.updatedAt || bundleModalProduct?.updatedAt || activeBundleVariant._id
+      )
+    : '';
+  const selectedProductImage = activeSelectedBundleVariant?.image || selectedProduct?.image || '';
+  const selectedProductImageSrc = selectedProductImage
+    ? getVersionedProductImageSrc(
+        selectedProductImage,
+        activeSelectedBundleVariant?.updatedAt ||
+          selectedProduct?.updatedAt ||
+          activeSelectedBundleVariant?._id ||
+          selectedProduct?._id
+      )
+    : '';
 
   return (
     <main className={styles.NewOrderPage}>
@@ -1257,7 +1904,7 @@ export default function NewOrderPage({ onAddToCart }) {
                   {paginatedProducts.map((product) => {
                     const isGemstone = product.mainCategory === 'Gemstones';
                     const pricePerGram = Number(product.price) || 0;
-                    const allowBundleCardPreview = product._id !== 'graphite-crucible';
+                    const allowBundleCardPreview = !['graphite-crucible', 'natural-amber-bracelet'].includes(product._id);
                     const previewVariant = product.isBundleProduct
                       ? product.bundleOptions?.find(
                           (variant) => variant._id === bundlePreviewOptionIds[product._id]
@@ -1513,17 +2160,10 @@ export default function NewOrderPage({ onAddToCart }) {
             >
               ×
             </button>
-            <div className={styles.modalImagePlaceholder} aria-hidden="true">
-              {activeBundleVariant.image ? (
-                <img
-                  src={getVersionedProductImageSrc(
-                    activeBundleVariant.image,
-                    activeBundleVariant.updatedAt || bundleModalProduct.updatedAt || activeBundleVariant._id
-                  )}
-                  alt=""
-                />
-              ) : 'Image Placeholder'}
-            </div>
+            <MagnifiableProductImage
+              src={activeBundleImageSrc}
+              alt={activeBundleVariant.name || bundleModalProduct.name || 'Product image'}
+            />
 
             <h2 id="bundle-option-title">Choose an option</h2>
             <p className={styles.gemstoneModalProductName}>{bundleModalProduct.name}</p>
@@ -1531,7 +2171,7 @@ export default function NewOrderPage({ onAddToCart }) {
               {bundleModalProduct.bundleDescription}
             </p>
             <label className={styles.gemstoneModalField}>
-              <span>{bundleModalProduct.bundleLabel === 'crucible number' ? 'Crucible number' : 'Size'}</span>
+              <span>{getBundleLabelText(bundleModalProduct.bundleLabel)}</span>
               <select
                 value={selectedBundleOptionId}
                 onChange={(e) => setSelectedBundleOptionId(e.target.value)}
@@ -1560,7 +2200,7 @@ export default function NewOrderPage({ onAddToCart }) {
       )}
 
       {selectedProduct && (
-        <div className={styles.modalOverlay} onClick={() => setSelectedProduct(null)} role="presentation">
+        <div className={styles.modalOverlay} onClick={closeProductDetails} role="presentation">
           <div
             className={styles.modalCard}
             onClick={(e) => e.stopPropagation()}
@@ -1571,25 +2211,15 @@ export default function NewOrderPage({ onAddToCart }) {
             <button
               type="button"
               className={styles.modalCloseButton}
-              onClick={() => setSelectedProduct(null)}
+              onClick={closeProductDetails}
               aria-label="Close dialog"
             >
               ×
             </button>
-            <div className={styles.modalImagePlaceholder} aria-hidden="true">
-              {(activeSelectedBundleVariant?.image || selectedProduct.image) ? (
-                <img
-                  src={getVersionedProductImageSrc(
-                    activeSelectedBundleVariant?.image || selectedProduct.image,
-                    activeSelectedBundleVariant?.updatedAt ||
-                      selectedProduct.updatedAt ||
-                      activeSelectedBundleVariant?._id ||
-                      selectedProduct._id
-                  )}
-                  alt=""
-                />
-              ) : 'Image Placeholder'}
-            </div>
+            <MagnifiableProductImage
+              src={selectedProductImageSrc}
+              alt={activeSelectedBundleVariant?.name || selectedProduct.name || 'Product image'}
+            />
 
             <h2 id="product-modal-title">{selectedProduct.name}</h2>
 
@@ -1618,7 +2248,7 @@ export default function NewOrderPage({ onAddToCart }) {
             {selectedProduct.isBundleProduct && activeSelectedBundleVariant ? (
               <>
                 <label className={styles.gemstoneModalField}>
-                  <span>{selectedProduct.bundleLabel === 'crucible number' ? 'Crucible number' : 'Size'}</span>
+                  <span>{getBundleLabelText(selectedProduct.bundleLabel)}</span>
                   <select
                     value={selectedBundleOptionId}
                     onChange={(e) => setSelectedBundleOptionId(e.target.value)}
