@@ -937,6 +937,21 @@ export const DEFAULT_TOOL_PRODUCTS = [
     countInStock: 0
   },
   {
+    _id: 'dialux-polishing-compounds',
+    name: 'Dialux polishing compounds',
+    category: 'Tools',
+    subcategory: 'Others',
+    description: 'Polishing compounds for jewellery finishing.',
+    price: 0,
+    image: '/products/dialux-polishing-compounds.jpg',
+    images: [
+      '/products/dialux-polishing-compounds.jpg',
+      '/products/dialux-polishing-compounds-2.jpg',
+      '/products/dialux-polishing-compounds-3.jpg'
+    ],
+    countInStock: 0
+  },
+  {
     _id: 'goldsmith-shovel',
     name: 'Goldsmith Shovel',
     category: 'Tools',
@@ -1083,7 +1098,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     subcategory: null,
     description: 'Scale product.',
     price: 180,
-    image: '/products/electronic-scale-100g.jpg',
+    image: '/products/electronic-scale-3kg.jpg',
     countInStock: 0
   },
   {

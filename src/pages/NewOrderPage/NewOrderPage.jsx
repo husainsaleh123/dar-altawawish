@@ -16,6 +16,14 @@ const PRODUCT_IMAGE_BY_KEY = new Map(
     .map((product) => [String(product?._id || '').trim().toLowerCase(), String(product?.image || '').trim()])
     .filter(([catalogKey, image]) => catalogKey && image)
 );
+const PRODUCT_IMAGES_BY_KEY = new Map(
+  DEFAULT_PRODUCTS
+    .map((product) => [
+      String(product?._id || '').trim().toLowerCase(),
+      Array.isArray(product?.images) ? product.images.map((image) => String(image || '').trim()).filter(Boolean) : []
+    ])
+    .filter(([catalogKey, images]) => catalogKey && images.length)
+);
 const PRODUCT_IMAGE_CACHE_VERSION = import.meta.env.DEV
   ? String(Date.now())
   : '2026-03-30-1005';
@@ -215,6 +223,17 @@ function getResolvedProductImage(product) {
 
   const catalogKey = String(product?.catalogKey || product?._id || '').trim().toLowerCase();
   return PRODUCT_IMAGE_BY_KEY.get(catalogKey) || '';
+}
+
+function getResolvedProductImages(product) {
+  const configuredImages = Array.isArray(product?.images)
+    ? product.images.map((image) => String(image || '').trim()).filter(Boolean)
+    : [];
+  const catalogKey = String(product?.catalogKey || product?._id || '').trim().toLowerCase();
+  const catalogImages = PRODUCT_IMAGES_BY_KEY.get(catalogKey) || [];
+  const coverImage = getResolvedProductImage(product);
+
+  return Array.from(new Set([coverImage, ...configuredImages, ...catalogImages].filter(Boolean)));
 }
 
 function getBundleCoverImage(variants) {
@@ -557,6 +576,7 @@ export default function NewOrderPage({ onAddToCart }) {
   const [itemsPerPage, setItemsPerPage] = useState(16);
   const [bundlePreviewOptionIds, setBundlePreviewOptionIds] = useState({});
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [selectedProductImageIndex, setSelectedProductImageIndex] = useState(0);
   const [addedProductName, setAddedProductName] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -599,6 +619,7 @@ export default function NewOrderPage({ onAddToCart }) {
     const withCategories = products.map((product) => ({
       ...product,
       image: getResolvedProductImage(product),
+      images: getResolvedProductImages(product),
       mainCategory: inferMainCategory(product),
       bundleOptions: Array.isArray(product.bundleOptions)
         ? product.bundleOptions.map((variant) => {
@@ -611,6 +632,7 @@ export default function NewOrderPage({ onAddToCart }) {
           return {
             ...variantWithProductCategory,
             image: getResolvedProductImage(variantWithProductCategory) || getResolvedProductImage(product),
+            images: getResolvedProductImages(variantWithProductCategory),
             mainCategory: inferMainCategory(variantWithProductCategory)
           };
         })
@@ -1607,6 +1629,7 @@ export default function NewOrderPage({ onAddToCart }) {
   function closeProductDetails() {
     setSelectedProduct(null);
     setSelectedBundleOptionId('');
+    setSelectedProductImageIndex(0);
   }
 
   function openProductDetails(product) {
@@ -1615,6 +1638,7 @@ export default function NewOrderPage({ onAddToCart }) {
       const firstVariant = product.bundleOptions?.[0] || null;
       setSelectedBundleOptionId(firstVariant?._id || '');
     }
+    setSelectedProductImageIndex(0);
     setSelectedProduct(product);
   }
 
@@ -1765,14 +1789,20 @@ export default function NewOrderPage({ onAddToCart }) {
         activeBundleVariant.updatedAt || bundleModalProduct?.updatedAt || activeBundleVariant._id
       )
     : '';
-  const selectedProductImage = activeSelectedBundleVariant?.image || selectedProduct?.image || '';
+  const selectedProductImages = activeSelectedBundleVariant
+    ? [activeSelectedBundleVariant.image].filter(Boolean)
+    : getResolvedProductImages(selectedProduct);
+  const selectedProductImageIndexSafe = selectedProductImages.length
+    ? Math.min(selectedProductImageIndex, selectedProductImages.length - 1)
+    : 0;
+  const selectedProductImage = selectedProductImages[selectedProductImageIndexSafe] || '';
   const selectedProductImageSrc = selectedProductImage
     ? getVersionedProductImageSrc(
         selectedProductImage,
         activeSelectedBundleVariant?.updatedAt ||
           selectedProduct?.updatedAt ||
           activeSelectedBundleVariant?._id ||
-          selectedProduct?._id
+          `${selectedProduct?._id || 'product'}-${selectedProductImageIndexSafe}`
       )
     : '';
 
@@ -2220,6 +2250,56 @@ export default function NewOrderPage({ onAddToCart }) {
               src={selectedProductImageSrc}
               alt={activeSelectedBundleVariant?.name || selectedProduct.name || 'Product image'}
             />
+            {selectedProductImages.length > 1 && (
+              <div className={styles.productImageSlider} aria-label="Product images">
+                <button
+                  type="button"
+                  className={styles.sliderArrowButton}
+                  onClick={() => {
+                    setSelectedProductImageIndex((index) =>
+                      index <= 0 ? selectedProductImages.length - 1 : index - 1
+                    );
+                  }}
+                  aria-label="Show previous product image"
+                >
+                  &lsaquo;
+                </button>
+                <div className={styles.sliderThumbnails}>
+                  {selectedProductImages.map((image, index) => {
+                    const imageSrc = getVersionedProductImageSrc(
+                      image,
+                      `${selectedProduct?._id || 'product'}-${index}`
+                    );
+                    return (
+                      <button
+                        key={image}
+                        type="button"
+                        className={`${styles.sliderThumbnailButton} ${
+                          index === selectedProductImageIndexSafe ? styles.activeSliderThumbnail : ''
+                        }`}
+                        onClick={() => setSelectedProductImageIndex(index)}
+                        aria-label={`Show product image ${index + 1}`}
+                        aria-current={index === selectedProductImageIndexSafe ? 'true' : undefined}
+                      >
+                        <img src={imageSrc} alt="" />
+                      </button>
+                    );
+                  })}
+                </div>
+                <button
+                  type="button"
+                  className={styles.sliderArrowButton}
+                  onClick={() => {
+                    setSelectedProductImageIndex((index) =>
+                      index >= selectedProductImages.length - 1 ? 0 : index + 1
+                    );
+                  }}
+                  aria-label="Show next product image"
+                >
+                  &rsaquo;
+                </button>
+              </div>
+            )}
 
             <h2 id="product-modal-title">{selectedProduct.name}</h2>
 
