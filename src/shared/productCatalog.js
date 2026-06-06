@@ -396,9 +396,9 @@ export const DEFAULT_MACHINE_PRODUCTS = [
   {
     _id: 'ultrasonic-cleaner-12l-large',
     name: 'Ultrasonic cleaner (12L Large)',
-    category: 'Machines',
-    subcategory: null,
-    description: 'Machine product.',
+    category: 'Tools',
+    subcategory: 'Others',
+    description: 'Tool product.',
     price: 175,
     image: '/products/ultrasonic-12L.jpg',
     countInStock: 0
@@ -451,6 +451,21 @@ export const DEFAULT_MACHINE_PRODUCTS = [
     description: 'Machine product.',
     price: 50,
     image: '/products/ring-expander-and-reducer.jpg',
+    countInStock: 0
+  },
+  {
+    _id: 'wooden-work-desk',
+    name: 'Wooden Work Desk',
+    category: 'Machines',
+    subcategory: null,
+    description: 'Machine product.',
+    price: 80,
+    image: '/products/wooden-bench-2.jpg',
+    images: [
+      '/products/wooden-bench-1.jpg',
+      '/products/wooden-bench-2.jpg',
+      '/products/wooden-bench-3.jpg'
+    ],
     countInStock: 0
   }
 ];
