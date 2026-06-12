@@ -6,11 +6,11 @@
   "scripts": {
     "sync:product-images": "node scripts/sync-product-images.mjs",
     "watch:product-images": "node scripts/sync-product-images.mjs --watch",
-    "dev:client": "concurrently \"npm run watch:product-images\" \"vite\"",
+    "dev:client": "vite",
     "server": "nodemon server.js",
     "dev": "concurrently \"npm run server\" \"npm run dev:client\"",
     "dev:full": "npm run dev",
-    "build": "npm run sync:product-images && vite build",
+    "build": "vite build",
     "start": "NODE_ENV=production node server.js",
     "start:dev": "NODE_ENV=development node server.js",
     "lint": "eslint .",

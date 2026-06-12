@@ -5,8 +5,8 @@ import { fileURLToPath } from 'node:url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const projectRoot = path.resolve(__dirname, '..');
-const sourceDir = path.join(projectRoot, 'src', 'assets', 'images', 'products');
-const targetDir = path.join(projectRoot, 'public', 'products');
+const sourceDir = path.join(projectRoot, 'public', 'products');
+const targetDir = path.join(projectRoot, 'src', 'assets', 'images', 'products');
 const watchMode = process.argv.includes('--watch');
 
 function ensureTargetDir() {
