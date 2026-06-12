@@ -856,7 +856,7 @@ export default function NewOrderPage({ onAddToCart }) {
         ...firstVariant,
         _id: 'graphite-crucible',
         name: 'Graphite Crucible',
-        image: '/products/copied%20graphite-crucible-6.jpg',
+        image: '/products/graphite-crucible-4.jpg',
         price: Number.isFinite(lowestPrice) ? lowestPrice : Number(firstVariant?.price) || 0,
         description: `${baseDescription}.`,
         isBundleProduct: true,

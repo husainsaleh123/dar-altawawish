@@ -971,7 +971,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     category: 'Tools',
     subcategory: 'Others',
     description: 'Tool product.',
-    price: 5,
+    price: 4,
     image: '/products/wax.jpg',
     countInStock: 0
   },
