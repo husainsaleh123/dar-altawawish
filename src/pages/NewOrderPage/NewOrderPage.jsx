@@ -1930,6 +1930,29 @@ export default function NewOrderPage({ onAddToCart }) {
                   </div>
                 </div>
 
+                <div className={styles.catalogNotice} role="status">
+                  <svg className={styles.catalogNoticeIcon} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path
+                      d="M12 3.4 2.7 19.5h18.6L12 3.4Z"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M12 8.5v5.3M12 17.1h.01"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                  <span>
+                    More products and variations are coming soon. Apologies for any
+                    inconvienence.
+                  </span>
+                </div>
+
                 <div className={styles.productsGrid}>
                   {paginatedProducts.map((product) => {
                     const isGemstone = product.mainCategory === 'Gemstones';

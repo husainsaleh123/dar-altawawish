@@ -265,17 +265,6 @@ export const DEFAULT_GEMSTONE_PRODUCTS = [
     unit: 'gram'
   },
   {
-    _id: 'turquoise-teardrop',
-    name: 'Turquoise Teardrop',
-    category: 'Gemstones',
-    subcategory: 'Turquoise',
-    description: 'Gemstone product priced per gram.',
-    price: 0,
-    image: '',
-    countInStock: 0,
-    unit: 'gram'
-  },
-  {
     _id: 'turquoise-oval',
     name: 'Turquoise Oval',
     category: 'Gemstones',
@@ -949,7 +938,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: 'Tool product.',
     price: 2,
     image: '/products/red-and-black-polish.jpg',
-    countInStock: 0
+    countInStock: 30
   },
   {
     _id: 'dialux-polishing-compounds',
@@ -957,14 +946,14 @@ export const DEFAULT_TOOL_PRODUCTS = [
     category: 'Tools',
     subcategory: 'Others',
     description: 'Polishing compounds for jewellery finishing.',
-    price: 0,
+    price: 1,
     image: '/products/dialux-polishing-compounds.jpg',
     images: [
       '/products/dialux-polishing-compounds.jpg',
       '/products/dialux-polishing-compounds-2.jpg',
       '/products/dialux-polishing-compounds-3.jpg'
     ],
-    countInStock: 0
+    countInStock: 30
   },
   {
     _id: 'goldsmith-shovel',
@@ -1258,13 +1247,27 @@ export const DEFAULT_BEAD_PRODUCTS = [
     price: 60,
     image: '/products/natural-amber-bracelet-60-bd.jpg',
     countInStock: 0
+  },
+  {
+    _id: 'royal-pearl-zari-tassel',
+    name: 'Royal Pearl Zari Tassel',
+    category: 'Beads',
+    subcategory: null,
+    description: 'Beads product.',
+    price: 8,
+    image: '/products/royal-pearl-zari-tassel.jpg',
+    images: [
+      '/products/royal-pearl-zari-tassel.jpg',
+      '/products/royal-pearl-zari-tassel-2.jpg'
+    ],
+    countInStock: 0
   }
 ];
 
 export const DEFAULT_MINERAL_PRODUCTS = [
   {
-    _id: 'brass-cube-1kg',
-    name: 'Brass cube (1 kg)',
+    _id: 'brass-cube-2kg',
+    name: 'Brass cube (2.3 kg)',
     category: 'Minerals',
     subcategory: null,
     description: 'Mineral product.',

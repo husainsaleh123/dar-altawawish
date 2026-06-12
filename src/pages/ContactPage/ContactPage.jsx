@@ -47,60 +47,90 @@ export default function ContactPage() {
 
   return (
     <section className={styles.page}>
-      <header className={styles.header}>
-        <h1>More than happy to help.</h1>
-        <p>For any inquiries or feedback, pls fill the form.</p>
-      </header>
+      <div className={styles.contactShell}>
+        <aside className={styles.contactIntro}>
+          <span className={styles.kicker}>Contact Dar AlTawawish</span>
+          <h1>More than happy to help.</h1>
+          <p>For product inquiries, quotations, and general feedback, send us a message and we will get back to you.</p>
 
-      <div className={styles.formCard}>
-        <form className={styles.contactForm} autoComplete="off" onSubmit={handleSubmit}>
-          <div className={styles.fieldGroup}>
-            <label htmlFor="name">
-              <i className="fa fa-user" aria-hidden="true" />
-              Name*
-            </label>
-            <input id="name" name="name" type="text" value={formData.name} onChange={handleChange} required />
+          <div className={styles.contactHighlights} aria-label="Contact support details">
+            <div>
+              <i className="fa fa-clock-o" aria-hidden="true" />
+              <span>Prompt follow-up</span>
+            </div>
+            <div>
+              <i className="fa fa-diamond" aria-hidden="true" />
+              <span>Jewellery tools and gemstones</span>
+            </div>
+            <div>
+              <i className="fa fa-comments-o" aria-hidden="true" />
+              <span>Custom requests welcome</span>
+            </div>
           </div>
+        </aside>
 
-          <div className={styles.fieldGroup}>
-            <label htmlFor="email">
-              <i className="fa fa-envelope-o" aria-hidden="true" />
-              Email*
-            </label>
-            <input id="email" name="email" type="email" value={formData.email} onChange={handleChange} required />
-          </div>
+        <div className={styles.formCard}>
+          <form className={styles.contactForm} autoComplete="off" onSubmit={handleSubmit}>
+            <div className={styles.formHeader}>
+              <h2>Send a message</h2>
+              <p>Required fields are marked with an asterisk.</p>
+            </div>
 
-          <div className={styles.fieldGroup}>
-            <label htmlFor="company">
-              <i className="fa fa-building-o" aria-hidden="true" />
-              Company
-            </label>
-            <input id="company" name="company" type="text" value={formData.company} onChange={handleChange} />
-          </div>
+            <div className={styles.fieldGroup}>
+              <label htmlFor="name">
+                <i className="fa fa-user" aria-hidden="true" />
+                Name*
+              </label>
+              <input id="name" name="name" type="text" value={formData.name} onChange={handleChange} required />
+            </div>
 
-          <div className={styles.fieldGroup}>
-            <label htmlFor="subject">
-              <i className="fa fa-tag" aria-hidden="true" />
-              Subject
-            </label>
-            <input id="subject" name="subject" type="text" value={formData.subject} onChange={handleChange} />
-          </div>
+            <div className={styles.fieldGroup}>
+              <label htmlFor="email">
+                <i className="fa fa-envelope-o" aria-hidden="true" />
+                Email*
+              </label>
+              <input id="email" name="email" type="email" value={formData.email} onChange={handleChange} required />
+            </div>
 
-          <div className={styles.fieldGroup}>
-            <label htmlFor="message">
-              <i className="fa fa-comment-o" aria-hidden="true" />
-              Message*
-            </label>
-            <textarea id="message" name="message" rows={4} value={formData.message} onChange={handleChange} required />
-          </div>
+            <div className={styles.fieldGroup}>
+              <label htmlFor="company">
+                <i className="fa fa-building-o" aria-hidden="true" />
+                Company
+              </label>
+              <input id="company" name="company" type="text" value={formData.company} onChange={handleChange} />
+            </div>
 
-          <button type="submit" className={styles.sendButton} disabled={isSubmitting}>
-            <span>{isSubmitting ? 'Sending...' : 'Send message'}</span>
-            <i className="fa fa-paper-plane" aria-hidden="true" />
-          </button>
-          {successMsg && <p className={styles.successMsg}>{successMsg}</p>}
-          {errorMsg && <p className={styles.errorMsg}>{errorMsg}</p>}
-        </form>
+            <div className={styles.fieldGroup}>
+              <label htmlFor="subject">
+                <i className="fa fa-tag" aria-hidden="true" />
+                Subject
+              </label>
+              <input id="subject" name="subject" type="text" value={formData.subject} onChange={handleChange} />
+            </div>
+
+            <div className={styles.fieldGroup}>
+              <label htmlFor="message">
+                <i className="fa fa-comment-o" aria-hidden="true" />
+                Message*
+              </label>
+              <textarea
+                id="message"
+                name="message"
+                rows={4}
+                value={formData.message}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            <button type="submit" className={styles.sendButton} disabled={isSubmitting}>
+              <span>{isSubmitting ? 'Sending...' : 'Send message'}</span>
+              <i className="fa fa-paper-plane" aria-hidden="true" />
+            </button>
+            {successMsg && <p className={styles.successMsg}>{successMsg}</p>}
+            {errorMsg && <p className={styles.errorMsg}>{errorMsg}</p>}
+          </form>
+        </div>
       </div>
     </section>
   );

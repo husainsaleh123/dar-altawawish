@@ -204,6 +204,28 @@
   background: #f2f5fc;
 }
 
+.catalogNotice {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.62rem;
+  margin: 0 0 1rem;
+  border: 1px solid #ead9a8;
+  border-radius: 8px;
+  background: #fff8e4;
+  color: #5d4516;
+  padding: 0.72rem 0.9rem;
+  font-size: 0.98rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.catalogNoticeIcon {
+  width: 1.18rem;
+  height: 1.18rem;
+  flex: 0 0 auto;
+  margin-top: 0.05rem;
+}
+
 .productsGrid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -783,6 +805,16 @@
 
   .toolbarControls {
     width: 100%;
+  }
+
+  .catalogNotice {
+    gap: 0.85rem;
+    padding: 1rem 1.05rem;
+    line-height: 1.8;
+  }
+
+  .catalogNoticeIcon {
+    margin-top: 0.1rem;
   }
 
   .productsGrid {
