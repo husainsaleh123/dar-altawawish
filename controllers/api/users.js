@@ -6,7 +6,6 @@ import Notification from '../../models/notification.js';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
-import dns from 'dns/promises';
 
 const checkToken = (req, res) => {
   console.log('req.user', req.user)
@@ -17,20 +16,32 @@ const dataController = {
   async create (req, res, next) {
     try {
       const email = String(req.body?.email || '').trim().toLowerCase();
+      const name = String(req.body?.name || '').trim();
+      const password = String(req.body?.password || '');
+      const countryCode = String(req.body?.countryCode || '+973').trim() || '+973';
+      const phone = String(req.body?.phone || '').trim();
 
       if (!EMAIL_REGEX.test(email)) {
         return res.status(400).json({ error: 'Enter a valid email address.' });
       }
 
-      const hasValidEmailDomain = await hasResolvableEmailDomain(email);
-      if (!hasValidEmailDomain) {
-        return res.status(400).json({ error: 'Email domain could not be verified. Please use a real email address.' });
+      if (!name) {
+        return res.status(400).json({ error: 'Full name is required.' });
       }
 
-      req.body.email = email;
-      const user = await User.create(req.body)
+      if (!password || password.length < 6) {
+        return res.status(400).json({ error: 'Password must be at least 6 characters.' });
+      }
+
+      const user = await User.create({
+        name,
+        email,
+        password,
+        countryCode,
+        phone,
+        authProvider: 'local',
+      });
       await createRegistrationNotification(user);
-      console.log(req.body)
       // token will be a string
       const token = createJWT(user)
       // send back the token as a string
@@ -117,38 +128,43 @@ const dataController = {
   },
   async googleLogin(req, res, next) {
     try {
-      const { credential } = req.body || {};
+      const { credential, phone = '', countryCode = '+973' } = req.body || {};
       const googleUser = await verifyGoogleCredential(credential);
 
       const email = String(googleUser.email || '').trim().toLowerCase();
       const name = String(googleUser.name || googleUser.given_name || '').trim();
       const googleId = String(googleUser.sub || '').trim();
+      const sanitizedPhone = String(phone || '').trim();
+      const sanitizedCountryCode = String(countryCode || '+973').trim() || '+973';
 
-      if (!email || !googleId) {
+      if (!email || !googleId || !name) {
         return res.status(400).json({ error: 'Invalid Google profile.' });
       }
 
-      const user = await User.findOne({
+      let user = await User.findOne({
         $or: [{ googleId }, { email }]
       });
 
       if (!user) {
-        return res.status(400).json({ error: 'User not registered' });
-      }
-
-      if (user.googleId && user.googleId !== googleId) {
+        user = await User.create({
+          name,
+          email,
+          password: crypto.randomBytes(24).toString('hex'),
+          authProvider: 'google',
+          googleId,
+          countryCode: sanitizedCountryCode,
+          phone: sanitizedPhone
+        });
+        await createRegistrationNotification(user);
+      } else if (user.googleId && user.googleId !== googleId) {
         return res.status(400).json({ error: 'Google account mismatch for this email.' });
-      }
-
-      if (!user.googleId) {
+      } else {
         user.googleId = googleId;
+        if (name && !user.name) user.name = name;
+        if (sanitizedPhone) user.phone = sanitizedPhone;
+        if (sanitizedPhone || user.countryCode) user.countryCode = sanitizedCountryCode;
+        await user.save();
       }
-
-      if (name && !user.name) {
-        user.name = name;
-      }
-
-      await user.save();
 
       res.locals.data.user = user;
       res.locals.data.token = createJWT(user);
@@ -259,32 +275,6 @@ function createJWT (user) {
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-async function hasResolvableEmailDomain(email) {
-  const domain = String(email || '').split('@')[1];
-  if (!domain) return false;
-
-  try {
-    const mxRecords = await dns.resolveMx(domain);
-    if (Array.isArray(mxRecords) && mxRecords.length > 0) return true;
-  } catch {
-    // fall through to A/AAAA lookup
-  }
-
-  try {
-    const addresses = await dns.resolve4(domain);
-    if (Array.isArray(addresses) && addresses.length > 0) return true;
-  } catch {
-    // ignore
-  }
-
-  try {
-    const addresses = await dns.resolve6(domain);
-    return Array.isArray(addresses) && addresses.length > 0;
-  } catch {
-    return false;
-  }
-}
-
 async function verifyGoogleCredential(credential) {
   if (!credential) throw new Error('Missing Google credential.');
   if (!process.env.GOOGLE_CLIENT_ID) {
@@ -313,17 +303,21 @@ async function verifyGoogleCredential(credential) {
 async function createRegistrationNotification(user) {
   if (!user?._id) return;
 
-  await Notification.create({
-    type: "user_registered",
-    title: "New user registration",
-    message: `${user.name} registered with ${user.email}.`,
-    entityType: "user",
-    entityId: user._id,
-    entityModel: "User",
-    metadata: {
-      email: user.email,
-      role: user.role,
-      authProvider: user.authProvider,
-    },
-  });
+  try {
+    await Notification.create({
+      type: "user_registered",
+      title: "New user registration",
+      message: `${user.name} registered with ${user.email}.`,
+      entityType: "user",
+      entityId: user._id,
+      entityModel: "User",
+      metadata: {
+        email: user.email,
+        role: user.role,
+        authProvider: user.authProvider,
+      },
+    });
+  } catch (error) {
+    console.error("Registration notification failed:", error);
+  }
 }
