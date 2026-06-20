@@ -32,5 +32,7 @@ export default async function sendRequest(url, method = 'GET', payload = null, o
   } catch {
     // ignore parsing errors
   }
-  throw new Error(message);
+  const error = new Error(message);
+  error.status = res.status;
+  throw error;
 }

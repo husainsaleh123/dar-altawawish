@@ -1,4 +1,4 @@
-import nodemailer from 'nodemailer';
+import { sendEmail } from '../../services/emailService.js';
 
 function isValidEmail(email = '') {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -18,26 +18,7 @@ export async function sendContactMessage(req, res) {
     }
 
     const toEmail = process.env.CONTACT_EMAIL_TO || process.env.EMAIL_TO || 'dar.altawawish@gmail.com';
-    const smtpUser = process.env.CONTACT_EMAIL_USER || process.env.EMAIL_USER || process.env.SMTP_USER;
-    const smtpPass = process.env.CONTACT_EMAIL_PASS || process.env.EMAIL_PASS || process.env.SMTP_PASS;
-    const smtpService = process.env.CONTACT_EMAIL_SERVICE || process.env.EMAIL_SERVICE || 'gmail';
-
-    if (!smtpUser || !smtpPass) {
-      return res.status(500).json({
-        error: 'Email service is not configured on the server. Set CONTACT_EMAIL_USER and CONTACT_EMAIL_PASS in .env, then restart the server.'
-      });
-    }
-
-    const transporter = nodemailer.createTransport({
-      service: smtpService,
-      auth: {
-        user: smtpUser,
-        pass: smtpPass
-      }
-    });
-
-    await transporter.sendMail({
-      from: smtpUser,
+    await sendEmail({
       to: toEmail,
       replyTo: email,
       subject: `Contact Form: ${subject.trim() || 'New Inquiry'}`,

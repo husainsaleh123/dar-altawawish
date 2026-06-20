@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { getGoogleConfig, googleAuth, signUp } from '../../utilities/users-service';
 import styles from './SignUpForm.module.scss';
 
@@ -62,7 +62,8 @@ function validateRegistration(formData) {
   return errors;
 }
 
-export default function SignUpForm({ setUser, onSwitchToLogin, embedded = false }) {
+export default function SignUpForm({ onSwitchToLogin, embedded = false }) {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
     name: '',
@@ -72,6 +73,7 @@ export default function SignUpForm({ setUser, onSwitchToLogin, embedded = false 
     confirm: ''
   });
   const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const [googleCredential, setGoogleCredential] = useState('');
   const [googleClientId, setGoogleClientId] = useState('');
   const [isGoogleFlow, setIsGoogleFlow] = useState(false);
@@ -79,6 +81,8 @@ export default function SignUpForm({ setUser, onSwitchToLogin, embedded = false 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasSubmitted, setHasSubmitted] = useState(false);
   const [isGoogleReady, setIsGoogleReady] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const googleButtonRef = useRef(null);
   const validationErrors = useMemo(() => validateRegistration(formData), [formData]);
 
@@ -184,6 +188,7 @@ export default function SignUpForm({ setUser, onSwitchToLogin, embedded = false 
       [evt.target.name]: evt.target.value
     }));
     setError('');
+    setSuccessMessage('');
   }
 
   function hasValidationError(matchers) {
@@ -192,6 +197,7 @@ export default function SignUpForm({ setUser, onSwitchToLogin, embedded = false 
   }
 
   function handleGoogleShellClick() {
+    setSuccessMessage('');
     if (!googleClientId) {
       setError('Google sign-in is not configured yet.');
       return;
@@ -214,6 +220,7 @@ export default function SignUpForm({ setUser, onSwitchToLogin, embedded = false 
 
     if (validationErrors.length > 0) {
       setError(validationErrors[0]);
+      setSuccessMessage('');
       return;
     }
 
@@ -226,9 +233,14 @@ export default function SignUpForm({ setUser, onSwitchToLogin, embedded = false 
         countryCode: formData.countryCode,
         phone: formData.phone.trim()
       };
-      const user = await signUp(payload);
-      setUser(user);
+      const response = await signUp(payload);
+      sessionStorage.setItem('pendingRegistrationEmail', payload.email);
+      sessionStorage.setItem('verificationExpiresAt', response?.expiresAt || '');
+      sessionStorage.setItem('verificationResendAt', response?.resendAvailableAt || '');
+      setError('');
+      navigate('/verify-email', { state: { email: payload.email } });
     } catch (err) {
+      setSuccessMessage('');
       setError(err?.message || 'Registration failed. Please try again.');
     } finally {
       setIsSubmitting(false);
@@ -244,12 +256,17 @@ export default function SignUpForm({ setUser, onSwitchToLogin, embedded = false 
 
     try {
       setIsSubmittingGoogle(true);
-      const user = await googleAuth({
+      const response = await googleAuth({
         credential: googleCredential,
         countryCode: formData.countryCode,
         phone: formData.phone.trim()
       });
-      setUser(user);
+      const email = formData.email.trim().toLowerCase();
+      sessionStorage.setItem('pendingRegistrationEmail', email);
+      sessionStorage.setItem('verificationExpiresAt', response?.expiresAt || '');
+      sessionStorage.setItem('verificationResendAt', response?.resendAvailableAt || '');
+      setError('');
+      navigate('/verify-email', { state: { email } });
     } catch (err) {
       setError(err?.message || 'Google sign-in failed.');
     } finally {
@@ -310,7 +327,7 @@ export default function SignUpForm({ setUser, onSwitchToLogin, embedded = false 
             </div>
 
             <button type="submit" className={styles.registerButton} disabled={isDisabled}>
-              Proceed
+              {isSubmittingGoogle ? 'Sending code...' : 'Send verification code'}
             </button>
           </form>
 
@@ -352,7 +369,7 @@ export default function SignUpForm({ setUser, onSwitchToLogin, embedded = false 
           </div>
         </div>
 
-        <p className={styles.orText}>Or</p>
+        <div className={styles.orText}>Or</div>
 
         <form onSubmit={handleSubmit} className={styles.registerForm} autoComplete="off">
           <div className={styles.fieldBlock}>
@@ -417,32 +434,54 @@ export default function SignUpForm({ setUser, onSwitchToLogin, embedded = false 
 
           <div className={styles.fieldBlock}>
             <label htmlFor="signup-password">Password</label>
-            <input
-              id="signup-password"
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              className={hasValidationError(['Password']) ? styles.inputError : ''}
-              aria-invalid={hasValidationError(['Password'])}
-              minLength="6"
-              required
-            />
+            <div className={styles.passwordInputWrap}>
+              <input
+                id="signup-password"
+                type={showPassword ? 'text' : 'password'}
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                className={hasValidationError(['Password']) ? styles.inputError : ''}
+                aria-invalid={hasValidationError(['Password'])}
+                minLength="6"
+                required
+              />
+              <button
+                type="button"
+                className={styles.passwordToggle}
+                onClick={() => setShowPassword((value) => !value)}
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+                aria-pressed={showPassword}
+              >
+                <i className={`fa ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`} aria-hidden="true" />
+              </button>
+            </div>
           </div>
 
           <div className={styles.fieldBlock}>
             <label htmlFor="signup-confirm">Confirm Password</label>
-            <input
-              id="signup-confirm"
-              type="password"
-              name="confirm"
-              value={formData.confirm}
-              onChange={handleChange}
-              className={hasValidationError(['Confirm password', 'Password and confirm password']) ? styles.inputError : ''}
-              aria-invalid={hasValidationError(['Confirm password', 'Password and confirm password'])}
-              minLength="6"
-              required
-            />
+            <div className={styles.passwordInputWrap}>
+              <input
+                id="signup-confirm"
+                type={showConfirmPassword ? 'text' : 'password'}
+                name="confirm"
+                value={formData.confirm}
+                onChange={handleChange}
+                className={hasValidationError(['Confirm password', 'Password and confirm password']) ? styles.inputError : ''}
+                aria-invalid={hasValidationError(['Confirm password', 'Password and confirm password'])}
+                minLength="6"
+                required
+              />
+              <button
+                type="button"
+                className={styles.passwordToggle}
+                onClick={() => setShowConfirmPassword((value) => !value)}
+                aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
+                aria-pressed={showConfirmPassword}
+              >
+                <i className={`fa ${showConfirmPassword ? 'fa-eye-slash' : 'fa-eye'}`} aria-hidden="true" />
+              </button>
+            </div>
           </div>
 
           <button type="submit" className={styles.registerButton} disabled={isDisabled}>
@@ -450,7 +489,9 @@ export default function SignUpForm({ setUser, onSwitchToLogin, embedded = false 
           </button>
         </form>
 
-        <p className={styles.errorText}>{error || '\u00A0'}</p>
+        <p className={successMessage ? styles.successText : styles.errorText}>
+          {successMessage || error || '\u00A0'}
+        </p>
       </div>
 
       {onSwitchToLogin ? (

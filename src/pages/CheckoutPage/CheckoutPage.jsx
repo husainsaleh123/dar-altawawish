@@ -231,31 +231,31 @@ export default function CheckoutPage({ cartItems = [], user, onCheckoutComplete 
             </div>
             <div className={`${styles.formGrid} ${styles.customerGrid}`}>
               <label>
-                <span>First name</span>
+                <span>First name*</span>
                 <input name="firstName" value={formData.firstName} onChange={handleChange} required />
               </label>
               <label>
-                <span>Last name</span>
+                <span>Last name*</span>
                 <input name="lastName" value={formData.lastName} onChange={handleChange} required />
               </label>
               <label>
-                <span>Email</span>
+                <span>Email*</span>
                 <input type="email" name="email" value={formData.email} onChange={handleChange} required />
               </label>
               <label>
-                <span>Phone</span>
+                <span>Phone*</span>
                 <input name="phone" value={formData.phone} onChange={handleChange} placeholder="+973" required />
               </label>
               <label>
-                <span>Company</span>
+                <span>Company (optional)</span>
                 <input name="company" value={formData.company} onChange={handleChange} />
               </label>
               <label>
-                <span>Country</span>
+                <span>Country*</span>
                 <input name="country" value={formData.country} onChange={handleChange} required />
               </label>
               <div className={`${styles.fullWidth} ${styles.fulfillmentSection}`}>
-                <span>Order method</span>
+                <span>Order method*</span>
                 <div className={styles.fulfillmentOptions}>
                   <label className={styles.fulfillmentOption}>
                     <input
@@ -290,7 +290,7 @@ export default function CheckoutPage({ cartItems = [], user, onCheckoutComplete 
                 </div>
               </div>
               <label className={styles.fullWidth}>
-                <span>Address</span>
+                <span>{formData.fulfillmentMethod === 'delivery' ? 'Address*' : 'Address'}</span>
                 <input
                   name="address"
                   value={formData.address}
@@ -301,11 +301,11 @@ export default function CheckoutPage({ cartItems = [], user, onCheckoutComplete 
                 />
               </label>
               <label>
-                <span>City</span>
+                <span>City*</span>
                 <input name="city" value={formData.city} onChange={handleChange} required />
               </label>
               <label className={styles.fullWidth}>
-                <span>Order notes</span>
+                <span>Order notes (optional)</span>
                 <textarea name="notes" value={formData.notes} onChange={handleChange} rows="4" />
               </label>
             </div>
@@ -378,7 +378,7 @@ export default function CheckoutPage({ cartItems = [], user, onCheckoutComplete 
                 checked={formData.agreeToTerms}
                 onChange={handleChange}
               />
-              <span>I confirm the order details and authorize payment for this purchase.</span>
+              <span>I confirm the order details and authorize payment for this purchase.*</span>
             </label>
           </section>
 
@@ -404,7 +404,7 @@ export default function CheckoutPage({ cartItems = [], user, onCheckoutComplete 
               <article key={item._id} className={styles.summaryItem}>
                 <div>
                   <h3>{item.name}</h3>
-                  <p>Qty {item.qty}</p>
+                  <p>x{item.qty}</p>
                 </div>
                 <strong>{formatPrice((Number(item.price) || 0) * (item.qty || 0))}</strong>
               </article>

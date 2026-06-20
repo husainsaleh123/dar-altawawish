@@ -7,13 +7,19 @@ import { checkToken, dataController, apiController } from '../../controllers/api
 const router = express.Router();
 
 // POST /api/users/signup
-router.post('/signup', dataController.create, apiController.auth);
+router.post('/signup', dataController.create, apiController.registrationPending);
+
+// POST /api/users/signup/verify
+router.post('/signup/verify', dataController.verifyRegistration, apiController.auth);
+
+// POST /api/users/signup/resend
+router.post('/signup/resend', dataController.resendRegistrationCode, apiController.registrationPending);
 
 // POST /api/users/login
 router.post('/login', dataController.login, apiController.auth);
 
 // POST /api/users/google
-router.post('/google', dataController.googleAuth, apiController.auth);
+router.post('/google', dataController.googleAuth, apiController.registrationPending);
 
 // POST /api/users/google/login
 router.post('/google/login', dataController.googleLogin, apiController.auth);

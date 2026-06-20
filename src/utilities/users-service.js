@@ -7,12 +7,26 @@ export async function signUp(userData) {
     ...userData,
     email: String(userData?.email || '').trim().toLowerCase()
   };
-  // The backend now returns { token: "...", user: {...} }
   const response = await usersAPI.signUp(normalizedData);
-  // Persist the token to localStorage
+  if (response?.token) {
+    localStorage.setItem('token', response.token);
+  }
+  return response?.user || response;
+}
+
+export async function verifyRegistration(payload) {
+  const response = await usersAPI.verifyRegistration({
+    email: String(payload?.email || '').trim().toLowerCase(),
+    code: String(payload?.code || '').trim()
+  });
   localStorage.setItem('token', response.token);
-  // Return the user object directly
   return response.user;
+}
+
+export async function resendRegistrationCode(email) {
+  return usersAPI.resendRegistrationCode({
+    email: String(email || '').trim().toLowerCase()
+  });
 }
 
 export async function login(credentials) {
@@ -29,9 +43,7 @@ export async function login(credentials) {
 }
 
 export async function googleAuth(payload) {
-  const response = await usersAPI.googleAuth(payload);
-  localStorage.setItem('token', response.token);
-  return response.user;
+  return usersAPI.googleAuth(payload);
 }
 
 export async function googleLogin(payload) {

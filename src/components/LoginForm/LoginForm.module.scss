@@ -107,7 +107,12 @@
 }
 
 .orText {
+  width: 100%;
+  max-width: none;
   margin: 0;
+  display: block;
+  grid-column: 1 / -1;
+  justify-self: stretch;
   color: #6a6a82;
   font-size: 0.95rem;
   text-align: center;

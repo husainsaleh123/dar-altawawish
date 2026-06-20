@@ -51,13 +51,14 @@
   width: 92px;
   aspect-ratio: 1 / 1;
   border-radius: 10px;
-  background: #ececf0;
+  background: transparent;
   color: #7a7f8e;
   display: grid;
   place-items: center;
   font-size: 0.72rem;
   text-align: center;
-  padding: 0.35rem;
+  padding: 0;
+  overflow: hidden;
 }
 
 .imageWrap img {

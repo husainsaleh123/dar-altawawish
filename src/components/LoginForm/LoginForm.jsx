@@ -178,7 +178,7 @@ export default function LoginForm({ setUser, onSwitchToSignUp, embedded = false 
         </div>
       </div>
 
-      <p className={styles.orText}>Or</p>
+      <div className={styles.orText}>Or</div>
 
       <form autoComplete="off" onSubmit={handleSubmit} className={styles.loginForm}>
         <label className={styles.fieldBlock}>

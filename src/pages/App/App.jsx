@@ -1,9 +1,9 @@
 // ./src/pages/App/App.jsx
 
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import styles from './App.module.scss';
-import { getUser } from '../../utilities/users-service';
+import { getProfile, getUser } from '../../utilities/users-service';
 import AuthPage from '../AuthPage/AuthPage';
 import NewOrderPage from '../NewOrderPage/NewOrderPage';
 import OrderHistoryPage from '../OrderHistoryPage/OrderHistoryPage';
@@ -20,11 +20,13 @@ import AdminDashboardPage from '../AdminDashboardPage/AdminDashboardPage';
 import AdminUsersPage from '../AdminUsersPage/AdminUsersPage';
 import AdminProductsPage from '../AdminProductsPage/AdminProductsPage';
 import AdminOrdersPage from '../AdminOrdersPage/AdminOrdersPage';
+import VerifyEmailPage from '../VerifyEmailPage/VerifyEmailPage';
 import Footer from '../../components/Footer/Footer';
 import { logOut } from '../../utilities/users-service';
 
 export default function App() {
-  const [user, setUser] = useState(getUser());
+  const [user, setUser] = useState(null);
+  const [isSessionChecking, setIsSessionChecking] = useState(() => Boolean(getUser()));
   const [cartItems, setCartItems] = useState(() => {
     const saved = localStorage.getItem('cartItems');
     if (!saved) return [];
@@ -36,6 +38,31 @@ export default function App() {
     }
   });
   const location = useLocation();
+
+  useEffect(() => {
+    let isMounted = true;
+    const savedUser = getUser();
+
+    if (!savedUser) {
+      setIsSessionChecking(false);
+      return undefined;
+    }
+
+    async function validateSavedSession() {
+      try {
+        const profile = await getProfile();
+        if (isMounted) setUser(profile?.user || null);
+      } catch {
+        logOut();
+        if (isMounted) setUser(null);
+      } finally {
+        if (isMounted) setIsSessionChecking(false);
+      }
+    }
+
+    validateSavedSession();
+    return () => { isMounted = false; };
+  }, []);
 
   useEffect(() => {
     localStorage.setItem('cartItems', JSON.stringify(cartItems));
@@ -86,9 +113,13 @@ export default function App() {
     setCartItems([]);
   }
 
-  function handleLogout() {
+  const handleLogout = useCallback(() => {
     logOut();
     setUser(null);
+  }, []);
+
+  if (isSessionChecking) {
+    return <main className={styles.App} aria-busy="true" />;
   }
 
   return (
@@ -101,6 +132,7 @@ export default function App() {
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/login" element={user ? <Navigate to="/" /> : <AuthPage setUser={setUser} initialMode="login" />} />
           <Route path="/signup" element={user ? <Navigate to="/" /> : <AuthPage setUser={setUser} initialMode="signup" />} />
+          <Route path="/verify-email" element={user ? <Navigate to="/" /> : <VerifyEmailPage setUser={setUser} />} />
           <Route path="/orders/new" element={<NewOrderPage onAddToCart={handleAddToCart} />} />
           <Route path="/checkout/access" element={<CheckoutAccessPage setUser={setUser} user={user} />} />
           <Route

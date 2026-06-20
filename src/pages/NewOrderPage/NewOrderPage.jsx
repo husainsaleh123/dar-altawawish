@@ -203,6 +203,36 @@ function formatPrice(value) {
   }).format(value);
 }
 
+function formatPriceAmount(value) {
+  return new Intl.NumberFormat('en-US', {
+    minimumFractionDigits: 3,
+    maximumFractionDigits: 3
+  }).format(value);
+}
+
+function formatVariationPriceRange(product) {
+  const prices = Array.isArray(product?.bundleOptions)
+    ? product.bundleOptions
+      .map((variant) => Number(variant?.price))
+      .filter((price) => Number.isFinite(price) && price >= 0)
+    : [];
+
+  if (!prices.length) return formatPrice(Number(product?.price) || 0);
+
+  const minPrice = Math.min(...prices);
+  const maxPrice = Math.max(...prices);
+  const units = new Set(
+    product.bundleOptions
+      .map((variant) => String(variant?.unit || '').trim())
+      .filter(Boolean)
+  );
+  const unit = units.size === 1 ? [...units][0] : '';
+  const unitLabel = unit === 'gram' ? ' / g' : unit === 'piece' ? ' / piece' : '';
+
+  if (minPrice === maxPrice) return `${formatPrice(minPrice)}${unitLabel}`;
+  return `${formatPrice(minPrice)} - ${formatPriceAmount(maxPrice)}${unitLabel}`;
+}
+
 function getVersionedProductImageSrc(imageSrc, versionSeed) {
   const normalizedSrc = String(imageSrc || '').trim();
   if (!normalizedSrc) return '';
@@ -1969,18 +1999,12 @@ export default function NewOrderPage({ onAddToCart }) {
                       productCardImage,
                       previewVariant?.updatedAt || product.updatedAt || previewVariant?._id || product._id
                     );
-                    const isGramBasedGemstoneBundle =
-                      product.isBundleProduct &&
-                      product.mainCategory === 'Gemstones' &&
-                      product.bundleOptions?.some((variant) => variant.unit !== 'piece');
                     const productPriceLabel = product._id === 'copper-grains'
                       ? 'BHD 13 per kg'
                       : product._id === 'zinc'
                         ? 'BHD 23 per kg'
-                      : isGramBasedGemstoneBundle
-                        ? '0.5 - 2 BD per gram'
                       : product.isBundleProduct
-                        ? `From ${formatPrice(product.price)}`
+                        ? formatVariationPriceRange(product)
                         : isGemstone
                         ? `${formatPrice(pricePerGram)} / ${product.unit === 'piece' ? 'piece' : 'g'}`
                         : formatPrice(product.price);

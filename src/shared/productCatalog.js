@@ -48,7 +48,7 @@ export const DEFAULT_GEMSTONE_PRODUCTS = [
     description: 'Gemstone product priced per piece.',
     price: 0.5,
     image: '/products/van-cliff-malakite-10x10mm.jpg',
-    countInStock: 0,
+    countInStock: 20,
     unit: 'piece',
     requiresQuantitySelection: true
   },
@@ -60,7 +60,7 @@ export const DEFAULT_GEMSTONE_PRODUCTS = [
     description: 'Gemstone product priced per piece.',
     price: 2,
     image: '/products/blue-lapis.jpg',
-    countInStock: 0,
+    countInStock: 20,
     unit: 'piece',
     requiresQuantitySelection: true
   },
@@ -70,9 +70,9 @@ export const DEFAULT_GEMSTONE_PRODUCTS = [
     category: 'Gemstones',
     subcategory: 'Eye Stone',
     description: 'Select your preferred flat round blue eye stone size before choosing how many grams to add to cart.',
-    price: 0,
+    price: 0.5,
     image: '/products/blue-eye-stone.jpg',
-    countInStock: 0,
+    countInStock: 20,
     unit: 'gram',
     isBundleProduct: true,
     bundleLabel: 'size',
@@ -84,9 +84,9 @@ export const DEFAULT_GEMSTONE_PRODUCTS = [
         category: 'Gemstones',
         subcategory: 'Eye Stone',
         description: 'Gemstone product priced per gram.',
-        price: 0,
+        price: 0.5,
         image: '/products/blue-eye-stone.jpg',
-        countInStock: 0,
+        countInStock: 20,
         unit: 'gram',
         sizeLabel: '5 mm'
       }
@@ -100,7 +100,7 @@ export const DEFAULT_GEMSTONE_PRODUCTS = [
     description: 'Select your preferred quartz size before choosing how many grams to add to cart.',
     price: 0,
     image: '/products/quartz-7-10.jpg',
-    countInStock: 0,
+    countInStock: 20,
     unit: 'gram',
     isBundleProduct: true,
     bundleLabel: 'size',
@@ -114,7 +114,7 @@ export const DEFAULT_GEMSTONE_PRODUCTS = [
         description: 'Gemstone product priced per gram.',
         price: 0,
         image: '/products/quartz-7-10.jpg',
-        countInStock: 0,
+        countInStock: 20,
         unit: 'gram',
         sizeLabel: '7 * 10 mm'
       },
@@ -126,7 +126,7 @@ export const DEFAULT_GEMSTONE_PRODUCTS = [
         description: 'Gemstone product priced per gram.',
         price: 0,
         image: '/products/quartz-17-25.jpg',
-        countInStock: 0,
+        countInStock: 20,
         unit: 'gram',
         sizeLabel: '17mm * 25mm'
       }
@@ -140,7 +140,7 @@ export const DEFAULT_GEMSTONE_PRODUCTS = [
     description: 'Gemstone product priced per gram.',
     price: 2,
     image: '',
-    countInStock: 0,
+    countInStock: 20,
     unit: 'gram'
   },
   {
@@ -151,7 +151,7 @@ export const DEFAULT_GEMSTONE_PRODUCTS = [
     description: 'Gemstone product priced per gram.',
     price: 2,
     image: '/products/coral-rounded-1.5mm.jpg',
-    countInStock: 0,
+    countInStock: 20,
     unit: 'gram'
   },
   {
@@ -162,7 +162,7 @@ export const DEFAULT_GEMSTONE_PRODUCTS = [
     description: 'Gemstone product priced per gram.',
     price: 2,
     image: '',
-    countInStock: 0,
+    countInStock: 20,
     unit: 'gram'
   },
   {
@@ -173,7 +173,7 @@ export const DEFAULT_GEMSTONE_PRODUCTS = [
     description: 'Gemstone product priced per gram.',
     price: 1,
     image: '',
-    countInStock: 0,
+    countInStock: 20,
     unit: 'gram'
   },
   {
@@ -184,7 +184,7 @@ export const DEFAULT_GEMSTONE_PRODUCTS = [
     description: 'Gemstone product priced per gram.',
     price: 0.5,
     image: '',
-    countInStock: 0,
+    countInStock: 20,
     unit: 'gram'
   },
   {
@@ -195,7 +195,7 @@ export const DEFAULT_GEMSTONE_PRODUCTS = [
     description: 'Gemstone product priced per gram.',
     price: 2,
     image: '/products/round-turquoise-1mm.jpg',
-    countInStock: 0,
+    countInStock: 20,
     unit: 'gram'
   },
   {
@@ -206,7 +206,7 @@ export const DEFAULT_GEMSTONE_PRODUCTS = [
     description: 'Gemstone product priced per gram.',
     price: 2,
     image: '/products/round-turquoise-1.5mm.jpg',
-    countInStock: 0,
+    countInStock: 20,
     unit: 'gram'
   },
   {
@@ -217,7 +217,7 @@ export const DEFAULT_GEMSTONE_PRODUCTS = [
     description: 'Gemstone product priced per gram.',
     price: 2,
     image: '/products/round-turquoise-2mm.jpg',
-    countInStock: 0,
+    countInStock: 20,
     unit: 'gram'
   },
   {
@@ -228,7 +228,7 @@ export const DEFAULT_GEMSTONE_PRODUCTS = [
     description: 'Gemstone product priced per gram.',
     price: 1,
     image: '/products/round-turquoise-3mm.jpg',
-    countInStock: 0,
+    countInStock: 20,
     unit: 'gram'
   },
   {
@@ -239,7 +239,7 @@ export const DEFAULT_GEMSTONE_PRODUCTS = [
     description: 'Gemstone product priced per gram.',
     price: 1,
     image: '/products/round-turquoise-4mm.jpg',
-    countInStock: 0,
+    countInStock: 20,
     unit: 'gram'
   },
   {
@@ -250,7 +250,7 @@ export const DEFAULT_GEMSTONE_PRODUCTS = [
     description: 'Gemstone product priced per gram.',
     price: 0.5,
     image: '/products/round-turquoise-5mm.jpg',
-    countInStock: 0,
+    countInStock: 20,
     unit: 'gram'
   },
   {
@@ -261,7 +261,7 @@ export const DEFAULT_GEMSTONE_PRODUCTS = [
     description: 'Gemstone product priced per gram.',
     price: 0,
     image: '',
-    countInStock: 0,
+    countInStock: 20,
     unit: 'gram'
   },
   {
@@ -272,7 +272,7 @@ export const DEFAULT_GEMSTONE_PRODUCTS = [
     description: 'Select your preferred turquoise oval size before choosing how many grams to add to cart.',
     price: 0.5,
     image: '/products/oval-turquoise-cover.jpg',
-    countInStock: 0,
+    countInStock: 20,
     unit: 'gram',
     isBundleProduct: true,
     bundleLabel: 'size',
@@ -286,7 +286,7 @@ export const DEFAULT_GEMSTONE_PRODUCTS = [
         description: 'Gemstone product priced per gram.',
         price: 2,
         image: '/products/oval-turquoise-cover.jpg',
-        countInStock: 0,
+        countInStock: 20,
         unit: 'gram',
         sizeLabel: '1-2 mm'
       },
@@ -298,7 +298,7 @@ export const DEFAULT_GEMSTONE_PRODUCTS = [
         description: 'Gemstone product priced per gram.',
         price: 1,
         image: '/products/oval-turquoise-cover.jpg',
-        countInStock: 0,
+        countInStock: 20,
         unit: 'gram',
         sizeLabel: '2-3 mm'
       },
@@ -310,7 +310,7 @@ export const DEFAULT_GEMSTONE_PRODUCTS = [
         description: 'Gemstone product priced per gram.',
         price: 0.5,
         image: '/products/oval-turquoise-cover.jpg',
-        countInStock: 0,
+        countInStock: 20,
         unit: 'gram',
         sizeLabel: '4-5 mm'
       }
@@ -324,7 +324,7 @@ export const DEFAULT_GEMSTONE_PRODUCTS = [
     description: 'Gemstone product priced per gram.',
     price: 0.8,
     image: '/products/white-zarcon-small.jpg',
-    countInStock: 0,
+    countInStock: 20,
     unit: 'gram'
   },
   {
@@ -335,7 +335,7 @@ export const DEFAULT_GEMSTONE_PRODUCTS = [
     description: 'Gemstone product priced per gram.',
     price: 0.5,
     image: '/products/white-zarcon-large.jpg',
-    countInStock: 0,
+    countInStock: 20,
     unit: 'gram'
   }
 ];
@@ -360,7 +360,7 @@ export const DEFAULT_MACHINE_PRODUCTS = [
     description: 'Machine product. Price will be updated.',
     price: 12,
     image: '/products/benchgrinder.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'freedom-machine',
@@ -370,7 +370,7 @@ export const DEFAULT_MACHINE_PRODUCTS = [
     description: 'Machine product. Price will be updated.',
     price: 25,
     image: '/products/foredom.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'furnace-machine',
@@ -380,7 +380,7 @@ export const DEFAULT_MACHINE_PRODUCTS = [
     description: 'Machine product. Price will be updated.',
     price: 160,
     image: '/products/furnace-machine.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'ultrasonic-cleaner-12l-large',
@@ -390,7 +390,7 @@ export const DEFAULT_MACHINE_PRODUCTS = [
     description: 'Tool product.',
     price: 175,
     image: '/products/ultrasonic-12L.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'ultrasonic-cleaner-5-7l-medium',
@@ -400,7 +400,7 @@ export const DEFAULT_MACHINE_PRODUCTS = [
     description: 'Machine product.',
     price: 145,
     image: '/products/ultrasonic-5.7L.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'ultrasonic-cleaner-1-8l',
@@ -410,7 +410,7 @@ export const DEFAULT_MACHINE_PRODUCTS = [
     description: 'Machine product.',
     price: 30,
     image: '/products/ultrasonic-1.8L.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'ultrasonic-cleaner-1-8l-v2',
@@ -420,7 +420,7 @@ export const DEFAULT_MACHINE_PRODUCTS = [
     description: 'Machine product.',
     price: 35,
     image: '/products/ultrasonic-1.8L - v2.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'sandblast-machine',
@@ -430,7 +430,7 @@ export const DEFAULT_MACHINE_PRODUCTS = [
     description: 'Machine product.',
     price: 130,
     image: '/products/sandblast.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'ring-expander-and-reducer',
@@ -440,7 +440,7 @@ export const DEFAULT_MACHINE_PRODUCTS = [
     description: 'Machine product.',
     price: 50,
     image: '/products/ring-expander-and-reducer.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'wooden-work-desk',
@@ -455,7 +455,7 @@ export const DEFAULT_MACHINE_PRODUCTS = [
       '/products/wooden-bench-2.jpg',
       '/products/wooden-bench-3.jpg'
     ],
-    countInStock: 0
+    countInStock: 20
   }
 ];
 
@@ -468,7 +468,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: 'Tool product.',
     price: 5,
     image: '/products/electric-crucible.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'crucible-no-1',
@@ -478,7 +478,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: 'Used for melting metals at high temperatures.',
     price: 1,
     image: '/products/graphite-crucible-1.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'crucible-no-1-5',
@@ -488,7 +488,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: 'Used for melting metals at high temperatures.',
     price: 1.5,
     image: '/products/graphite-crucible-1.5.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'crucible-no-2',
@@ -498,7 +498,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: 'Used for melting metals at high temperatures.',
     price: 2,
     image: '/products/graphite-crucible-2.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'crucible-no-3',
@@ -508,7 +508,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: 'Used for melting metals at high temperatures.',
     price: 3,
     image: '/products/graphite-crucible-3.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'crucible-no-4',
@@ -518,7 +518,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: 'Used for melting metals at high temperatures.',
     price: 4,
     image: '/products/graphite-crucible-4.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'crucible-no-5',
@@ -528,7 +528,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: 'Used for melting metals at high temperatures.',
     price: 5,
     image: '/products/graphite-crucible-5.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'crucible-no-6',
@@ -538,7 +538,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: 'Used for melting metals at high temperatures.',
     price: 6,
     image: '/products/graphite-crucible-6.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'yellow-cotton-buff-medium-6x50',
@@ -548,7 +548,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: 'Tool product.',
     price: 1.5,
     image: '/products/yellow-buff-6-50.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'yellow-cotton-buff-medium-4x50',
@@ -558,7 +558,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: 'Tool product.',
     price: 1,
     image: '/products/yellow-buff-4-50.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'yellow-cotton-buff-small-3x50',
@@ -568,7 +568,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: 'Tool product.',
     price: 0.5,
     image: '/products/yellow-buff-3-50.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'white-cotton-buff-medium-6x50',
@@ -578,7 +578,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: 'Tool product.',
     price: 1.5,
     image: '/products/white-buff-6-50.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'white-cotton-buff-4x50',
@@ -588,7 +588,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: 'Tool product.',
     price: 1,
     image: '/products/white-buff-4-50.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'white-cotton-buff-3x50',
@@ -598,7 +598,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: 'Tool product.',
     price: 0.5,
     image: '/products/white-buff-3-50.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'sawing-blade-2-0',
@@ -608,7 +608,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: 'Tool product.',
     price: 5,
     image: '/products/sawing-blades-2.0.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'sawing-blade-3-0',
@@ -618,7 +618,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: 'Tool product.',
     price: 5,
     image: '/products/sawing-blades-3.0.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'sawing-blade-5-0',
@@ -628,7 +628,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: 'Tool product.',
     price: 8,
     image: '/products/sawing-blades-5.0.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'sawing-blade-6-0',
@@ -638,7 +638,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: 'Tool product.',
     price: 8,
     image: '/products/sawing-blades-6.0.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'soldering-water-200-ml',
@@ -648,7 +648,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: 'Tool product.',
     price: 0.8,
     image: '/products/Soldering-water-200ml.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'soldering-water-400-ml',
@@ -658,7 +658,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: 'Tool product.',
     price: 1,
     image: '/products/Soldering-water-400ml.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'soldering-water-1-ml',
@@ -668,7 +668,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: 'Tool product.',
     price: 2.5,
     image: '/products/Soldering-water-1L.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'soldering-sheet-15x30-cm',
@@ -678,7 +678,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: 'Tool product.',
     price: 1.5,
     image: '/products/soldering-sheet-15-30.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'soldering-sheet-25x25-cm',
@@ -688,7 +688,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: 'Tool product.',
     price: 2,
     image: '/products/soldering-sheet-25-25.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'soldering-sheet-25-5x30-cm',
@@ -698,7 +698,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: 'Tool product.',
     price: 2.5,
     image: '/products/soldering-sheet-25.5-30.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'soldering-sheet-30x30-cm',
@@ -708,7 +708,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: 'Tool product.',
     price: 3.5,
     image: '/products/soldering-sheet-30-30.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'soldering-sheet-25-5x35-cm',
@@ -718,7 +718,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: 'Tool product.',
     price: 3,
     image: '/products/soldering-sheet-25.5-35.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'swaraj-gas-burner-0',
@@ -728,7 +728,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: 'Tool product.',
     price: 2,
     image: '/products/swaraj-burner-0.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'swaraj-gas-burner-3938',
@@ -738,7 +738,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: 'Tool product.',
     price: 2,
     image: '/products/swaraj-burner-3938.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'swaraj-gas-burner-3940',
@@ -748,7 +748,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: 'Tool product.',
     price: 2.5,
     image: '/products/swaraj-burner-3940.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'sievert-gas-burner-2941',
@@ -758,7 +758,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: 'Tool product.',
     price: 8,
     image: '/products/sievert-gas-burner-2941.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'gemka-burner-3938',
@@ -768,7 +768,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: 'Tool product.',
     price: 2,
     image: '',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'gemka-burner-3939',
@@ -778,7 +778,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: 'Tool product.',
     price: 3,
     image: '/products/gemka-burner-3939.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'gemka-burner-2940',
@@ -788,7 +788,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: 'Tool product.',
     price: 3,
     image: '',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'gemka-burner-2943',
@@ -798,7 +798,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: 'Tool product.',
     price: 5,
     image: '',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'diamond-needle-files',
@@ -808,7 +808,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: 'Tool product.',
     price: 10,
     image: '/products/diamond-needle-files.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'diamond-selector-tool',
@@ -818,7 +818,17 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: 'Tool product.',
     price: 10,
     image: '/products/diamond-selector-tool.jpg',
-    countInStock: 0
+    countInStock: 20
+  },
+  {
+    _id: 'hand-drill',
+    name: 'Hand Drill',
+    category: 'Tools',
+    subcategory: 'Others',
+    description: 'Tool product.',
+    price: 5,
+    image: '/products/hand-drill-2.jpg',
+    countInStock: 20
   },
   {
     _id: 'wheel-brush-black-small',
@@ -828,7 +838,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: 'Tool product.',
     price: 0.4,
     image: '/products/wheel-brush-black-small.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'wheel-brush-black-large',
@@ -838,7 +848,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: 'Tool product.',
     price: 0.5,
     image: '/products/wheel-brush-black-large.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'brass-wire-brush-small',
@@ -848,7 +858,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: 'Tool product.',
     price: 0.5,
     image: '/products/angled-brass-wire-brush-small.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'brass-wire-brush-medium',
@@ -858,7 +868,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: 'Tool product.',
     price: 0.6,
     image: '/products/angled-brass-wire-brush-medium.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'brass-wire-brush-large',
@@ -868,7 +878,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: 'Tool product.',
     price: 0.8,
     image: '/products/angled-brass-wire-brush-large.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'stamp-21',
@@ -878,7 +888,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: 'Tool product.',
     price: 2,
     image: '/products/stamp-21.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'castaldo-spray',
@@ -888,7 +898,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: 'Tool product.',
     price: 5,
     image: '/products/castaldo-spray.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'ring-stick',
@@ -898,7 +908,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: 'Tool product.',
     price: 3,
     image: '/products/ring-stick.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'ring-sizer',
@@ -908,7 +918,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: 'Tool product.',
     price: 5,
     image: '/products/ring-sizer.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'thickness-gauge-10mm',
@@ -918,7 +928,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: 'Tool product.',
     price: 6,
     image: '/products/measurement-gauge-10mm.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'thickness-gauge-20mm',
@@ -928,7 +938,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: 'Tool product.',
     price: 7,
     image: '/products/measurement-gauge-20mm.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'red-black-polish',
@@ -963,7 +973,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: 'Tool product.',
     price: 0.5,
     image: '/products/shovel.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'wax',
@@ -973,7 +983,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: 'Tool product.',
     price: 4,
     image: '/products/wax.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'araldite-glue',
@@ -983,7 +993,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: 'Tool product.',
     price: 1.5,
     image: '/products/Araldite.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'mesh',
@@ -993,7 +1003,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: 'Tool product.',
     price: 0.5,
     image: '/products/mesh.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'steel-cylinder-small',
@@ -1003,7 +1013,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: 'Small steel cylinder: 12 cm x 9.5 cm.',
     price: 6,
     image: '/products/steel-cylinder-small.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'steel-cylinder-medium',
@@ -1013,7 +1023,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: 'Medium steel cylinder: 20 cm x 10 cm.',
     price: 8,
     image: '/products/steel-cylinder-medium.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'steel-cylinder-large',
@@ -1023,7 +1033,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: 'Large steel cylinder: 25 cm x 12.5 cm.',
     price: 12,
     image: '/products/steel-cylinder-large.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'gold-jewelry-polishing-cloth',
@@ -1033,7 +1043,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: 'Tool product.',
     price: 4,
     image: '/products/gold-jewelry-cleaner-cloth.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'silver-jewelry-polishing-cloth',
@@ -1043,7 +1053,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: 'Tool product.',
     price: 4,
     image: '/products/silver-jewelry-cleaner-cloth.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'liquid-gold-cleaning',
@@ -1053,7 +1063,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: 'Tool product.',
     price: 3,
     image: '/products/goldbad.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'silver-cleaning-liquid',
@@ -1063,7 +1073,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: 'Tool product.',
     price: 4.5,
     image: '/products/silver-cleaner.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'gold-star-omega',
@@ -1073,7 +1083,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: '45 kg.',
     price: 35,
     image: '/products/gold-star-omega.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'electronic-scale-100g',
@@ -1083,7 +1093,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: 'Scale product.',
     price: 12,
     image: '/products/electronic-scale-100g.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'electronic-scale-600g',
@@ -1093,7 +1103,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: 'Scale product.',
     price: 25,
     image: '/products/electronic-scale-600g.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'electronic-scale-3kg',
@@ -1103,7 +1113,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: 'Scale product.',
     price: 180,
     image: '/products/electronic-scale-3kg.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'calibration-weight',
@@ -1113,7 +1123,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     description: 'Select your preferred calibration weight before adding to cart.',
     price: 15,
     image: '/products/calibration-weight-1kg.jpg',
-    countInStock: 0,
+    countInStock: 20,
     isBundleProduct: true,
     bundleLabel: 'weight',
     bundleDescription: 'Available in the following weights: 500g, 1 kg.',
@@ -1126,7 +1136,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
         description: 'Calibration weight.',
         price: 8,
         image: '/products/calibration-weight-500g.jpg',
-        countInStock: 0,
+        countInStock: 20,
         sizeLabel: '500g'
       },
       {
@@ -1137,7 +1147,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
         description: 'Calibration weight.',
         price: 15,
         image: '/products/calibration-weight-1kg.jpg',
-        countInStock: 0,
+        countInStock: 20,
         sizeLabel: '1 kg'
       }
     ]
@@ -1153,7 +1163,7 @@ export const DEFAULT_PLASTIC_PRODUCTS = [
     description: 'Plastic bag product.',
     price: 0.5,
     image: '/products/plastic-bag-6-8.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'nylon-plastic-bags-7-10',
@@ -1163,7 +1173,7 @@ export const DEFAULT_PLASTIC_PRODUCTS = [
     description: 'Plastic bag product.',
     price: 0.5,
     image: '/products/plastic-bag-7-10.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'nylon-plastic-bags-9-13',
@@ -1173,7 +1183,7 @@ export const DEFAULT_PLASTIC_PRODUCTS = [
     description: 'Plastic bag product.',
     price: 1,
     image: '/products/plastic-bag-9-13.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'nylon-plastic-bags-12-17',
@@ -1183,7 +1193,7 @@ export const DEFAULT_PLASTIC_PRODUCTS = [
     description: 'Plastic bag product.',
     price: 1,
     image: '/products/plastic-bag-12-17.jpg',
-    countInStock: 0
+    countInStock: 20
   }
 ];
 
@@ -1196,7 +1206,7 @@ export const DEFAULT_BEAD_PRODUCTS = [
     description: 'Select your preferred bracelet weight before adding to cart.',
     price: 0,
     image: '/products/natural-amber-bracelet.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'natural-amber-bracelet-13g',
@@ -1206,7 +1216,7 @@ export const DEFAULT_BEAD_PRODUCTS = [
     description: 'Natural amber bracelet.',
     price: 26,
     image: '/products/natural-amber-bracelet-26-bd.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'natural-amber-bracelet-16g',
@@ -1216,7 +1226,7 @@ export const DEFAULT_BEAD_PRODUCTS = [
     description: 'Natural amber bracelet.',
     price: 32,
     image: '/products/natural-amber-bracelet-32-bd.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'natural-amber-bracelet-19g',
@@ -1226,7 +1236,7 @@ export const DEFAULT_BEAD_PRODUCTS = [
     description: 'Natural amber bracelet.',
     price: 38,
     image: '/products/natural-amber-bracelet-38-bd.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'natural-amber-bracelet-25g',
@@ -1236,7 +1246,7 @@ export const DEFAULT_BEAD_PRODUCTS = [
     description: 'Natural amber bracelet.',
     price: 50,
     image: '/products/natural-amber-bracelet-50-bd.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'natural-amber-bracelet-30g',
@@ -1246,7 +1256,7 @@ export const DEFAULT_BEAD_PRODUCTS = [
     description: 'Natural amber bracelet.',
     price: 60,
     image: '/products/natural-amber-bracelet-60-bd.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'royal-pearl-zari-tassel',
@@ -1260,7 +1270,7 @@ export const DEFAULT_BEAD_PRODUCTS = [
       '/products/royal-pearl-zari-tassel.jpg',
       '/products/royal-pearl-zari-tassel-2.jpg'
     ],
-    countInStock: 0
+    countInStock: 20
   }
 ];
 
@@ -1273,7 +1283,7 @@ export const DEFAULT_MINERAL_PRODUCTS = [
     description: 'Mineral product.',
     price: 23,
     image: '/products/brass-cube.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'copper-grains-100g',
@@ -1283,7 +1293,7 @@ export const DEFAULT_MINERAL_PRODUCTS = [
     description: 'Mineral product.',
     price: 1.3,
     image: '/products/copper-grains-100g.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'copper-grains-500g',
@@ -1293,7 +1303,7 @@ export const DEFAULT_MINERAL_PRODUCTS = [
     description: 'Mineral product.',
     price: 6.5,
     image: '/products/copper-grains-500g.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'copper-grains-1kg',
@@ -1303,7 +1313,7 @@ export const DEFAULT_MINERAL_PRODUCTS = [
     description: 'Mineral product.',
     price: 13,
     image: '/products/copper-grains-1kg.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'zinc-100g',
@@ -1313,7 +1323,7 @@ export const DEFAULT_MINERAL_PRODUCTS = [
     description: 'Mineral product.',
     price: 2.3,
     image: '/products/zinc-grains-100g.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'zinc-500g',
@@ -1323,7 +1333,7 @@ export const DEFAULT_MINERAL_PRODUCTS = [
     description: 'Mineral product.',
     price: 11.5,
     image: '/products/zinc-grains-500g.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'zinc-1kg',
@@ -1333,7 +1343,7 @@ export const DEFAULT_MINERAL_PRODUCTS = [
     description: 'Mineral product.',
     price: 23,
     image: '/products/zinc-grains-1kg.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'auruna-264',
@@ -1343,7 +1353,7 @@ export const DEFAULT_MINERAL_PRODUCTS = [
     description: 'Mineral product.',
     price: 120,
     image: '/products/auruna-264.jpg',
-    countInStock: 0
+    countInStock: 20
   },
   {
     _id: 'rhoduna-275-black',
@@ -1353,7 +1363,7 @@ export const DEFAULT_MINERAL_PRODUCTS = [
     description: 'Mineral product.',
     price: 350,
     image: '/products/rhoduna-275.jpg',
-    countInStock: 0
+    countInStock: 20
   },
 ];
 

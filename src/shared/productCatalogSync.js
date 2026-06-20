@@ -61,6 +61,13 @@ export async function syncProductCatalog() {
 
   if (!operations.length) return;
   await Product.bulkWrite(operations, { ordered: false });
+  await Product.updateMany(
+    {
+      catalogKey: { $in: activeCatalogKeys },
+      countInStock: 0,
+    },
+    { $set: { countInStock: 20 } }
+  );
   await Product.deleteMany({
     catalogKey: { $exists: true, $nin: activeCatalogKeys },
   });

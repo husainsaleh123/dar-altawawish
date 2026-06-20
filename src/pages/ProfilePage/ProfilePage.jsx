@@ -28,7 +28,7 @@ function getStatusLabel(status) {
 
 export default function ProfilePage({ user, onLogout }) {
   const navigate = useNavigate();
-  const [profileUser, setProfileUser] = useState(user);
+  const [profileUser, setProfileUser] = useState(null);
   const [orders, setOrders] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState('');
@@ -48,13 +48,21 @@ export default function ProfilePage({ user, onLogout }) {
       try {
         setIsLoading(true);
         setLoadError('');
+        setProfileUser(null);
+        setOrders([]);
         const data = await getProfile();
         if (!isMounted) return;
-        setProfileUser(data?.user || user);
+        setProfileUser(data?.user || null);
         setOrders(Array.isArray(data?.orders) ? data.orders : []);
       } catch (error) {
         if (!isMounted) return;
+        setProfileUser(null);
+        setOrders([]);
         setLoadError(error.message || 'Unable to load your profile.');
+        if (error?.status === 401 || error?.status === 404) {
+          onLogout?.();
+          navigate('/login', { replace: true });
+        }
       } finally {
         if (isMounted) {
           setIsLoading(false);
@@ -67,7 +75,7 @@ export default function ProfilePage({ user, onLogout }) {
     return () => {
       isMounted = false;
     };
-  }, [user]);
+  }, [navigate, onLogout, user]);
 
   const infoRows = useMemo(() => ([
     { label: 'Name', value: profileUser?.name || 'N/A' },
@@ -137,7 +145,7 @@ export default function ProfilePage({ user, onLogout }) {
         </section>
       ) : null}
 
-      <section className={styles.layout}>
+      {!loadError && profileUser ? <section className={styles.layout}>
         <article className={styles.infoPanel}>
           <div className={styles.panelHeader}>
             <h2>Your information</h2>
@@ -211,9 +219,9 @@ export default function ProfilePage({ user, onLogout }) {
             </form>
           )}
         </article>
-      </section>
+      </section> : null}
 
-      <section className={styles.ordersSection}>
+      {!loadError && profileUser ? <section className={styles.ordersSection}>
         <div className={styles.sectionHeader}>
           <div>
             <span className={styles.sectionKicker}>Past Orders</span>
@@ -274,7 +282,7 @@ export default function ProfilePage({ user, onLogout }) {
             ))}
           </div>
         ) : null}
-      </section>
+      </section> : null}
     </main>
   );
 }

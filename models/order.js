@@ -122,12 +122,11 @@ const orderSchema = new mongoose.Schema(
 );
 
 // Optional normalization so pickup doesn’t keep address
-orderSchema.pre("validate", function (next) {
+orderSchema.pre("validate", function () {
   if (this.fulfillmentMethod === "pickup") {
     this.shippingAddress = undefined;
     this.shippingPrice = 0;
   }
-  next();
 });
 
 export default mongoose.model("Order", orderSchema);

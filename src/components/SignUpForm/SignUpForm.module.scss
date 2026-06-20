@@ -120,6 +120,7 @@
 
 .orText {
   width: 100%;
+  max-width: none;
   margin: 0 0 1.15rem;
   display: block;
   justify-self: center;
@@ -172,6 +173,38 @@
 
 .fieldBlock input[readonly] {
   color: #555d6e;
+}
+
+.passwordInputWrap {
+  position: relative;
+  width: 100%;
+}
+
+.passwordInputWrap input {
+  padding-right: 3.2rem;
+}
+
+.passwordToggle {
+  position: absolute;
+  top: 50%;
+  right: 0.55rem;
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: #1c0094;
+  cursor: pointer;
+  transform: translateY(-50%);
+}
+
+.passwordToggle:hover {
+  background: rgba(28, 0, 148, 0.08);
 }
 
 .fieldBlock select {
@@ -241,6 +274,13 @@
   min-height: 1.2rem;
   margin: 0.5rem 0 0;
   color: #b3193f;
+  text-align: center;
+}
+
+.successText {
+  min-height: 1.2rem;
+  margin: 0.5rem 0 0;
+  color: #1d6b3a;
   text-align: center;
 }
 

@@ -90,10 +90,14 @@
   margin-top: 1.2rem;
   display: grid;
   gap: 0.75rem;
+  width: min(100%, 460px);
   max-width: 460px;
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .loginForm input {
+  grid-column: 1;
+  display: block;
   width: 100%;
   min-height: 50px;
   border: 1px solid #85c1ff;
@@ -102,8 +106,13 @@
   font-size: 1rem;
 }
 
+.loginForm .loginButton {
+  max-width: 100%;
+}
+
 .loginButton:disabled {
-  background: #9ab8a7;
+  background: #1c0094;
+  opacity: 0.55;
   cursor: not-allowed;
 }
 
@@ -112,6 +121,70 @@
   margin: 0.55rem 0 0;
   color: #b30a25;
   font-size: 0.95rem;
+}
+
+.loginSeparator {
+  width: min(100%, 460px);
+  margin: 0.4rem 0;
+  color: #adb0af;
+  font-weight: 800;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.googleButtonWrap {
+  width: min(100%, 460px);
+}
+
+.googleButtonShell {
+  position: relative;
+  width: 100%;
+}
+
+.googleVisualButton {
+  width: 100%;
+  min-height: 54px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  border: 1px solid #d7ddf6;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #1b1b2e;
+  font-size: 1rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.googleVisualButtonDisabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.googleIconBadge {
+  width: 30px;
+  height: 30px;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 999px;
+  background: #fff;
+}
+
+.googleIconBadge svg {
+  width: 18px;
+  height: 18px;
+}
+
+.googleNativeButton {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.googleNativeButtonReady {
+  pointer-events: auto;
 }
 
 .loggedInCard {

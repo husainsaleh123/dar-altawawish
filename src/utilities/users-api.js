@@ -8,6 +8,14 @@ export function signUp(userData) {
   return sendRequest(`${BASE_URL}/signup`, 'POST', userData);
 }
 
+export function verifyRegistration(payload) {
+  return sendRequest(`${BASE_URL}/signup/verify`, 'POST', payload, { includeToken: false });
+}
+
+export function resendRegistrationCode(payload) {
+  return sendRequest(`${BASE_URL}/signup/resend`, 'POST', payload, { includeToken: false });
+}
+
 export function login(credentials) {
   return sendRequest(`${BASE_URL}/login`, 'POST', credentials);
 }
