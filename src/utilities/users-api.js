@@ -39,3 +39,11 @@ export function getProfile() {
 export function updatePassword(passwordData) {
   return sendRequest(`${BASE_URL}/password`, 'PUT', passwordData);
 }
+
+export function requestPasswordReset() {
+  return sendRequest(`${BASE_URL}/password/reset/request`, 'POST');
+}
+
+export function resetPasswordWithCode(payload) {
+  return sendRequest(`${BASE_URL}/password/reset`, 'POST', payload);
+}

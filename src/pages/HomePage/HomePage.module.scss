@@ -1,8 +1,16 @@
 .hero {
   display: grid;
   justify-items: center;
+  align-content: center;
   row-gap: 2.1rem;
-  padding: 5.4rem 1.2rem 3rem;
+  padding: 1.8rem 1.2rem 0rem;
+  min-height: calc(100svh - 88px);
+  box-sizing: border-box;
+  background-image: linear-gradient(rgba(255, 255, 255, 0.86), rgba(255, 255, 255, 0.86)),
+    url('/images/home/home-page-bg.png');
+  background-position: center;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
   text-align: center;
   color: #151523;
 
@@ -194,7 +202,8 @@
 @media (max-width: 768px) {
   .hero {
     row-gap: 1.35rem;
-    padding: 4.2rem 1rem 2.6rem;
+    padding: 1.6rem 1rem 0.9rem;
+    min-height: calc(100svh - 88px);
   }
 
   .introText {
@@ -265,7 +274,7 @@
 }
 
 .numbersSection {
-  margin-top: 2rem;
+  margin-top: 0;
   padding: 4.2rem 1.2rem 3.8rem;
   background: linear-gradient(145deg, #7593dc 0%, #5578d4 45%, #4569c4 100%);
   color: #fff;
@@ -473,8 +482,9 @@
 
 @media (max-width: 480px) {
   .hero {
-    padding: 3.4rem 0.78rem 2.3rem;
+    padding: 1.25rem 0.78rem 0.75rem;
     row-gap: 1.08rem;
+    min-height: calc(100svh - 88px);
   }
 
   .hero h1 {
@@ -483,7 +493,7 @@
   }
 
   .searchBar input {
-    margin-top: 20px;
+    margin-top: 0;
     height: 45px;
     padding: 0 3.1rem 0 1rem;
     font-size: 0.98rem;
@@ -491,11 +501,13 @@
 
   .searchBar {
     width: min(75%, 550px);
+    margin-top: 20px;
     margin-bottom: 0.6rem;
   }
 
   .searchIcon {
     right: 1rem;
+    top: 50%;
   }
 
   .searchIcon svg {

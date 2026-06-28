@@ -97,7 +97,12 @@ async function createOrder(req, res) {
             ? "benefitpay"
             : "cash",
       payment: {
-        provider: isApsCardPayment ? "aps" : null,
+        provider:
+          isApsCardPayment
+            ? "aps"
+            : req.body.paymentMethod === "benefitpay"
+              ? "benefitpay"
+              : null,
         status: "pending",
       },
       loyalty: {

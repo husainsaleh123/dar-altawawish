@@ -4,7 +4,8 @@ import User from '../../models/user.js';
 import Order from '../../models/order.js';
 import Notification from '../../models/notification.js';
 import PendingRegistration from '../../models/pendingRegistration.js';
-import { sendRegistrationCodeEmail } from '../../services/emailService.js';
+import PasswordReset from '../../models/passwordReset.js';
+import { sendPasswordResetCodeEmail, sendRegistrationCodeEmail } from '../../services/emailService.js';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
@@ -374,6 +375,107 @@ const dataController = {
     } catch (error) {
       res.status(400).json({ error: error?.message || 'Unable to update password.' });
     }
+  },
+  async requestPasswordReset(req, res, next) {
+    try {
+      const user = await User.findById(req.user._id).select('name email authProvider').lean();
+      if (!user) {
+        return res.status(404).json({ error: 'User not found.' });
+      }
+      if (user.authProvider !== 'local') {
+        return res.status(400).json({ error: 'Password reset is unavailable for Google accounts.' });
+      }
+
+      const existingReset = await PasswordReset.findOne({ user: user._id })
+        .select('resendAvailableAt')
+        .lean();
+      if (existingReset?.resendAvailableAt > new Date()) {
+        const retryAfter = Math.ceil((existingReset.resendAvailableAt.getTime() - Date.now()) / 1000);
+        return res.status(429).json({ error: `Please wait ${retryAfter} seconds before requesting another code.` });
+      }
+
+      const code = createVerificationCode();
+      const expiresAt = new Date(Date.now() + VERIFICATION_CODE_TTL_MS);
+      const resendAvailableAt = new Date(Date.now() + RESEND_COOLDOWN_MS);
+      const codeHash = hashPasswordResetCode(user._id, code);
+
+      await PasswordReset.findOneAndUpdate(
+        { user: user._id },
+        { codeHash, verificationAttempts: 0, resendAvailableAt, expiresAt },
+        { upsert: true, runValidators: true, setDefaultsOnInsert: true }
+      );
+
+      try {
+        await sendPasswordResetCodeEmail({ to: user.email, name: user.name, code });
+      } catch (error) {
+        await PasswordReset.updateOne(
+          { user: user._id, codeHash },
+          { $set: { resendAvailableAt: new Date() } }
+        );
+        throw error;
+      }
+
+      res.locals.data.message = 'A 4-digit password reset code was sent to your email.';
+      res.locals.data.expiresAt = expiresAt;
+      res.locals.data.resendAvailableAt = resendAvailableAt;
+      next();
+    } catch (error) {
+      res.status(400).json({ error: error?.message || 'Unable to send the password reset code.' });
+    }
+  },
+  async resetPasswordWithCode(req, res, next) {
+    try {
+      const code = String(req.body?.code || '').trim();
+      const newPassword = String(req.body?.newPassword || '');
+      const confirmPassword = String(req.body?.confirmPassword || '');
+
+      if (!/^\d{4}$/.test(code)) {
+        return res.status(400).json({ error: 'Enter the complete 4-digit reset code.' });
+      }
+      if (newPassword.length < 6) {
+        return res.status(400).json({ error: 'New password must be at least 6 characters.' });
+      }
+      if (newPassword !== confirmPassword) {
+        return res.status(400).json({ error: 'New password and confirmation do not match.' });
+      }
+
+      const passwordReset = await PasswordReset.findOne({ user: req.user._id });
+      if (!passwordReset) {
+        return res.status(400).json({ error: 'This reset request is invalid or has expired.' });
+      }
+      if (passwordReset.expiresAt <= new Date()) {
+        await PasswordReset.deleteOne({ _id: passwordReset._id });
+        return res.status(400).json({ error: 'This reset code has expired. Request a new one.' });
+      }
+      if (passwordReset.verificationAttempts >= MAX_VERIFICATION_ATTEMPTS) {
+        return res.status(429).json({ error: 'Too many incorrect attempts. Request a new code.' });
+      }
+
+      const suppliedHash = hashPasswordResetCode(req.user._id, code);
+      if (!safeHashEquals(passwordReset.codeHash, suppliedHash)) {
+        passwordReset.verificationAttempts += 1;
+        await passwordReset.save();
+        const attemptsLeft = MAX_VERIFICATION_ATTEMPTS - passwordReset.verificationAttempts;
+        return res.status(400).json({
+          error: attemptsLeft > 0
+            ? `Incorrect code. ${attemptsLeft} attempt${attemptsLeft === 1 ? '' : 's'} remaining.`
+            : 'Too many incorrect attempts. Request a new code.'
+        });
+      }
+
+      const user = await User.findById(req.user._id);
+      if (!user) {
+        return res.status(404).json({ error: 'User not found.' });
+      }
+      user.password = newPassword;
+      await user.save();
+      await PasswordReset.deleteOne({ _id: passwordReset._id });
+
+      res.locals.data.message = 'Password reset successfully.';
+      next();
+    } catch (error) {
+      res.status(400).json({ error: error?.message || 'Unable to reset the password.' });
+    }
   }
 }
 
@@ -438,6 +540,14 @@ function hashVerificationCode(email, code) {
   return crypto
     .createHmac('sha256', process.env.SECRET)
     .update(`${String(email).trim().toLowerCase()}:${String(code).trim()}`)
+    .digest('hex');
+}
+
+function hashPasswordResetCode(userId, code) {
+  if (!process.env.SECRET) throw new Error('Server secret is not configured.');
+  return crypto
+    .createHmac('sha256', process.env.SECRET)
+    .update(`password-reset:${String(userId)}:${String(code).trim()}`)
     .digest('hex');
 }
 

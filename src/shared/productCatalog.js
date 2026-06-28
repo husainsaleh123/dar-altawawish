@@ -823,9 +823,9 @@ export const DEFAULT_TOOL_PRODUCTS = [
   {
     _id: 'hand-drill',
     name: 'Hand Drill',
-    category: 'Tools',
-    subcategory: 'Others',
-    description: 'Tool product.',
+    category: 'Machines',
+    subcategory: null,
+    description: 'Machine product.',
     price: 5,
     image: '/products/hand-drill-2.jpg',
     countInStock: 20
@@ -1081,7 +1081,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     category: 'Tools',
     subcategory: 'Others',
     description: '45 kg.',
-    price: 35,
+    price: 40,
     image: '/products/gold-star-omega.jpg',
     countInStock: 20
   },
@@ -1091,7 +1091,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     category: 'Scales',
     subcategory: null,
     description: 'Scale product.',
-    price: 12,
+    price: 10,
     image: '/products/electronic-scale-100g.jpg',
     countInStock: 20
   },
@@ -1101,7 +1101,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     category: 'Scales',
     subcategory: null,
     description: 'Scale product.',
-    price: 25,
+    price: 18,
     image: '/products/electronic-scale-600g.jpg',
     countInStock: 20
   },
@@ -1111,7 +1111,7 @@ export const DEFAULT_TOOL_PRODUCTS = [
     category: 'Scales',
     subcategory: null,
     description: 'Scale product.',
-    price: 180,
+    price: 25,
     image: '/products/electronic-scale-3kg.jpg',
     countInStock: 20
   },

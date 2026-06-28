@@ -64,6 +64,14 @@ export async function updatePassword(passwordData) {
   return usersAPI.updatePassword(passwordData);
 }
 
+export async function requestPasswordReset() {
+  return usersAPI.requestPasswordReset();
+}
+
+export async function resetPasswordWithCode(payload) {
+  return usersAPI.resetPasswordWithCode(payload);
+}
+
 export function getToken() {
   const token = localStorage.getItem('token');
   // getItem will return null if no key

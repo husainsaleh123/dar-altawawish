@@ -65,7 +65,7 @@ export default function HomePage() {
         </p>
 
         <div className={styles.actions}>
-          <Link to="/orders/new" className={styles.buyNow}>Buy now</Link>
+          <Link to="/orders/new" className={styles.buyNow}>Shop Now</Link>
           <Link to="/contact" className={styles.contact}>Contact</Link>
         </div>
       </section>

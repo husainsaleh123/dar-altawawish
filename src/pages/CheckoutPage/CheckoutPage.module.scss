@@ -192,17 +192,17 @@
 
 .paymentOption {
   display: grid;
-  grid-template-columns: 20px 1fr;
+  grid-template-columns: 20px 44px 1fr;
   gap: 0.8rem;
-  align-items: start;
-  padding: 1rem 1rem 0.95rem;
+  align-items: center;
+  padding: 0.9rem 1rem;
   border: 1px solid #c9d1c6;
   border-radius: 18px;
   background: #fdfcf8;
 }
 
 .paymentOption input {
-  margin-top: 0.2rem;
+  margin: 0;
 }
 
 .paymentOption strong {
@@ -211,12 +211,47 @@
   font-size: 1rem;
 }
 
-.paymentOption span {
+.paymentOption .paymentEmoji {
+  display: inline-grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  margin: 0;
+  justify-self: center;
+  font-size: 1.45rem;
+  line-height: 1;
+}
+
+.paymentOption .debitCardIcon {
+  width: 44px;
+  height: 30px;
+}
+
+.debitCardIcon img {
+  width: 44px;
+  height: 30px;
   display: block;
-  margin-top: 0.2rem;
-  color: #5a675c;
-  font-size: 0.94rem;
-  line-height: 1.5;
+  object-fit: contain;
+}
+
+.paymentOption .benefitPayIcon {
+  position: relative;
+  width: 30px;
+  height: 30px;
+  justify-self: center;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.benefitPayIcon img {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 60px;
+  max-width: none;
+  height: 30px;
+  object-fit: contain;
+  transform: translateX(-50%);
 }
 
 .fullWidth {

@@ -1,6 +1,5 @@
 import styles from './AboutPage.module.scss';
 import 'font-awesome/css/font-awesome.min.css';
-import aboutImage from '../../assets/images/about.jpg';
 
 const CORE_VALUES = [
   {
@@ -43,7 +42,7 @@ export default function AboutPage() {
               and retail quantities through direct and in-store orders.
             </p>
           </div>
-          <img className={styles.imagePlaceholder} src={aboutImage} alt="About Dar AlTawawish" />
+          <img className={styles.imagePlaceholder} src="/images/icons/about-page.png" alt="About Dar AlTawawish" />
         </div>
       </section>
 

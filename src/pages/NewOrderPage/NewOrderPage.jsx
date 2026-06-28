@@ -1,5 +1,6 @@
 import styles from './NewOrderPage.module.scss';
 import { useEffect, useMemo, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { getAll } from '../../utilities/products-api';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
@@ -644,6 +645,23 @@ export default function NewOrderPage({ onAddToCart }) {
       behavior: 'smooth'
     });
   }, [gemstoneModalProduct, pieceModalProduct, bundleModalProduct, selectedProduct]);
+
+  useEffect(() => {
+    if (!addedProductName) return undefined;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    function handleEscape(event) {
+      if (event.key === 'Escape') setAddedProductName('');
+    }
+
+    window.addEventListener('keydown', handleEscape);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener('keydown', handleEscape);
+    };
+  }, [addedProductName]);
 
   const categorizedProducts = useMemo(() => {
     const withCategories = products.map((product) => ({
@@ -2401,8 +2419,22 @@ export default function NewOrderPage({ onAddToCart }) {
         </div>
       )}
 
-      {addedProductName && (
+      {addedProductName && createPortal(
         <div className={styles.cartSuccessOverlay} onClick={handleContinueShopping} role="presentation">
+          <div className={styles.successCelebration} aria-hidden="true">
+            <span>✨</span>
+            <span>🎉</span>
+            <span>✨</span>
+            <span>★</span>
+            <span>🎊</span>
+            <span>★</span>
+            <span>✨</span>
+            <span>🎉</span>
+            <span>★</span>
+            <span>🎊</span>
+            <span>✨</span>
+            <span>★</span>
+          </div>
           <div
             className={styles.cartSuccessCard}
             onClick={(e) => e.stopPropagation()}
@@ -2410,17 +2442,21 @@ export default function NewOrderPage({ onAddToCart }) {
             aria-modal="true"
             aria-labelledby="cart-success-title"
           >
-            <h2 id="cart-success-title">{addedProductName} added to cart successfully!</h2>
-            <div className={styles.cartSuccessActions}>
-              <button type="button" className={styles.checkoutButton} onClick={handleCheckout}>
-                Checkout
-              </button>
-              <button type="button" className={styles.continueShoppingButton} onClick={handleContinueShopping}>
-                Continue Shopping
-              </button>
+            <div className={styles.cartSuccessContent}>
+              <div className={styles.successIcon} aria-hidden="true">✓</div>
+              <h2 id="cart-success-title">{addedProductName} added to cart successfully!</h2>
+              <div className={styles.cartSuccessActions}>
+                <button type="button" className={styles.checkoutButton} onClick={handleCheckout}>
+                  Checkout
+                </button>
+                <button type="button" className={styles.continueShoppingButton} onClick={handleContinueShopping}>
+                  Continue Shopping
+                </button>
+              </div>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </main>
   );

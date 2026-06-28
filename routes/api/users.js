@@ -33,4 +33,10 @@ router.get('/profile', ensureLoggedIn, dataController.profile, apiController.pro
 // PUT /api/users/password
 router.put('/password', ensureLoggedIn, dataController.updatePassword, apiController.message);
 
+// POST /api/users/password/reset/request
+router.post('/password/reset/request', ensureLoggedIn, dataController.requestPasswordReset, apiController.registrationPending);
+
+// POST /api/users/password/reset
+router.post('/password/reset', ensureLoggedIn, dataController.resetPasswordWithCode, apiController.message);
+
 export default router;

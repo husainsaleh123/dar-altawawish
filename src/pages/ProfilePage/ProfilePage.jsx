@@ -1,6 +1,11 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { getProfile, updatePassword } from '../../utilities/users-service';
+import {
+  getProfile,
+  requestPasswordReset,
+  resetPasswordWithCode,
+  updatePassword
+} from '../../utilities/users-service';
 import styles from './ProfilePage.module.scss';
 
 function formatDate(value) {
@@ -40,6 +45,18 @@ export default function ProfilePage({ user, onLogout }) {
   const [passwordError, setPasswordError] = useState('');
   const [passwordSuccess, setPasswordSuccess] = useState('');
   const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
+  const [isForgotPasswordMode, setIsForgotPasswordMode] = useState(false);
+  const [resetCode, setResetCode] = useState('');
+  const [isRequestingReset, setIsRequestingReset] = useState(false);
+  const [visiblePasswords, setVisiblePasswords] = useState({
+    currentPassword: false,
+    newPassword: false,
+    confirmPassword: false
+  });
+
+  function togglePasswordVisibility(field) {
+    setVisiblePasswords((current) => ({ ...current, [field]: !current[field] }));
+  }
 
   useEffect(() => {
     let isMounted = true;
@@ -107,22 +124,59 @@ export default function ProfilePage({ user, onLogout }) {
       return;
     }
 
+    if (isForgotPasswordMode && !/^\d{4}$/.test(resetCode)) {
+      setPasswordError('Enter the complete 4-digit reset code.');
+      return;
+    }
+
     try {
       setIsUpdatingPassword(true);
       setPasswordError('');
       setPasswordSuccess('');
-      const response = await updatePassword(passwordData);
-      setPasswordSuccess(response?.message || 'Password updated successfully.');
+      const response = isForgotPasswordMode
+        ? await resetPasswordWithCode({
+            code: resetCode,
+            newPassword: passwordData.newPassword,
+            confirmPassword: passwordData.confirmPassword
+          })
+        : await updatePassword(passwordData);
+      setPasswordSuccess(response?.message || (isForgotPasswordMode ? 'Password reset successfully.' : 'Password updated successfully.'));
       setPasswordData({
         currentPassword: '',
         newPassword: '',
         confirmPassword: ''
       });
+      setResetCode('');
+      setIsForgotPasswordMode(false);
     } catch (error) {
       setPasswordError(error.message || 'Unable to update password.');
     } finally {
       setIsUpdatingPassword(false);
     }
+  }
+
+  async function handleForgotPassword() {
+    try {
+      setIsRequestingReset(true);
+      setPasswordError('');
+      setPasswordSuccess('');
+      const response = await requestPasswordReset();
+      setIsForgotPasswordMode(true);
+      setResetCode('');
+      setPasswordData((current) => ({ ...current, currentPassword: '' }));
+      setPasswordSuccess(response?.message || 'A reset code was sent to your email.');
+    } catch (error) {
+      setPasswordError(error?.message || 'Unable to send the reset code.');
+    } finally {
+      setIsRequestingReset(false);
+    }
+  }
+
+  function cancelForgotPassword() {
+    setIsForgotPasswordMode(false);
+    setResetCode('');
+    setPasswordError('');
+    setPasswordSuccess('');
   }
 
   function handleLogoutClick() {
@@ -179,42 +233,112 @@ export default function ProfilePage({ user, onLogout }) {
             </div>
           ) : (
             <form className={styles.passwordForm} onSubmit={handlePasswordSubmit}>
-              <label>
+              {!isForgotPasswordMode ? <label>
                 <span>Current password</span>
-                <input
-                  type="password"
-                  name="currentPassword"
-                  value={passwordData.currentPassword}
-                  onChange={handlePasswordChange}
-                  required
-                />
-              </label>
+                <div className={styles.passwordInputWrap}>
+                  <input
+                    type={visiblePasswords.currentPassword ? 'text' : 'password'}
+                    name="currentPassword"
+                    value={passwordData.currentPassword}
+                    onChange={handlePasswordChange}
+                    required
+                  />
+                  <button
+                    type="button"
+                    className={styles.passwordToggle}
+                    onClick={() => togglePasswordVisibility('currentPassword')}
+                    aria-label={visiblePasswords.currentPassword ? 'Hide current password' : 'Show current password'}
+                    aria-pressed={visiblePasswords.currentPassword}
+                  >
+                    <i className={`fa ${visiblePasswords.currentPassword ? 'fa-eye-slash' : 'fa-eye'}`} aria-hidden="true" />
+                  </button>
+                </div>
+              </label> : (
+                <label>
+                  <span>4-digit reset code</span>
+                  <input
+                    className={styles.resetCodeInput}
+                    type="text"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                    maxLength="4"
+                    value={resetCode}
+                    onChange={(event) => {
+                      setResetCode(event.target.value.replace(/\D/g, '').slice(0, 4));
+                      setPasswordError('');
+                    }}
+                    autoComplete="one-time-code"
+                    required
+                  />
+                </label>
+              )}
+
               <label>
                 <span>New password</span>
-                <input
-                  type="password"
-                  name="newPassword"
-                  value={passwordData.newPassword}
-                  onChange={handlePasswordChange}
-                  minLength="6"
-                  required
-                />
+                <div className={styles.passwordInputWrap}>
+                  <input
+                    type={visiblePasswords.newPassword ? 'text' : 'password'}
+                    name="newPassword"
+                    value={passwordData.newPassword}
+                    onChange={handlePasswordChange}
+                    minLength="6"
+                    required
+                  />
+                  <button
+                    type="button"
+                    className={styles.passwordToggle}
+                    onClick={() => togglePasswordVisibility('newPassword')}
+                    aria-label={visiblePasswords.newPassword ? 'Hide new password' : 'Show new password'}
+                    aria-pressed={visiblePasswords.newPassword}
+                  >
+                    <i className={`fa ${visiblePasswords.newPassword ? 'fa-eye-slash' : 'fa-eye'}`} aria-hidden="true" />
+                  </button>
+                </div>
               </label>
               <label>
                 <span>Confirm new password</span>
-                <input
-                  type="password"
-                  name="confirmPassword"
-                  value={passwordData.confirmPassword}
-                  onChange={handlePasswordChange}
-                  minLength="6"
-                  required
-                />
+                <div className={styles.passwordInputWrap}>
+                  <input
+                    type={visiblePasswords.confirmPassword ? 'text' : 'password'}
+                    name="confirmPassword"
+                    value={passwordData.confirmPassword}
+                    onChange={handlePasswordChange}
+                    minLength="6"
+                    required
+                  />
+                  <button
+                    type="button"
+                    className={styles.passwordToggle}
+                    onClick={() => togglePasswordVisibility('confirmPassword')}
+                    aria-label={visiblePasswords.confirmPassword ? 'Hide password confirmation' : 'Show password confirmation'}
+                    aria-pressed={visiblePasswords.confirmPassword}
+                  >
+                    <i className={`fa ${visiblePasswords.confirmPassword ? 'fa-eye-slash' : 'fa-eye'}`} aria-hidden="true" />
+                  </button>
+                </div>
               </label>
               <p className={styles.formMessageError}>{passwordError || '\u00A0'}</p>
               <p className={styles.formMessageSuccess}>{passwordSuccess || '\u00A0'}</p>
+              <div className={styles.forgotPasswordActions}>
+                <button type="button" className={styles.forgotPasswordButton} onClick={handleForgotPassword} disabled={isRequestingReset}>
+                  {isRequestingReset
+                    ? 'Sending code...'
+                    : isForgotPasswordMode
+                      ? 'Resend reset code'
+                      : 'Forgot current password?'}
+                </button>
+                {isForgotPasswordMode ? (
+                  <button type="button" className={styles.cancelResetButton} onClick={cancelForgotPassword}>
+                    Use current password instead
+                  </button>
+                ) : null}
+              </div>
               <button type="submit" className={styles.primaryButton} disabled={isUpdatingPassword}>
-                {isUpdatingPassword ? 'Updating...' : 'Change password'}
+                {isUpdatingPassword
+                  ? 'Updating...'
+                  : isForgotPasswordMode
+                    ? 'Reset password'
+                    : 'Change password'}
               </button>
             </form>
           )}

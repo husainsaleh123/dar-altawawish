@@ -162,6 +162,35 @@ export async function sendRegistrationCodeEmail({ to, name, code }) {
   });
 }
 
+export async function sendPasswordResetCodeEmail({ to, name, code }) {
+  const safeName = String(name || 'there').trim();
+  const safeCode = String(code || '').trim();
+
+  if (!to || !/^\d{4}$/.test(safeCode)) {
+    throw new Error('Password reset email requires a recipient and a 4-digit code.');
+  }
+
+  return sendEmail({
+    to,
+    subject: 'Your Dar Altawawish password reset code',
+    text: [
+      `Hi ${safeName},`,
+      '',
+      `Your password reset code is: ${safeCode}`,
+      '',
+      'This code expires in 10 minutes. Do not share it with anyone.',
+      'If you did not request a password reset, you can ignore this email.'
+    ].join('\n'),
+    html: [
+      `<p>Hi ${escapeHtml(safeName)},</p>`,
+      '<p>Enter this code to reset your Dar Altawawish password:</p>',
+      `<p style="margin:24px 0;font-size:32px;font-weight:800;letter-spacing:10px;color:#1c0094;">${escapeHtml(safeCode)}</p>`,
+      '<p>This code expires in 10 minutes. Do not share it with anyone.</p>',
+      '<p>If you did not request a password reset, you can ignore this email.</p>'
+    ].join('')
+  });
+}
+
 export function isEmailServiceConfigured() {
   const config = getEmailConfig();
   return Boolean(config.user && config.pass);

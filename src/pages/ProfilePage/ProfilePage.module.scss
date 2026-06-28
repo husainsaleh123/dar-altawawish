@@ -159,10 +159,79 @@
     width: 100%;
     border: 1px solid rgba(129, 102, 58, 0.22);
     border-radius: 0.95rem;
-    padding: 0.9rem 1rem;
+    padding: 0.9rem 3.25rem 0.9rem 1rem;
     background: #fffdf9;
     color: #23190d;
   }
+}
+
+.passwordInputWrap {
+  position: relative;
+  width: 100%;
+}
+
+.passwordToggle {
+  position: absolute;
+  top: 50%;
+  right: 0.65rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: inline-grid;
+  place-items: center;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #1c0094;
+  font-size: 1rem;
+  cursor: pointer;
+  transform: translateY(-50%);
+}
+
+.passwordToggle:hover,
+.passwordToggle:focus-visible {
+  background: rgba(28, 0, 148, 0.08);
+}
+
+.resetCodeInput {
+  padding-right: 1rem !important;
+  padding-left: 1rem !important;
+  letter-spacing: 0.45em;
+  font-size: 1.25rem;
+  font-weight: 800;
+  text-align: center;
+}
+
+.forgotPasswordActions {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+}
+
+.forgotPasswordButton,
+.cancelResetButton {
+  margin: 0;
+  padding: 0.35rem 0;
+  border: 0;
+  background: transparent;
+  color: #1c0094;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.cancelResetButton {
+  color: #6d6255;
+}
+
+.forgotPasswordButton:disabled {
+  opacity: 0.65;
+  cursor: wait;
 }
 
 .passwordForm .formMessageError,

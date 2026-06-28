@@ -338,10 +338,8 @@ export default function CheckoutPage({ cartItems = [], user, onCheckoutComplete 
                   checked={formData.paymentMethod === 'cash-on-hand'}
                   onChange={handleChange}
                 />
-                <div>
-                  <strong>Cash on hand</strong>
-                  <span>Pay in cash when the order is collected or delivered.</span>
-                </div>
+                <span className={styles.paymentEmoji} aria-hidden="true">💵</span>
+                <strong>Cash on hand</strong>
               </label>
               <label className={styles.paymentOption}>
                 <input
@@ -351,21 +349,25 @@ export default function CheckoutPage({ cartItems = [], user, onCheckoutComplete 
                   checked={formData.paymentMethod === 'debit-card'}
                   onChange={handleChange}
                 />
-                <div>
-                  <strong>Debit card</strong>
-                  <span>Pay securely on Amazon Payment Services after reviewing your order.</span>
-                </div>
+                <span className={`${styles.paymentEmoji} ${styles.debitCardIcon}`} aria-hidden="true">
+                  <img src="/images/icons/debit-card.png" alt="" />
+                </span>
+                <strong>Debit card</strong>
+              </label>
+              <label className={styles.paymentOption}>
+                <input
+                  type="radio"
+                  name="paymentMethod"
+                  value="benefitpay"
+                  checked={formData.paymentMethod === 'benefitpay'}
+                  onChange={handleChange}
+                />
+                <span className={`${styles.paymentEmoji} ${styles.benefitPayIcon}`} aria-hidden="true">
+                  <img src="/images/icons/benefit-pay.png" alt="" />
+                </span>
+                <strong>BenefitPay</strong>
               </label>
             </div>
-
-            {formData.paymentMethod === 'debit-card' && (
-              <div className={styles.gatewayNotice}>
-                <strong>APS hosted checkout</strong>
-                <p>
-                  After you place the order, we will redirect you to Amazon Payment Services to enter the card details securely.
-                </p>
-              </div>
-            )}
 
             <label className={styles.checkboxRow}>
               <input type="checkbox" name="saveInfo" checked={formData.saveInfo} onChange={handleChange} />
