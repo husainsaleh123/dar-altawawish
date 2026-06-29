@@ -7,7 +7,7 @@ import logoImage from '../../assets/images/Logo_design_final_PNG.png';
 const NAV_ITEMS = [
   { label: 'Home', to: '/' },
   { label: 'About', to: '/about' },
-  { label: 'Products', to: '/orders/new' },
+  { label: 'Products', to: '/products' },
   { label: 'Contact', to: '/contact' }
 ];
 
@@ -57,7 +57,7 @@ export default function Navigation({ user, cartCount = 0 }) {
       <div id="primary-menu" className={`${styles.menuPanel} ${isMenuOpen ? styles.menuPanelOpen : ''}`}>
         <ul className={styles.links}>
           {navItems.map((item) => {
-            const isProductsRoute = item.to === '/orders/new' && location.pathname.startsWith('/orders');
+            const isProductsRoute = item.to === '/products' && location.pathname === '/products';
             return (
               <li key={item.label}>
                 <NavLink

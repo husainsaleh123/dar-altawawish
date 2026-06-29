@@ -351,7 +351,7 @@ export default function ProfilePage({ user, onLogout }) {
             <span className={styles.sectionKicker}>Past Orders</span>
             <h2>Track previous purchases</h2>
           </div>
-          <Link to="/orders/new" className={styles.secondaryLink}>
+          <Link to="/products" className={styles.secondaryLink}>
             Place another order
           </Link>
         </div>

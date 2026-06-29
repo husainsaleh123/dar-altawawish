@@ -188,7 +188,7 @@ export default function CheckoutPage({ cartItems = [], user, onCheckoutComplete 
             </p>
           ) : null}
           <div className={styles.successActions}>
-            <button type="button" className={styles.primaryButton} onClick={() => navigate('/orders/new')}>
+            <button type="button" className={styles.primaryButton} onClick={() => navigate('/products')}>
               Continue shopping
             </button>
             <button type="button" className={styles.secondaryButton} onClick={() => navigate('/orders')}>
@@ -206,7 +206,7 @@ export default function CheckoutPage({ cartItems = [], user, onCheckoutComplete 
         <section className={styles.emptyCard}>
           <h1>Your cart is empty</h1>
           <p>Add products before continuing to checkout.</p>
-          <Link to="/orders/new" className={styles.primaryButton}>
+          <Link to="/products" className={styles.primaryButton}>
             Browse products
           </Link>
         </section>

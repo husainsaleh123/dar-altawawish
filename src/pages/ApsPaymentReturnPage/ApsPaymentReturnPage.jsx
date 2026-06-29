@@ -63,7 +63,7 @@ export default function ApsPaymentReturnPage({ onCheckoutComplete }) {
         ) : null}
 
         <div className={styles.actions}>
-          <Link to={isSuccess ? '/orders/new' : '/checkout'} className={styles.primaryButton}>
+          <Link to={isSuccess ? '/products' : '/checkout'} className={styles.primaryButton}>
             {isSuccess ? 'Continue shopping' : 'Return to checkout'}
           </Link>
           <Link to={isSuccess ? '/profile' : '/orders'} className={styles.secondaryButton}>

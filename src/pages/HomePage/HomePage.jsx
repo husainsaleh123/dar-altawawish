@@ -31,7 +31,7 @@ export default function HomePage() {
   function handleSearchSubmit(event) {
     event.preventDefault();
     const query = searchTerm.trim();
-    navigate(query ? `/orders/new?search=${encodeURIComponent(query)}` : '/orders/new');
+    navigate(query ? `/products?search=${encodeURIComponent(query)}` : '/products');
   }
 
   return (
@@ -65,7 +65,7 @@ export default function HomePage() {
         </p>
 
         <div className={styles.actions}>
-          <Link to="/orders/new" className={styles.buyNow}>Shop Now</Link>
+          <Link to="/products" className={styles.buyNow}>Shop Now</Link>
           <Link to="/contact" className={styles.contact}>Contact</Link>
         </div>
       </section>

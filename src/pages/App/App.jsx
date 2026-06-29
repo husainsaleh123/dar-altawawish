@@ -133,7 +133,8 @@ export default function App() {
           <Route path="/login" element={user ? <Navigate to="/" /> : <AuthPage setUser={setUser} initialMode="login" />} />
           <Route path="/signup" element={user ? <Navigate to="/" /> : <AuthPage setUser={setUser} initialMode="signup" />} />
           <Route path="/verify-email" element={user ? <Navigate to="/" /> : <VerifyEmailPage setUser={setUser} />} />
-          <Route path="/orders/new" element={<NewOrderPage onAddToCart={handleAddToCart} />} />
+          <Route path="/products" element={<NewOrderPage onAddToCart={handleAddToCart} />} />
+          <Route path="/orders/new" element={<Navigate to="/products" replace />} />
           <Route path="/checkout/access" element={<CheckoutAccessPage setUser={setUser} user={user} />} />
           <Route
             path="/checkout"
