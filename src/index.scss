@@ -16,9 +16,24 @@
 @font-face {
   font-family: 'TT Firs Neue Trl';
   src:
+    url('/fonts/TT%20Firs%20Neue%20Trial%20Var%20Roman.ttf') format('truetype-variations'),
     local('TT Firs Neue Trl'),
     local('TT Firs Neue Trial'),
     local('TT Firs Neue');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'TT Firs Neue Trl';
+  src:
+    url('/fonts/TT%20Firs%20Neue%20Trial%20Var%20Italic.ttf') format('truetype-variations'),
+    local('TT Firs Neue Trl Italic'),
+    local('TT Firs Neue Trial Italic'),
+    local('TT Firs Neue Italic');
+  font-weight: 100 900;
+  font-style: italic;
   font-display: swap;
 }
 
@@ -92,6 +107,10 @@ button,
 input,
 textarea,
 select {
+  font-family: var(--app-font-family);
+}
+
+::placeholder {
   font-family: var(--app-font-family);
 }
 
