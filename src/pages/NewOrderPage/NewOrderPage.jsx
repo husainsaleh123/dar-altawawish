@@ -1692,6 +1692,13 @@ export default function NewOrderPage({ onAddToCart }) {
     setSelectedProduct(product);
   }
 
+  function handleAddSelectedProductToCart() {
+    if (!selectedProduct) return;
+    const productToAdd = selectedProduct;
+    closeProductDetails();
+    handleAddToCart(productToAdd);
+  }
+
   function handleConfirmGemstoneAddToCart() {
     if (!gemstoneModalProduct) return;
 
@@ -2386,6 +2393,19 @@ export default function NewOrderPage({ onAddToCart }) {
                 </span>
               </p>
             </div>
+
+            {!selectedProduct.isBundleProduct && (
+              <div className={styles.productModalActions}>
+                <button
+                  type="button"
+                  className={styles.checkoutButton}
+                  onClick={handleAddSelectedProductToCart}
+                  disabled={!selectedProductInStock}
+                >
+                  Add to Cart
+                </button>
+              </div>
+            )}
 
             <p>
               {selectedProduct.isBundleProduct

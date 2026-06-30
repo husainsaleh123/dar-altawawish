@@ -434,24 +434,34 @@
 
 .modalCloseButton {
   position: absolute;
-  top: 0.85rem;
-  right: 0.95rem;
-  border: 0;
-  background: transparent;
-  color: #c7223a;
-  font-size: 2rem;
+  top: 0.75rem;
+  right: 0.85rem;
+  z-index: 5;
+  width: 2.25rem;
+  height: 2.25rem;
+  display: grid;
+  place-items: center;
+  border: 1px solid #d7ddea;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.95);
+  color: #1c0094;
+  font-size: 1.65rem;
+  font-weight: 700;
   line-height: 1;
   cursor: pointer;
-  padding: 0.1rem 0.3rem;
+  padding: 0 0 0.12rem;
+  box-shadow: 0 8px 18px rgba(12, 18, 42, 0.12);
 }
 
 .modalCloseButton:hover {
-  color: #a3172d;
+  color: #ffffff;
+  background: #1c0094;
+  border-color: #1c0094;
 }
 
 .modalCloseButton:focus-visible {
-  outline: 2px solid #c7223a33;
-  border-radius: 8px;
+  outline: 3px solid #1c009433;
+  outline-offset: 2px;
 }
 
 .modalImagePlaceholder {
@@ -645,6 +655,17 @@
 .outOfStock {
   color: #b3193f;
   font-weight: 700;
+}
+
+.productModalActions {
+  margin: 0.9rem 0 1rem;
+  display: grid;
+}
+
+.productModalActions .checkoutButton {
+  width: 100%;
+  min-height: 46px;
+  font-size: 0.98rem;
 }
 
 .modalCard p {
