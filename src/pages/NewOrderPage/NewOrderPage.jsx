@@ -2394,6 +2394,12 @@ export default function NewOrderPage({ onAddToCart }) {
               </p>
             </div>
 
+            <p>
+              {selectedProduct.isBundleProduct
+                ? selectedProduct.bundleDescription
+                : (selectedProduct.description || 'No description available.')}
+            </p>
+
             {!selectedProduct.isBundleProduct && (
               <div className={styles.productModalActions}>
                 <button
@@ -2407,11 +2413,6 @@ export default function NewOrderPage({ onAddToCart }) {
               </div>
             )}
 
-            <p>
-              {selectedProduct.isBundleProduct
-                ? selectedProduct.bundleDescription
-                : (selectedProduct.description || 'No description available.')}
-            </p>
             {selectedProduct.isBundleProduct && activeSelectedBundleVariant ? (
               <>
                 <label className={styles.gemstoneModalField}>
