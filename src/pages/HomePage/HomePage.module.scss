@@ -207,11 +207,13 @@
 @media (max-width: 768px) {
   .hero {
     align-content: start;
-    row-gap: 1.35rem;
-    padding: clamp(5rem, 13svh, 10rem) 1rem clamp(4rem, 10svh, 9rem);
+    row-gap: 1rem;
+    padding: clamp(2.25rem, 8svh, 5rem) 1rem clamp(2.75rem, 8svh, 5.5rem);
     min-height: auto;
     background-image: linear-gradient(rgba(255, 255, 255, 0.86), rgba(255, 255, 255, 0.86)),
       url('/images/home/home-page-mobile-bg.png');
+    background-size: cover;
+    background-position: center top;
   }
 
   .hero h1 {
@@ -219,9 +221,9 @@
   }
 
   .introText {
-    font-size: clamp(1.15rem, 3.8vw, 1.55rem);
-    line-height: 2.2;
-    margin: 0.5rem auto 0.85rem;
+    font-size: clamp(1.05rem, 3.7vw, 1.35rem);
+    line-height: 1.75;
+    margin: 0.35rem auto 0.65rem;
     width: min(92%, 760px);
   }
 
@@ -232,7 +234,7 @@
 
   .searchBar {
     width: min(92%, 650px);
-    margin-bottom: 0.95rem;
+    margin-bottom: 0.55rem;
   }
 
   .searchIcon {
@@ -247,7 +249,7 @@
 
   .actions {
     gap: 1rem;
-    margin-top: 0.8rem;
+    margin-top: 0.45rem;
   }
 
   .numbersSection {
@@ -494,27 +496,29 @@
 
 @media (max-width: 480px) {
   .hero {
-    padding: 1.25rem 0.78rem 0.75rem;
-    row-gap: 1.08rem;
-    min-height: calc(100svh - 88px);
+    padding: 2rem 1rem 2.6rem;
+    row-gap: 0.9rem;
+    min-height: auto;
   }
 
   .hero h1 {
-    font-size: clamp(1.55rem, 8vw, 2rem);
-    margin-bottom: 20px;
+    width: min(100%, 620px);
+    font-size: clamp(2rem, 8vw, 2.45rem);
+    line-height: 1.12;
+    margin: 0 0 0.35rem;
   }
 
   .searchBar input {
     margin-top: 0;
-    height: 45px;
+    height: 52px;
     padding: 0 3.1rem 0 1rem;
-    font-size: 0.98rem;
+    font-size: 1rem;
   }
 
   .searchBar {
-    width: min(75%, 550px);
-    margin-top: 20px;
-    margin-bottom: 0.6rem;
+    width: 100%;
+    margin-top: 0.35rem;
+    margin-bottom: 0.45rem;
   }
 
   .searchIcon {
@@ -528,10 +532,10 @@
   }
 
   .introText {
-    font-size: 1rem;
-    line-height: 1.68;
-    margin: 0.58rem auto 0.85rem;
-    width: min(92%, 540px);
+    font-size: 1.05rem;
+    line-height: 1.65;
+    margin: 0.35rem auto 0.55rem;
+    width: min(100%, 540px);
   }
 
   .introSubline {
@@ -552,7 +556,8 @@
     min-width: 0;
     width: calc(50% - 0.4rem);
     padding: 0.72rem 0.55rem;
-    font-size: 1.32rem;
+    font-size: 1.1rem;
+    border-radius: 12px;
   }
 
   .numbersSection {

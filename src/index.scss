@@ -61,16 +61,20 @@ $shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
 html {
   min-height: 100%;
+  background: #ffffff;
+  text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
   margin: 0;
-  font-family: 'TT Firs Neue Trl', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: #ffffff;
   padding: 0;
   min-height: 100vh;
+  color: #151523;
 }
 
 button,

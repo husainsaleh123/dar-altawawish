@@ -7,8 +7,8 @@
   align-content: start;
   gap: 2.2rem;
   padding: 2.5rem 0.75rem 3rem;
-  background-color: #fdfcf1;
-  border-radius: 2vmin;
+  background-color: #ffffff;
+  border-radius: 0;
 }
 
 .productIntro {
@@ -838,9 +838,40 @@
 }
 
 @media (max-width: 620px) {
+  .NewOrderPage {
+    gap: 1.55rem;
+    padding: 2.2rem 1rem 2.4rem;
+  }
+
+  .productIntro {
+    width: 100%;
+  }
+
+  .productIntro h1 {
+    margin: 2.2rem auto 1.35rem;
+    width: min(100%, 620px);
+    font-size: clamp(2rem, 8.5vw, 2.65rem);
+    line-height: 1.16;
+  }
+
+  .productIntro p {
+    width: min(100%, 640px);
+    margin: 0 auto;
+    font-size: clamp(1.02rem, 4.1vw, 1.25rem);
+    line-height: 1.85;
+  }
+
+  .searchBar {
+    width: 100%;
+    margin-bottom: 2.1rem;
+  }
+
   .searchBar input {
     height: 50px;
-    font-size: 0.95rem;
+    font-size: 1rem;
+    padding-left: 1rem;
+    padding-right: 3.25rem;
+    border-radius: 12px;
   }
 
   .searchIcon svg {
@@ -894,6 +925,36 @@
 
   .productsGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.85rem 0.75rem;
+  }
+
+  .productCard {
+    border-radius: 10px;
+    padding: 0.62rem;
+  }
+
+  .productImagePlaceholder {
+    border-radius: 8px;
+    margin-bottom: 0.55rem;
+  }
+
+  .productCard h3 {
+    font-size: 0.96rem;
+    line-height: 1.22;
+  }
+
+  .productCategory {
+    font-size: 0.84rem;
+  }
+
+  .productPrice {
+    font-size: 0.92rem;
+  }
+
+  .addToCartButton {
+    min-height: 44px;
+    margin-top: 0.72rem;
+    font-size: 0.92rem;
   }
 
   .pagination {
@@ -907,6 +968,29 @@
 
   .pageInfo {
     font-size: 0.82rem;
+  }
+
+  .cartSuccessCard {
+    width: min(100%, 360px);
+    border-radius: 18px;
+    padding: 1.65rem 1rem 1.35rem;
+  }
+
+  .successIcon {
+    width: 64px;
+    height: 64px;
+    font-size: 2.1rem;
+  }
+
+  .cartSuccessActions {
+    gap: 0.6rem;
+  }
+
+  .checkoutButton,
+  .continueShoppingButton {
+    min-height: 42px;
+    padding: 0.58rem 0.82rem;
+    font-size: 0.84rem;
   }
 }
 
