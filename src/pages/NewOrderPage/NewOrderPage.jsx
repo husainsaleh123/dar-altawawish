@@ -624,7 +624,9 @@ export default function NewOrderPage({ onAddToCart }) {
         setProducts(Array.isArray(data) ? data : []);
         setError('');
       } catch (err) {
-        setError(err?.message || 'Failed to load products.');
+        console.error('Failed to load products from API. Showing catalog fallback:', err);
+        setProducts(DEFAULT_PRODUCTS);
+        setError('');
       } finally {
         setLoading(false);
       }
